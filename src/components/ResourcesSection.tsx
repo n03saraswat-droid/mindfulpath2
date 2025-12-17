@@ -1,15 +1,16 @@
-import { BookOpen, Phone, Users, Brain, Heart, Shield } from "lucide-react";
+import { BookOpen, Users, Brain, Heart, Shield, Flame } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const resources = [
   {
-    icon: Phone,
-    title: "Crisis Hotlines",
-    description: "Immediate support when you need it most",
+    icon: Flame,
+    title: "Anger Management",
+    description: "Learn to understand and manage anger effectively",
     items: [
-      "988 Suicide & Crisis Lifeline (US)",
-      "Crisis Text Line: Text HOME to 741741",
-      "International Association for Suicide Prevention"
+      "Recognizing anger triggers",
+      "Healthy expression techniques",
+      "Cooling down strategies",
+      "Communication skills"
     ],
     color: "bg-destructive/10 text-destructive",
   },
@@ -114,37 +115,6 @@ const ResourcesSection = () => {
               </CardContent>
             </Card>
           ))}
-        </div>
-
-        <div className="mt-16 p-8 bg-card rounded-2xl border border-border/50 shadow-card">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
-              <Phone className="w-8 h-8 text-destructive" />
-            </div>
-            <div className="text-center md:text-left">
-              <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">
-                If You're in Crisis
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                If you or someone you know is in immediate danger, please reach out for help immediately.
-              </p>
-              <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                <a
-                  href="tel:988"
-                  className="inline-flex items-center gap-2 bg-destructive text-destructive-foreground px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
-                >
-                  <Phone className="w-4 h-4" />
-                  Call 988 (US)
-                </a>
-                <a
-                  href="sms:741741?body=HOME"
-                  className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-medium hover:bg-secondary/80 transition-colors"
-                >
-                  Text HOME to 741741
-                </a>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
