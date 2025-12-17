@@ -46,6 +46,12 @@ const Navigation = () => {
               Self-Care
             </button>
             <button
+              onClick={() => scrollToSection("meditation")}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Meditation
+            </button>
+            <button
               onClick={() => scrollToSection("chat")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
@@ -102,6 +108,12 @@ const Navigation = () => {
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Self-Care
+              </button>
+              <button
+                onClick={() => scrollToSection("meditation")}
+                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
+              >
+                Meditation
               </button>
               <button
                 onClick={() => scrollToSection("chat")}
