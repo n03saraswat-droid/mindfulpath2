@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, Heart, BarChart3 } from "lucide-react";
+import { Menu, X, Heart, BarChart3, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -26,7 +26,7 @@ const Navigation = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             <button
               onClick={() => scrollToSection("home")}
               className="text-muted-foreground hover:text-foreground transition-colors"
@@ -38,12 +38,6 @@ const Navigation = () => {
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Resources
-            </button>
-            <button
-              onClick={() => scrollToSection("self-care")}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Self-Care
             </button>
             <button
               onClick={() => scrollToSection("meditation")}
@@ -60,13 +54,24 @@ const Navigation = () => {
             <Button
               onClick={() => navigate(user ? "/mood-tracker" : "/auth")}
               variant="outline"
+              size="sm"
               className="border-primary/30 text-foreground hover:bg-primary/5"
             >
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Mood Tracker
+              <BarChart3 className="w-4 h-4 mr-1" />
+              Mood
+            </Button>
+            <Button
+              onClick={() => navigate(user ? "/gratitude" : "/auth")}
+              variant="outline"
+              size="sm"
+              className="border-warmth text-foreground hover:bg-warmth/10"
+            >
+              <Sun className="w-4 h-4 mr-1" />
+              Gratitude
             </Button>
             <Button
               onClick={() => scrollToSection("chat")}
+              size="sm"
               className="gradient-calm text-primary-foreground hover:opacity-90 transition-opacity"
             >
               Talk to MindfulAI
@@ -104,12 +109,6 @@ const Navigation = () => {
                 Resources
               </button>
               <button
-                onClick={() => scrollToSection("self-care")}
-                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
-              >
-                Self-Care
-              </button>
-              <button
                 onClick={() => scrollToSection("meditation")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
@@ -121,17 +120,32 @@ const Navigation = () => {
               >
                 AI Support
               </button>
-              <Button
-                onClick={() => {
-                  navigate(user ? "/mood-tracker" : "/auth");
-                  setIsOpen(false);
-                }}
-                variant="outline"
-                className="border-primary/30 text-foreground hover:bg-primary/5 w-full"
-              >
-                <BarChart3 className="w-4 h-4 mr-2" />
-                Mood Tracker
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => {
+                    navigate(user ? "/mood-tracker" : "/auth");
+                    setIsOpen(false);
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="border-primary/30 text-foreground hover:bg-primary/5 flex-1"
+                >
+                  <BarChart3 className="w-4 h-4 mr-1" />
+                  Mood
+                </Button>
+                <Button
+                  onClick={() => {
+                    navigate(user ? "/gratitude" : "/auth");
+                    setIsOpen(false);
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="border-warmth text-foreground hover:bg-warmth/10 flex-1"
+                >
+                  <Sun className="w-4 h-4 mr-1" />
+                  Gratitude
+                </Button>
+              </div>
               <Button
                 onClick={() => scrollToSection("chat")}
                 className="gradient-calm text-primary-foreground w-full"
