@@ -1,7 +1,12 @@
-import { ArrowDown, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ArrowDown, Sparkles, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   const scrollToChat = () => {
     document.getElementById("chat")?.scrollIntoView({ behavior: "smooth" });
   };
