@@ -1,9 +1,13 @@
 import { useState } from "react";
-import { Menu, X, Heart, Moon, Sun } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Menu, X, Heart, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -47,6 +51,14 @@ const Navigation = () => {
             >
               AI Support
             </button>
+            <Button
+              onClick={() => navigate(user ? "/mood-tracker" : "/auth")}
+              variant="outline"
+              className="border-primary/30 text-foreground hover:bg-primary/5"
+            >
+              <BarChart3 className="w-4 h-4 mr-2" />
+              Mood Tracker
+            </Button>
             <Button
               onClick={() => scrollToSection("chat")}
               className="gradient-calm text-primary-foreground hover:opacity-90 transition-opacity"
@@ -97,6 +109,17 @@ const Navigation = () => {
               >
                 AI Support
               </button>
+              <Button
+                onClick={() => {
+                  navigate(user ? "/mood-tracker" : "/auth");
+                  setIsOpen(false);
+                }}
+                variant="outline"
+                className="border-primary/30 text-foreground hover:bg-primary/5 w-full"
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Mood Tracker
+              </Button>
               <Button
                 onClick={() => scrollToSection("chat")}
                 className="gradient-calm text-primary-foreground w-full"
