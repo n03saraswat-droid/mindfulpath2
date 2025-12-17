@@ -4,6 +4,7 @@ import ResourcesSection from "@/components/ResourcesSection";
 import SelfCareSection from "@/components/SelfCareSection";
 import MeditationSection from "@/components/MeditationSection";
 import ChatSection from "@/components/ChatSection";
+import CoursesSection from "@/components/CoursesSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -12,6 +13,7 @@ const Index = () => {
       <Navigation />
       <main>
         <HeroSection />
+        <CoursesSection />
         <ResourcesSection />
         <SelfCareSection />
         <MeditationSection />
