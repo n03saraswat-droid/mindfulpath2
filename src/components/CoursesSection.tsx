@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { BookOpen, Clock, Users, ChevronRight, Brain, Heart, Frown, Zap, Moon, AlertTriangle, Flame, Shield } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -95,6 +96,8 @@ const courses = [
 ];
 
 const CoursesSection = () => {
+  const navigate = useNavigate();
+  
   return (
     <section id="courses" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -143,7 +146,12 @@ const CoursesSection = () => {
                   <Badge variant="outline" className="text-xs">
                     {course.level}
                   </Badge>
-                  <Button variant="ghost" size="sm" className="text-xs group-hover:text-primary">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-xs group-hover:text-primary"
+                    onClick={() => navigate("/courses")}
+                  >
                     Start Course
                     <ChevronRight className="w-3 h-3 ml-1" />
                   </Button>

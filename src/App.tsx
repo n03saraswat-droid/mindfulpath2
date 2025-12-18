@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import MoodTracker from "./pages/MoodTracker";
 import GratitudePractice from "./pages/GratitudePractice";
+import Courses from "./pages/Courses";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/mood-tracker" element={<MoodTracker />} />
             <Route path="/gratitude" element={<GratitudePractice />} />
+            <Route path="/courses" element={<Courses />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
