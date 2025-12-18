@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, Heart, BarChart3, Sun } from "lucide-react";
+import { Menu, X, Heart, BarChart3, Sun, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -50,6 +50,12 @@ const Navigation = () => {
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               AI Support
+            </button>
+            <button
+              onClick={() => navigate("/courses")}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Courses
             </button>
             <Button
               onClick={() => navigate(user ? "/mood-tracker" : "/auth")}
@@ -116,6 +122,15 @@ const Navigation = () => {
               </button>
               <button
                 onClick={() => scrollToSection("chat")}
+                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
+              >
+                Courses
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/courses");
+                  setIsOpen(false);
+                }}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 AI Support
