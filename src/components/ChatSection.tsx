@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, AlertCircle, Loader2 } from "lucide-react";
+import { Send, Bot, User, AlertCircle, Loader2, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 type Message = {
   role: "user" | "assistant";
@@ -18,6 +21,7 @@ const ChatSection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -29,6 +33,17 @@ const ChatSection = () => {
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
+
+    // Check authentication
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast({
+        variant: "destructive",
+        title: "Authentication Required",
+        description: "Please sign in to use the chat feature.",
+      });
+      return;
+    }
 
     const userMessage: Message = { role: "user", content: input.trim() };
     setMessages((prev) => [...prev, userMessage]);
@@ -42,12 +57,15 @@ const ChatSection = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({ messages: [...messages, userMessage] }),
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Please sign in to use the chat feature.");
+        }
         if (response.status === 429) {
           throw new Error("Too many requests. Please wait a moment and try again.");
         }
@@ -143,6 +161,23 @@ const ChatSection = () => {
               </p>
             </div>
 
+            {/* Authentication Notice */}
+            {!user && (
+              <div className="bg-primary/10 p-4 flex items-center justify-between gap-3 border-b border-border">
+                <div className="flex items-center gap-3">
+                  <LogIn className="w-5 h-5 text-primary flex-shrink-0" />
+                  <p className="text-sm text-foreground">
+                    Please sign in to use the chat feature.
+                  </p>
+                </div>
+                <Link to="/auth">
+                  <Button size="sm" className="gradient-calm text-primary-foreground">
+                    Sign In
+                  </Button>
+                </Link>
+              </div>
+            )}
+
             {/* Chat Messages */}
             <div className="h-96 overflow-y-auto p-6 space-y-4">
               {messages.length === 0 && (
@@ -154,7 +189,10 @@ const ChatSection = () => {
                     Welcome to MindfulAI
                   </h3>
                   <p className="text-muted-foreground max-w-md">
-                    I'm here to support you. Feel free to share what's on your mind, ask about mental health topics, or try a guided relaxation exercise.
+                    {user 
+                      ? "I'm here to support you. Feel free to share what's on your mind, ask about mental health topics, or try a guided relaxation exercise."
+                      : "Sign in to start chatting with MindfulAI. I'm here to support you with mental health topics, coping strategies, and relaxation exercises."
+                    }
                   </p>
                 </div>
               )}
@@ -213,13 +251,13 @@ const ChatSection = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Share what's on your mind..."
+                  placeholder={user ? "Share what's on your mind..." : "Sign in to start chatting..."}
                   className="min-h-[60px] resize-none bg-background"
-                  disabled={isLoading}
+                  disabled={isLoading || !user}
                 />
                 <Button
                   onClick={sendMessage}
-                  disabled={!input.trim() || isLoading}
+                  disabled={!input.trim() || isLoading || !user}
                   size="icon"
                   className="h-[60px] w-[60px] gradient-calm text-primary-foreground hover:opacity-90"
                 >
