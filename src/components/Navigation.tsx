@@ -34,7 +34,7 @@ const Navigation = () => {
               Home
             </button>
             <button
-              onClick={() => scrollToSection("resources")}
+              onClick={() => navigate("/resources")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Resources
@@ -109,7 +109,10 @@ const Navigation = () => {
                 Home
               </button>
               <button
-                onClick={() => scrollToSection("resources")}
+                onClick={() => {
+                  navigate("/resources");
+                  setIsOpen(false);
+                }}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Resources
