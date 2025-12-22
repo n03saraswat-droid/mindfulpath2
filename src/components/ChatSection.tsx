@@ -157,7 +157,7 @@ const ChatSection = () => {
             <div className="bg-warmth/50 p-4 flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-warmth-foreground flex-shrink-0 mt-0.5" />
               <p className="text-sm text-warmth-foreground">
-                <strong>Important:</strong> MindfulAI is an AI assistant for mental health awareness and support. It is not a replacement for professional mental health care. If you're in crisis, please contact emergency services or call 988.
+                <strong>Important:</strong> MindfulAI is an AI assistant for mental health awareness and support. It is not a replacement for professional mental health care. If you're in crisis, please seek professional help.
               </p>
             </div>
 
