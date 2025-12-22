@@ -1,5 +1,7 @@
-import { BookOpen, Users, Brain, Heart, Shield, Flame, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
+import { BookOpen, Users, Brain, Heart, Shield, Flame, ExternalLink, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const resources = [
   {
@@ -123,6 +125,15 @@ const ResourcesSection = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <Button asChild size="lg" className="gap-2">
+            <Link to="/resources">
+              View All Resources
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
