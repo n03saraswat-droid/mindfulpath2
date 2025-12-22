@@ -1,4 +1,4 @@
-import { BookOpen, Users, Brain, Heart, Shield, Flame } from "lucide-react";
+import { BookOpen, Users, Brain, Heart, Shield, Flame, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const resources = [
@@ -7,10 +7,10 @@ const resources = [
     title: "Anger Management",
     description: "Learn to understand and manage anger effectively",
     items: [
-      "Recognizing anger triggers",
-      "Healthy expression techniques",
-      "Cooling down strategies",
-      "Communication skills"
+      { label: "Recognizing anger triggers", url: "https://www.apa.org/topics/anger/control" },
+      { label: "Healthy expression techniques", url: "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/anger-management/art-20045434" },
+      { label: "Cooling down strategies", url: "https://www.helpguide.org/articles/relationships-communication/anger-management.htm" },
+      { label: "Communication skills", url: "https://www.mind.org.uk/information-support/types-of-mental-health-problems/anger/managing-outbursts/" }
     ],
     color: "bg-destructive/10 text-destructive",
   },
@@ -19,10 +19,10 @@ const resources = [
     title: "Understanding Mental Health",
     description: "Learn about common conditions and treatments",
     items: [
-      "Anxiety & Depression",
-      "PTSD & Trauma",
-      "Bipolar Disorder",
-      "OCD & Related Disorders"
+      { label: "Anxiety & Depression", url: "https://www.who.int/news-room/fact-sheets/detail/depression" },
+      { label: "PTSD & Trauma", url: "https://www.nimh.nih.gov/health/topics/post-traumatic-stress-disorder-ptsd" },
+      { label: "Bipolar Disorder", url: "https://www.nami.org/About-Mental-Illness/Mental-Health-Conditions/Bipolar-Disorder" },
+      { label: "OCD & Related Disorders", url: "https://iocdf.org/about-ocd/" }
     ],
     color: "bg-primary/10 text-primary",
   },
@@ -31,10 +31,10 @@ const resources = [
     title: "Support Communities",
     description: "Connect with others who understand",
     items: [
-      "Peer support groups",
-      "Online communities",
-      "Family support resources",
-      "Caregiver networks"
+      { label: "Peer support groups", url: "https://www.nami.org/Support-Education/Support-Groups" },
+      { label: "Online communities", url: "https://www.7cups.com/" },
+      { label: "Family support resources", url: "https://www.nami.org/Support-Education/Support-Groups/NAMI-Family-Support-Group" },
+      { label: "Caregiver networks", url: "https://www.caregiver.org/connecting-caregivers" }
     ],
     color: "bg-serenity text-serenity-foreground",
   },
@@ -43,10 +43,10 @@ const resources = [
     title: "Educational Resources",
     description: "Evidence-based information and guides",
     items: [
-      "Self-help workbooks",
-      "Research articles",
-      "Video courses",
-      "Podcasts & audiobooks"
+      { label: "Self-help workbooks", url: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself" },
+      { label: "Research articles", url: "https://www.ncbi.nlm.nih.gov/pmc/journals/901/" },
+      { label: "Video courses", url: "https://www.coursera.org/courses?query=mental%20health" },
+      { label: "Podcasts & audiobooks", url: "https://www.mentalhealth.org.uk/podcasts" }
     ],
     color: "bg-warmth text-warmth-foreground",
   },
@@ -55,10 +55,10 @@ const resources = [
     title: "Self-Care Tools",
     description: "Practical techniques for daily wellness",
     items: [
-      "Meditation guides",
-      "Breathing exercises",
-      "Journaling prompts",
-      "Sleep hygiene tips"
+      { label: "Meditation guides", url: "https://www.headspace.com/meditation/techniques" },
+      { label: "Breathing exercises", url: "https://www.healthline.com/health/breathing-exercises" },
+      { label: "Journaling prompts", url: "https://positivepsychology.com/journaling-for-mindfulness/" },
+      { label: "Sleep hygiene tips", url: "https://www.sleepfoundation.org/sleep-hygiene" }
     ],
     color: "bg-hope/20 text-primary",
   },
@@ -67,10 +67,10 @@ const resources = [
     title: "Professional Help",
     description: "Finding the right care for you",
     items: [
-      "Finding a therapist",
-      "Types of therapy",
-      "What to expect",
-      "Insurance & costs"
+      { label: "Finding a therapist", url: "https://www.psychologytoday.com/intl/counsellors" },
+      { label: "Types of therapy", url: "https://www.apa.org/topics/psychotherapy/understanding" },
+      { label: "What to expect", url: "https://www.mind.org.uk/information-support/drugs-and-treatments/talking-therapy-and-counselling/what-to-expect/" },
+      { label: "Insurance & costs", url: "https://www.mhanational.org/finding-therapy" }
     ],
     color: "bg-accent text-accent-foreground",
   },
@@ -106,9 +106,17 @@ const ResourcesSection = () => {
               <CardContent>
                 <ul className="space-y-2">
                   {resource.items.map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-muted-foreground">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
-                      {item}
+                    <li key={item.label}>
+                      <a 
+                        href={item.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
+                      >
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                        <span className="flex-1">{item.label}</span>
+                        <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </a>
                     </li>
                   ))}
                 </ul>
