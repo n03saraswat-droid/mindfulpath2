@@ -1,4 +1,4 @@
-import { Heart, Phone, Mail } from "lucide-react";
+import { Heart } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -46,19 +46,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div>
-            <h3 className="font-serif text-lg font-semibold mb-4">Crisis Resources</h3>
-            <ul className="space-y-3">
-              <li className="flex items-center gap-2 text-background/70">
-                <Phone className="w-4 h-4" />
-                <span>988 (US Crisis Line)</span>
-              </li>
-              <li className="flex items-center gap-2 text-background/70">
-                <Mail className="w-4 h-4" />
-                <span>Text HOME to 741741</span>
-              </li>
-            </ul>
-          </div>
         </div>
 
         <div className="border-t border-background/20 pt-8">
