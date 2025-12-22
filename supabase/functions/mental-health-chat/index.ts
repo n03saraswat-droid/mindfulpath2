@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,6 +12,35 @@ serve(async (req) => {
   }
 
   try {
+    // Validate authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      console.log("No authorization header provided");
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Create a Supabase client with the user's token
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    // Verify the user is authenticated
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) {
+      console.log("Authentication failed:", authError?.message || "No user found");
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    console.log("Authenticated user:", user.id);
+
     const { messages } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
@@ -18,7 +48,7 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    console.log("Processing mental health chat request with", messages.length, "messages");
+    console.log("Processing mental health chat request with", messages.length, "messages for user:", user.id);
 
     const systemPrompt = `You are MindfulAI, a compassionate and supportive mental health awareness companion. Your role is to:
 
@@ -77,7 +107,7 @@ Remember: You're here to support, educate, and guide - not to replace profession
       });
     }
 
-    console.log("Streaming response from AI gateway");
+    console.log("Streaming response from AI gateway for user:", user.id);
     
     return new Response(response.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
