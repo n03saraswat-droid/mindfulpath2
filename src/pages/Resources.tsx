@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   BookOpen, Users, Brain, Heart, Shield, Flame, ExternalLink, 
-  ArrowLeft, Search, Filter, ChevronDown, ChevronUp 
+  ArrowLeft, Search, Filter, ChevronDown, ChevronUp, Bookmark, BookmarkCheck
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { useBookmarks } from "@/hooks/useBookmarks";
+import { useAuth } from "@/contexts/AuthContext";
 
 const resourceCategories = [
   {
@@ -213,6 +216,10 @@ const Resources = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [activeTab, setActiveTab] = useState("all");
+  const { bookmarks, isBookmarked, toggleBookmark, loading: bookmarksLoading } = useBookmarks();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
@@ -247,6 +254,43 @@ const Resources = () => {
     setSelectedTags([]);
   };
 
+  // Get all bookmarked items with their full data
+  const getBookmarkedItems = () => {
+    const items: Array<{
+      resourceId: string;
+      label: string;
+      url: string;
+      description: string;
+      categoryTitle: string;
+      categoryColor: string;
+      categoryIcon: typeof Flame;
+    }> = [];
+
+    bookmarks.forEach(bookmark => {
+      // Parse resource_id format: "categoryId:itemLabel"
+      const [categoryId, itemLabel] = bookmark.resource_id.split(":");
+      const category = resourceCategories.find(c => c.id === categoryId);
+      if (category) {
+        const item = category.items.find(i => i.label === itemLabel);
+        if (item) {
+          items.push({
+            resourceId: bookmark.resource_id,
+            label: item.label,
+            url: item.url,
+            description: item.description,
+            categoryTitle: category.title,
+            categoryColor: category.color,
+            categoryIcon: category.icon,
+          });
+        }
+      }
+    });
+
+    return items;
+  };
+
+  const bookmarkedItems = getBookmarkedItems();
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -271,64 +315,78 @@ const Resources = () => {
             </p>
           </div>
 
-          {/* Search and Filters */}
-          <div className="mb-8 space-y-4">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  placeholder="Search resources..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <Button
-                variant="outline"
-                onClick={() => setShowFilters(!showFilters)}
-                className="gap-2"
-              >
-                <Filter className="w-4 h-4" />
-                Filters
-                {selectedTags.length > 0 && (
-                  <Badge variant="secondary" className="ml-1">
-                    {selectedTags.length}
-                  </Badge>
-                )}
-              </Button>
-              {(searchQuery || selectedTags.length > 0) && (
-                <Button variant="ghost" onClick={clearFilters}>
-                  Clear all
-                </Button>
-              )}
-            </div>
+          {/* Tabs for All / Saved */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+            <TabsList>
+              <TabsTrigger value="all" className="gap-2">
+                <BookOpen className="w-4 h-4" />
+                All Resources
+              </TabsTrigger>
+              <TabsTrigger value="saved" className="gap-2">
+                <BookmarkCheck className="w-4 h-4" />
+                Saved ({bookmarks.length})
+              </TabsTrigger>
+            </TabsList>
 
-            {showFilters && (
-              <div className="p-4 bg-secondary/30 rounded-lg animate-fade-in">
-                <p className="text-sm text-muted-foreground mb-3">Filter by topic:</p>
-                <div className="flex flex-wrap gap-2">
-                  {allTags.map(tag => (
-                    <Badge
-                      key={tag}
-                      variant={selectedTags.includes(tag) ? "default" : "outline"}
-                      className="cursor-pointer hover:bg-primary/80 transition-colors"
-                      onClick={() => toggleTag(tag)}
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
+            <TabsContent value="all" className="mt-6">
+              {/* Search and Filters */}
+              <div className="mb-8 space-y-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <Input
+                      placeholder="Search resources..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="gap-2"
+                  >
+                    <Filter className="w-4 h-4" />
+                    Filters
+                    {selectedTags.length > 0 && (
+                      <Badge variant="secondary" className="ml-1">
+                        {selectedTags.length}
+                      </Badge>
+                    )}
+                  </Button>
+                  {(searchQuery || selectedTags.length > 0) && (
+                    <Button variant="ghost" onClick={clearFilters}>
+                      Clear all
+                    </Button>
+                  )}
                 </div>
+
+                {showFilters && (
+                  <div className="p-4 bg-secondary/30 rounded-lg animate-fade-in">
+                    <p className="text-sm text-muted-foreground mb-3">Filter by topic:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {allTags.map(tag => (
+                        <Badge
+                          key={tag}
+                          variant={selectedTags.includes(tag) ? "default" : "outline"}
+                          className="cursor-pointer hover:bg-primary/80 transition-colors"
+                          onClick={() => toggleTag(tag)}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          {/* Results count */}
-          <p className="text-sm text-muted-foreground mb-6">
-            Showing {filteredCategories.length} of {resourceCategories.length} categories
-          </p>
+              {/* Results count */}
+              <p className="text-sm text-muted-foreground mb-6">
+                Showing {filteredCategories.length} of {resourceCategories.length} categories
+              </p>
 
-          {/* Resource Categories */}
-          <div className="space-y-6">
+              {/* Resource Categories */}
+              <div className="space-y-6">
             {filteredCategories.map((category, index) => {
               const isExpanded = expandedCategories.includes(category.id);
               const IconComponent = category.icon;
@@ -375,27 +433,57 @@ const Resources = () => {
                   {isExpanded && (
                     <CardContent className="pt-0 animate-fade-in">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        {category.items.map((item) => (
-                          <a
-                            key={item.label}
-                            href={item.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group p-4 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all"
-                          >
-                            <div className="flex items-start justify-between gap-2">
-                              <div>
-                                <h4 className="font-medium text-foreground group-hover:text-primary transition-colors">
-                                  {item.label}
-                                </h4>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  {item.description}
-                                </p>
+                        {category.items.map((item) => {
+                          const resourceId = `${category.id}:${item.label}`;
+                          const saved = isBookmarked(resourceId);
+
+                          return (
+                            <div
+                              key={item.label}
+                              className="group p-4 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all"
+                            >
+                              <div className="flex items-start justify-between gap-2">
+                                <a
+                                  href={item.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex-1"
+                                >
+                                  <h4 className="font-medium text-foreground group-hover:text-primary transition-colors">
+                                    {item.label}
+                                  </h4>
+                                  <p className="text-sm text-muted-foreground mt-1">
+                                    {item.description}
+                                  </p>
+                                </a>
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleBookmark(resourceId, item.label);
+                                    }}
+                                  >
+                                    {saved ? (
+                                      <BookmarkCheck className="w-4 h-4 text-primary" />
+                                    ) : (
+                                      <Bookmark className="w-4 h-4 text-muted-foreground hover:text-primary" />
+                                    )}
+                                  </Button>
+                                  <a
+                                    href={item.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <ExternalLink className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
+                                  </a>
+                                </div>
                               </div>
-                              <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
                             </div>
-                          </a>
-                        ))}
+                          );
+                        })}
                       </div>
                     </CardContent>
                   )}
@@ -412,6 +500,81 @@ const Resources = () => {
               </Button>
             </div>
           )}
+            </TabsContent>
+
+            <TabsContent value="saved" className="mt-6">
+              {!user ? (
+                <div className="text-center py-16 bg-secondary/20 rounded-xl">
+                  <Bookmark className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="font-serif text-xl font-semibold mb-2">Sign in to save resources</h3>
+                  <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                    Create an account to bookmark your favorite resources and access them anytime.
+                  </p>
+                  <Button onClick={() => navigate("/auth")}>
+                    Sign In
+                  </Button>
+                </div>
+              ) : bookmarkedItems.length === 0 ? (
+                <div className="text-center py-16 bg-secondary/20 rounded-xl">
+                  <BookmarkCheck className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="font-serif text-xl font-semibold mb-2">No saved resources yet</h3>
+                  <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                    Browse the resources and click the bookmark icon to save your favorites here.
+                  </p>
+                  <Button variant="outline" onClick={() => setActiveTab("all")}>
+                    Browse Resources
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {bookmarkedItems.map((item) => {
+                    const IconComponent = item.categoryIcon;
+                    return (
+                      <Card key={item.resourceId} className="hover:shadow-card transition-all">
+                        <CardHeader className="pb-2">
+                          <div className="flex items-center justify-between">
+                            <div className={`w-8 h-8 rounded-lg ${item.categoryColor} flex items-center justify-center`}>
+                              <IconComponent className="w-4 h-4" />
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => toggleBookmark(item.resourceId, item.label)}
+                            >
+                              <BookmarkCheck className="w-4 h-4 text-primary" />
+                            </Button>
+                          </div>
+                          <Badge variant="secondary" className="w-fit text-xs mt-2">
+                            {item.categoryTitle}
+                          </Badge>
+                        </CardHeader>
+                        <CardContent>
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group"
+                          >
+                            <h4 className="font-medium text-foreground group-hover:text-primary transition-colors mb-1">
+                              {item.label}
+                            </h4>
+                            <p className="text-sm text-muted-foreground line-clamp-2">
+                              {item.description}
+                            </p>
+                            <div className="flex items-center gap-1 mt-3 text-sm text-primary">
+                              <span>Open resource</span>
+                              <ExternalLink className="w-3 h-3" />
+                            </div>
+                          </a>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
 
