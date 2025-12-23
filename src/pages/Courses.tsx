@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 interface Lesson {
@@ -15,6 +15,8 @@ interface Lesson {
   title: string;
   duration: string;
   description: string;
+  resourceUrl?: string;
+  resourceLabel?: string;
 }
 
 interface Course {
@@ -42,11 +44,11 @@ const courses: Course[] = [
     rating: 4.8,
     color: "from-blue-500/20 to-cyan-500/20",
     lessons: [
-      { id: "anxiety-1", title: "What is Anxiety?", duration: "15 min", description: "Understanding the basics of anxiety and how it affects your mind and body." },
-      { id: "anxiety-2", title: "Identifying Your Triggers", duration: "20 min", description: "Learn to recognize what situations or thoughts trigger your anxiety." },
-      { id: "anxiety-3", title: "Breathing Techniques", duration: "15 min", description: "Master calming breathing exercises to reduce anxiety in the moment." },
-      { id: "anxiety-4", title: "Cognitive Restructuring", duration: "25 min", description: "Challenge and reframe anxious thoughts using CBT techniques." },
-      { id: "anxiety-5", title: "Building a Coping Toolkit", duration: "20 min", description: "Create your personalized set of strategies for managing anxiety." },
+      { id: "anxiety-1", title: "What is Anxiety?", duration: "15 min", description: "Understanding the basics of anxiety and how it affects your mind and body.", resourceUrl: "https://www.who.int/news-room/fact-sheets/detail/depression", resourceLabel: "WHO: Anxiety & Depression" },
+      { id: "anxiety-2", title: "Identifying Your Triggers", duration: "20 min", description: "Learn to recognize what situations or thoughts trigger your anxiety.", resourceUrl: "https://www.apa.org/topics/anger/control", resourceLabel: "APA: Recognizing Triggers" },
+      { id: "anxiety-3", title: "Breathing Techniques", duration: "15 min", description: "Master calming breathing exercises to reduce anxiety in the moment.", resourceUrl: "https://www.healthline.com/health/breathing-exercises", resourceLabel: "Breathing Exercises Guide" },
+      { id: "anxiety-4", title: "Cognitive Restructuring", duration: "25 min", description: "Challenge and reframe anxious thoughts using CBT techniques.", resourceUrl: "https://www.apa.org/topics/psychotherapy/understanding", resourceLabel: "APA: Types of Therapy" },
+      { id: "anxiety-5", title: "Building a Coping Toolkit", duration: "20 min", description: "Create your personalized set of strategies for managing anxiety.", resourceUrl: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself", resourceLabel: "Self-Help Workbooks" },
     ],
   },
   {
@@ -60,12 +62,12 @@ const courses: Course[] = [
     rating: 4.9,
     color: "from-indigo-500/20 to-purple-500/20",
     lessons: [
-      { id: "depression-1", title: "Understanding Depression", duration: "20 min", description: "Learn what depression is and isn't, and how it differs from sadness." },
-      { id: "depression-2", title: "The Mind-Body Connection", duration: "18 min", description: "Explore how physical health impacts mental well-being." },
-      { id: "depression-3", title: "Behavioral Activation", duration: "22 min", description: "Small steps to break the cycle of inactivity and low mood." },
-      { id: "depression-4", title: "Challenging Negative Thoughts", duration: "25 min", description: "Identify and change thought patterns that fuel depression." },
-      { id: "depression-5", title: "Building Social Connections", duration: "20 min", description: "Overcome isolation and rebuild meaningful relationships." },
-      { id: "depression-6", title: "Creating a Wellness Plan", duration: "15 min", description: "Design your personal roadmap to sustained mental wellness." },
+      { id: "depression-1", title: "Understanding Depression", duration: "20 min", description: "Learn what depression is and isn't, and how it differs from sadness.", resourceUrl: "https://www.who.int/news-room/fact-sheets/detail/depression", resourceLabel: "WHO: Depression Facts" },
+      { id: "depression-2", title: "The Mind-Body Connection", duration: "18 min", description: "Explore how physical health impacts mental well-being.", resourceUrl: "https://www.sleepfoundation.org/sleep-hygiene", resourceLabel: "Sleep & Mental Health" },
+      { id: "depression-3", title: "Behavioral Activation", duration: "22 min", description: "Small steps to break the cycle of inactivity and low mood.", resourceUrl: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself", resourceLabel: "Self-Help Workbooks" },
+      { id: "depression-4", title: "Challenging Negative Thoughts", duration: "25 min", description: "Identify and change thought patterns that fuel depression.", resourceUrl: "https://www.apa.org/topics/psychotherapy/understanding", resourceLabel: "Cognitive Therapy Guide" },
+      { id: "depression-5", title: "Building Social Connections", duration: "20 min", description: "Overcome isolation and rebuild meaningful relationships.", resourceUrl: "https://www.nami.org/Support-Education/Support-Groups", resourceLabel: "NAMI Support Groups" },
+      { id: "depression-6", title: "Creating a Wellness Plan", duration: "15 min", description: "Design your personal roadmap to sustained mental wellness.", resourceUrl: "https://www.mhanational.org/finding-therapy", resourceLabel: "Finding Professional Help" },
     ],
   },
   {
@@ -79,10 +81,10 @@ const courses: Course[] = [
     rating: 4.7,
     color: "from-green-500/20 to-emerald-500/20",
     lessons: [
-      { id: "stress-1", title: "The Science of Stress", duration: "15 min", description: "Understand how stress affects your body and mind." },
-      { id: "stress-2", title: "Time Management Essentials", duration: "20 min", description: "Organize your time to reduce overwhelm and increase productivity." },
-      { id: "stress-3", title: "Relaxation Techniques", duration: "18 min", description: "Progressive muscle relaxation and other calming practices." },
-      { id: "stress-4", title: "Setting Healthy Boundaries", duration: "22 min", description: "Learn to say no and protect your mental energy." },
+      { id: "stress-1", title: "The Science of Stress", duration: "15 min", description: "Understand how stress affects your body and mind.", resourceUrl: "https://www.apa.org/topics/anger/control", resourceLabel: "APA: Stress Response" },
+      { id: "stress-2", title: "Time Management Essentials", duration: "20 min", description: "Organize your time to reduce overwhelm and increase productivity.", resourceUrl: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself", resourceLabel: "Self-Help Resources" },
+      { id: "stress-3", title: "Relaxation Techniques", duration: "18 min", description: "Progressive muscle relaxation and other calming practices.", resourceUrl: "https://www.headspace.com/meditation/techniques", resourceLabel: "Meditation Techniques" },
+      { id: "stress-4", title: "Setting Healthy Boundaries", duration: "22 min", description: "Learn to say no and protect your mental energy.", resourceUrl: "https://www.helpguide.org/articles/relationships-communication/anger-management.htm", resourceLabel: "Healthy Communication" },
     ],
   },
   {
@@ -96,11 +98,11 @@ const courses: Course[] = [
     rating: 4.6,
     color: "from-orange-500/20 to-red-500/20",
     lessons: [
-      { id: "anger-1", title: "Understanding Anger", duration: "18 min", description: "Explore what anger is and why we experience it." },
-      { id: "anger-2", title: "Recognizing Warning Signs", duration: "15 min", description: "Identify physical and emotional cues before anger escalates." },
-      { id: "anger-3", title: "Cooling Down Strategies", duration: "20 min", description: "Techniques to de-escalate anger in the moment." },
-      { id: "anger-4", title: "Assertive Communication", duration: "25 min", description: "Express your needs without aggression or passivity." },
-      { id: "anger-5", title: "Long-term Anger Prevention", duration: "22 min", description: "Build habits that reduce chronic anger and frustration." },
+      { id: "anger-1", title: "Understanding Anger", duration: "18 min", description: "Explore what anger is and why we experience it.", resourceUrl: "https://www.apa.org/topics/anger/control", resourceLabel: "APA: Anger Control" },
+      { id: "anger-2", title: "Recognizing Warning Signs", duration: "15 min", description: "Identify physical and emotional cues before anger escalates.", resourceUrl: "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/anger-management/art-20045434", resourceLabel: "Mayo Clinic: Anger Signs" },
+      { id: "anger-3", title: "Cooling Down Strategies", duration: "20 min", description: "Techniques to de-escalate anger in the moment.", resourceUrl: "https://www.helpguide.org/articles/relationships-communication/anger-management.htm", resourceLabel: "HelpGuide: Cooling Down" },
+      { id: "anger-4", title: "Assertive Communication", duration: "25 min", description: "Express your needs without aggression or passivity.", resourceUrl: "https://www.mind.org.uk/information-support/types-of-mental-health-problems/anger/managing-outbursts/", resourceLabel: "Mind: Communication Skills" },
+      { id: "anger-5", title: "Long-term Anger Prevention", duration: "22 min", description: "Build habits that reduce chronic anger and frustration.", resourceUrl: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself", resourceLabel: "Self-Help Workbooks" },
     ],
   },
   {
@@ -114,10 +116,10 @@ const courses: Course[] = [
     rating: 4.8,
     color: "from-violet-500/20 to-indigo-500/20",
     lessons: [
-      { id: "sleep-1", title: "Sleep Science 101", duration: "15 min", description: "Learn about sleep cycles and why they matter." },
-      { id: "sleep-2", title: "Creating a Sleep Sanctuary", duration: "12 min", description: "Optimize your bedroom environment for better sleep." },
-      { id: "sleep-3", title: "Wind-Down Routines", duration: "18 min", description: "Establish pre-sleep habits that signal your body it's time to rest." },
-      { id: "sleep-4", title: "Managing Sleep Disruptors", duration: "20 min", description: "Address common issues like racing thoughts and anxiety at night." },
+      { id: "sleep-1", title: "Sleep Science 101", duration: "15 min", description: "Learn about sleep cycles and why they matter.", resourceUrl: "https://www.sleepfoundation.org/sleep-hygiene", resourceLabel: "Sleep Foundation: Sleep Science" },
+      { id: "sleep-2", title: "Creating a Sleep Sanctuary", duration: "12 min", description: "Optimize your bedroom environment for better sleep.", resourceUrl: "https://www.sleepfoundation.org/sleep-hygiene", resourceLabel: "Sleep Hygiene Tips" },
+      { id: "sleep-3", title: "Wind-Down Routines", duration: "18 min", description: "Establish pre-sleep habits that signal your body it's time to rest.", resourceUrl: "https://www.headspace.com/meditation/techniques", resourceLabel: "Relaxation Meditation" },
+      { id: "sleep-4", title: "Managing Sleep Disruptors", duration: "20 min", description: "Address common issues like racing thoughts and anxiety at night.", resourceUrl: "https://www.healthline.com/health/breathing-exercises", resourceLabel: "Calming Breathing Exercises" },
     ],
   },
   {
@@ -131,11 +133,11 @@ const courses: Course[] = [
     rating: 4.7,
     color: "from-yellow-500/20 to-amber-500/20",
     lessons: [
-      { id: "esteem-1", title: "What is Self-Esteem?", duration: "15 min", description: "Understand the foundations of healthy self-worth." },
-      { id: "esteem-2", title: "Challenging Your Inner Critic", duration: "22 min", description: "Recognize and reframe negative self-talk." },
-      { id: "esteem-3", title: "Celebrating Your Strengths", duration: "18 min", description: "Identify and appreciate your unique qualities." },
-      { id: "esteem-4", title: "Setting Achievable Goals", duration: "20 min", description: "Build confidence through small wins and progress." },
-      { id: "esteem-5", title: "Self-Compassion Practice", duration: "25 min", description: "Treat yourself with the kindness you deserve." },
+      { id: "esteem-1", title: "What is Self-Esteem?", duration: "15 min", description: "Understand the foundations of healthy self-worth.", resourceUrl: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself", resourceLabel: "Self-Esteem Workbook" },
+      { id: "esteem-2", title: "Challenging Your Inner Critic", duration: "22 min", description: "Recognize and reframe negative self-talk.", resourceUrl: "https://www.apa.org/topics/psychotherapy/understanding", resourceLabel: "CBT Techniques" },
+      { id: "esteem-3", title: "Celebrating Your Strengths", duration: "18 min", description: "Identify and appreciate your unique qualities.", resourceUrl: "https://positivepsychology.com/journaling-for-mindfulness/", resourceLabel: "Journaling for Self-Discovery" },
+      { id: "esteem-4", title: "Setting Achievable Goals", duration: "20 min", description: "Build confidence through small wins and progress.", resourceUrl: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself", resourceLabel: "Goal-Setting Workbook" },
+      { id: "esteem-5", title: "Self-Compassion Practice", duration: "25 min", description: "Treat yourself with the kindness you deserve.", resourceUrl: "https://www.headspace.com/meditation/techniques", resourceLabel: "Self-Compassion Meditation" },
     ],
   },
   {
@@ -149,10 +151,10 @@ const courses: Course[] = [
     rating: 4.8,
     color: "from-pink-500/20 to-rose-500/20",
     lessons: [
-      { id: "rel-1", title: "Communication Fundamentals", duration: "20 min", description: "Learn active listening and clear expression." },
-      { id: "rel-2", title: "Understanding Attachment Styles", duration: "25 min", description: "How early experiences shape your relationships." },
-      { id: "rel-3", title: "Conflict Resolution", duration: "22 min", description: "Navigate disagreements constructively." },
-      { id: "rel-4", title: "Building Trust and Intimacy", duration: "20 min", description: "Deepen connections through vulnerability and consistency." },
+      { id: "rel-1", title: "Communication Fundamentals", duration: "20 min", description: "Learn active listening and clear expression.", resourceUrl: "https://www.helpguide.org/articles/relationships-communication/anger-management.htm", resourceLabel: "Effective Communication" },
+      { id: "rel-2", title: "Understanding Attachment Styles", duration: "25 min", description: "How early experiences shape your relationships.", resourceUrl: "https://www.apa.org/topics/psychotherapy/understanding", resourceLabel: "Understanding Attachment" },
+      { id: "rel-3", title: "Conflict Resolution", duration: "22 min", description: "Navigate disagreements constructively.", resourceUrl: "https://www.mind.org.uk/information-support/types-of-mental-health-problems/anger/managing-outbursts/", resourceLabel: "Conflict Management" },
+      { id: "rel-4", title: "Building Trust and Intimacy", duration: "20 min", description: "Deepen connections through vulnerability and consistency.", resourceUrl: "https://www.nami.org/Support-Education/Support-Groups", resourceLabel: "Support Communities" },
     ],
   },
   {
@@ -166,11 +168,11 @@ const courses: Course[] = [
     rating: 4.9,
     color: "from-teal-500/20 to-cyan-500/20",
     lessons: [
-      { id: "mind-1", title: "Introduction to Mindfulness", duration: "12 min", description: "What mindfulness is and its benefits for mental health." },
-      { id: "mind-2", title: "Basic Meditation Practice", duration: "15 min", description: "Learn foundational sitting meditation techniques." },
-      { id: "mind-3", title: "Mindful Breathing", duration: "10 min", description: "Use breath as an anchor for present-moment awareness." },
-      { id: "mind-4", title: "Body Scan Meditation", duration: "20 min", description: "Release tension and connect with physical sensations." },
-      { id: "mind-5", title: "Mindfulness in Daily Life", duration: "18 min", description: "Bring awareness to everyday activities." },
+      { id: "mind-1", title: "Introduction to Mindfulness", duration: "12 min", description: "What mindfulness is and its benefits for mental health.", resourceUrl: "https://www.headspace.com/meditation/techniques", resourceLabel: "Headspace: Mindfulness Intro" },
+      { id: "mind-2", title: "Basic Meditation Practice", duration: "15 min", description: "Learn foundational sitting meditation techniques.", resourceUrl: "https://www.headspace.com/meditation/techniques", resourceLabel: "Meditation Techniques" },
+      { id: "mind-3", title: "Mindful Breathing", duration: "10 min", description: "Use breath as an anchor for present-moment awareness.", resourceUrl: "https://www.healthline.com/health/breathing-exercises", resourceLabel: "Breathing Exercises" },
+      { id: "mind-4", title: "Body Scan Meditation", duration: "20 min", description: "Release tension and connect with physical sensations.", resourceUrl: "https://www.headspace.com/meditation/techniques", resourceLabel: "Body Scan Guide" },
+      { id: "mind-5", title: "Mindfulness in Daily Life", duration: "18 min", description: "Bring awareness to everyday activities.", resourceUrl: "https://positivepsychology.com/journaling-for-mindfulness/", resourceLabel: "Mindful Journaling" },
     ],
   },
 ];
@@ -340,7 +342,7 @@ const Courses = () => {
                         )}
                       </button>
                       <div className="flex-1">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between flex-wrap gap-2">
                           <h3 className={`font-medium ${isCompleted ? "line-through text-muted-foreground" : ""}`}>
                             Lesson {index + 1}: {lesson.title}
                           </h3>
@@ -352,6 +354,18 @@ const Courses = () => {
                         <p className="text-sm text-muted-foreground mt-1">
                           {lesson.description}
                         </p>
+                        {lesson.resourceUrl && (
+                          <a
+                            href={lesson.resourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 mt-2 text-sm text-primary hover:text-primary/80 hover:underline transition-colors"
+                          >
+                            <BookOpen className="w-3.5 h-3.5" />
+                            {lesson.resourceLabel || "Related Resource"}
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        )}
                       </div>
                       <Button size="sm" variant="ghost">
                         <Play className="w-4 h-4" />
