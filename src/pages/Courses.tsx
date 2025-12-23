@@ -8,8 +8,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, ExternalLink, X } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, ExternalLink, Award } from "lucide-react";
 import { toast } from "sonner";
+import CourseCertificate from "@/components/CourseCertificate";
 
 interface Lesson {
   id: string;
@@ -315,10 +316,31 @@ const Courses = () => {
               </div>
               <Progress value={progress} className="h-3" />
               {progress === 100 && (
-                <p className="text-sm text-green-600 mt-2 flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4" />
-                  Course completed! Great job!
-                </p>
+                <div className="mt-4 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950/30 dark:to-amber-950/30 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center">
+                        <Award className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-yellow-800 dark:text-yellow-200">
+                          🎉 Congratulations!
+                        </p>
+                        <p className="text-sm text-yellow-700 dark:text-yellow-300">
+                          You've completed this course!
+                        </p>
+                      </div>
+                    </div>
+                    <div className="sm:ml-auto">
+                      <CourseCertificate
+                        courseName={selectedCourse.title}
+                        courseIcon={selectedCourse.icon}
+                        userName={user?.email?.split("@")[0] || "Learner"}
+                        completionDate={new Date()}
+                      />
+                    </div>
+                  </div>
+                </div>
               )}
             </CardContent>
           </Card>
