@@ -8,9 +8,11 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, ExternalLink, Award } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, ExternalLink, Award, ClipboardList } from "lucide-react";
 import { toast } from "sonner";
 import CourseCertificate from "@/components/CourseCertificate";
+import CourseQuiz from "@/components/CourseQuiz";
+import { courseQuizzes } from "@/data/courseQuizzes";
 
 interface Lesson {
   id: string;
@@ -407,6 +409,43 @@ const Courses = () => {
               );
             })}
           </div>
+
+          {/* Course Quiz Section */}
+          {(() => {
+            const quiz = courseQuizzes.find(q => q.courseId === selectedCourse.id);
+            if (!quiz) return null;
+            
+            return (
+              <Card className="mt-8 border-2 border-dashed border-primary/30 bg-primary/5">
+                <CardContent className="p-6">
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shrink-0">
+                      <ClipboardList className="w-7 h-7 text-primary-foreground" />
+                    </div>
+                    <div className="flex-1 text-center sm:text-left">
+                      <h3 className="font-semibold text-lg">Course Assessment</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Test your knowledge with a {quiz.questions.length}-question quiz to reinforce what you've learned.
+                      </p>
+                    </div>
+                    <CourseQuiz 
+                      quiz={quiz} 
+                      courseIcon={selectedCourse.icon}
+                      onComplete={(score, total) => {
+                        if (score === total) {
+                          toast.success("Perfect score! You've mastered this material! 🌟");
+                        } else if (score >= total * 0.8) {
+                          toast.success("Excellent work! You have a strong understanding! 🎉");
+                        } else {
+                          toast.info("Good effort! Review the lessons and try again. 📚");
+                        }
+                      }}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })()}
 
           {/* Video Player Dialog */}
           <Dialog open={!!videoLesson} onOpenChange={(open) => !open && setVideoLesson(null)}>
