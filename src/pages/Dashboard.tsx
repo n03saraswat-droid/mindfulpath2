@@ -39,6 +39,10 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (!loading && !user) {
       navigate("/auth");
     }
