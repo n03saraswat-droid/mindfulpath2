@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import MoodAnalytics from "@/components/MoodAnalytics";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -58,7 +59,7 @@ const Dashboard = () => {
     enabled: !!user,
   });
 
-  // Fetch mood entries
+  // Fetch mood entries (fetch more for analytics)
   const { data: moodEntries = [] } = useQuery({
     queryKey: ["mood-entries", user?.id],
     queryFn: async () => {
@@ -67,7 +68,7 @@ const Dashboard = () => {
         .select("*")
         .eq("user_id", user!.id)
         .order("logged_at", { ascending: false })
-        .limit(7);
+        .limit(60);
       if (error) throw error;
       return data;
     },
@@ -223,6 +224,11 @@ const Dashboard = () => {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Mood Analytics Section */}
+        <div className="grid lg:grid-cols-2 gap-6 mb-6">
+          <MoodAnalytics entries={moodEntries} />
         </div>
 
         {/* Main Content Grid */}
