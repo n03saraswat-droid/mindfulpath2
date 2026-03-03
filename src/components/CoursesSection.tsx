@@ -3,6 +3,7 @@ import { BookOpen, Clock, Users, ChevronRight, Brain, Heart, Frown, Zap, Moon, A
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const courses = [
   {
@@ -101,7 +102,7 @@ const CoursesSection = () => {
   return (
     <section id="courses" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <ScrollReveal className="text-center mb-12">
           <Badge variant="secondary" className="mb-4">
             <BookOpen className="w-3 h-3 mr-1" />
             Learning Courses
@@ -112,13 +113,13 @@ const CoursesSection = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Self-paced courses designed by mental health professionals to help you understand and manage various mental health challenges.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {courses.map((course) => (
+          {courses.map((course, index) => (
+            <ScrollReveal key={course.id} delay={index * 80} variant="scale">
             <Card 
-              key={course.id} 
-              className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/50"
+              className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/50 h-full"
             >
               <CardHeader className="pb-3">
                 <div className={`w-12 h-12 rounded-lg ${course.bgColor} flex items-center justify-center mb-3`}>
@@ -158,6 +159,7 @@ const CoursesSection = () => {
                 </div>
               </CardContent>
             </Card>
+            </ScrollReveal>
           ))}
         </div>
 

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
+import ScrollReveal from "@/components/ScrollReveal";
 
 type MeditationType = "breathing" | "body-scan" | "mindfulness" | "sleep";
 type AmbientSound = "rain" | "ocean" | "forest" | "wind" | "none";
@@ -227,14 +228,14 @@ const MeditationSection = () => {
   return (
     <section id="meditation" className="py-24 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <ScrollReveal className="text-center mb-16">
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
             Guided Meditation
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Take a moment to pause, breathe, and reconnect with yourself through our guided exercises.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Meditation Selection */}
