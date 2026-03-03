@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { BookOpen, Users, Brain, Heart, Shield, Flame, ExternalLink, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const resources = [
   {
@@ -82,21 +83,20 @@ const ResourcesSection = () => {
   return (
     <section id="resources" className="py-24 bg-secondary/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <ScrollReveal className="text-center mb-16">
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
             Mental Health Resources
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Explore our curated collection of resources designed to support your mental health journey.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {resources.map((resource, index) => (
+            <ScrollReveal key={resource.title} delay={index * 100} variant="up">
             <Card
-              key={resource.title}
-              className="bg-card border-border/50 hover:shadow-card transition-all duration-300 hover:-translate-y-1 animate-fade-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="bg-card border-border/50 hover:shadow-card transition-all duration-300 hover:-translate-y-1 h-full"
             >
               <CardHeader>
                 <div className={`w-12 h-12 rounded-xl ${resource.color} flex items-center justify-center mb-4`}>
@@ -124,6 +124,7 @@ const ResourcesSection = () => {
                 </ul>
               </CardContent>
             </Card>
+            </ScrollReveal>
           ))}
         </div>
 

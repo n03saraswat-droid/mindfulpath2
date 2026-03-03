@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
+import ScrollReveal from "@/components/ScrollReveal";
 
 type Message = {
   role: "user" | "assistant";
@@ -144,14 +145,14 @@ const ChatSection = () => {
   return (
     <section id="chat" className="py-24 bg-secondary/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <ScrollReveal className="text-center mb-12">
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
             Talk to MindfulAI
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Our compassionate AI companion is here to listen, support, and guide you. Share what's on your mind.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="max-w-3xl mx-auto">
           <div className="bg-card rounded-2xl shadow-card border border-border/50 overflow-hidden">

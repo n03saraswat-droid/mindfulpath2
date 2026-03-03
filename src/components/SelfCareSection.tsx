@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Wind, Leaf, Moon, Sun, Coffee, Dumbbell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const breathingExercise = {
   inhale: 4,
@@ -88,21 +89,20 @@ const SelfCareSection = () => {
   return (
     <section id="self-care" className="py-24 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <ScrollReveal className="text-center mb-16">
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
             Self-Care Practices
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Small daily practices can make a big difference in your mental well-being.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {selfCareTips.map((tip, index) => (
+            <ScrollReveal key={tip.title} delay={index * 80} variant="up">
             <Card
-              key={tip.title}
-              className="bg-card border-border/50 hover:shadow-card transition-all duration-300 animate-fade-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="bg-card border-border/50 hover:shadow-card transition-all duration-300 h-full"
             >
               <CardHeader>
                 <div className={`w-12 h-12 rounded-xl ${tip.color} flex items-center justify-center mb-4`}>
@@ -114,10 +114,12 @@ const SelfCareSection = () => {
                 <CardDescription className="text-base">{tip.description}</CardDescription>
               </CardContent>
             </Card>
+            </ScrollReveal>
           ))}
         </div>
 
         {/* Breathing Exercise */}
+        <ScrollReveal variant="scale">
         <div className="max-w-2xl mx-auto">
           <Card className="bg-gradient-to-br from-primary/5 to-serenity/20 border-primary/20">
             <CardHeader className="text-center">
@@ -175,6 +177,7 @@ const SelfCareSection = () => {
             </CardContent>
           </Card>
         </div>
+        </ScrollReveal>
       </div>
     </section>
   );
