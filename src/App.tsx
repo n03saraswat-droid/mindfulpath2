@@ -5,13 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ScrollToTop from "@/components/ScrollToTop";
-import Index from "./pages/Index";
+import MainApp from "./pages/MainApp";
 import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
-import MoodTracker from "./pages/MoodTracker";
-import GratitudePractice from "./pages/GratitudePractice";
-import Courses from "./pages/Courses";
-import Resources from "./pages/Resources";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,13 +20,8 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<MainApp />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/mood-tracker" element={<MoodTracker />} />
-            <Route path="/gratitude" element={<GratitudePractice />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/resources" element={<Resources />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

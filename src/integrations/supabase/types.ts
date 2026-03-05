@@ -14,6 +14,68 @@ export type Database = {
   }
   public: {
     Tables: {
+      community_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_posts: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          id: string
+          likes_count: number
+          title: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          content: string
+          created_at?: string
+          id?: string
+          likes_count?: number
+          title: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          likes_count?: number
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       course_progress: {
         Row: {
           completed_at: string
@@ -89,6 +151,35 @@ export type Database = {
         }
         Relationships: []
       }
+      post_likes: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -134,6 +225,87 @@ export type Database = {
           resource_id?: string
           resource_item_label?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_xp: {
+        Row: {
+          id: string
+          last_activity_date: string | null
+          level: number
+          longest_streak: number
+          streak_days: number
+          updated_at: string
+          user_id: string
+          xp_total: number
+        }
+        Insert: {
+          id?: string
+          last_activity_date?: string | null
+          level?: number
+          longest_streak?: number
+          streak_days?: number
+          updated_at?: string
+          user_id: string
+          xp_total?: number
+        }
+        Update: {
+          id?: string
+          last_activity_date?: string | null
+          level?: number
+          longest_streak?: number
+          streak_days?: number
+          updated_at?: string
+          user_id?: string
+          xp_total?: number
+        }
+        Relationships: []
+      }
+      xp_events: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_type: string
+          id: string
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_type: string
+          id?: string
+          user_id: string
+          xp_earned: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          user_id?: string
+          xp_earned?: number
         }
         Relationships: []
       }
