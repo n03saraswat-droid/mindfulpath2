@@ -37,11 +37,11 @@ const HeroSection = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-up" style={{ animationDelay: "0.3s" }}>
             <Button
-              onClick={scrollToChat}
+              onClick={() => navigate("/auth")}
               size="lg"
               className="gradient-calm text-primary-foreground hover:opacity-90 transition-all shadow-soft px-8 py-6 text-lg"
             >
-              Start a Conversation
+              Get Started Free
             </Button>
             <Button
               variant="outline"

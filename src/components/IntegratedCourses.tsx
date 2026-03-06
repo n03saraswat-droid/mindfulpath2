@@ -1,5 +1,3 @@
-// Re-export the existing courses page content as an integrated component
-// This wraps the courses page in a format suitable for the sidebar layout
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,13 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, Award, ClipboardList } from "lucide-react";
+import { BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, Award } from "lucide-react";
 import { toast } from "sonner";
 import CourseCertificate from "@/components/CourseCertificate";
 import CourseQuiz from "@/components/CourseQuiz";
 import { courseQuizzes } from "@/data/courseQuizzes";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useXPReward } from "@/hooks/useXPReward";
 
 interface Lesson {
   id: string;
@@ -67,6 +66,30 @@ const courses: Course[] = [
       { id: "mind-3", title: "Mindful Breathing", duration: "10 min", description: "Breath as anchor.", videoId: "tEmt1Znux58" },
     ],
   },
+  {
+    id: "stress", title: "Stress Management", description: "Master techniques to handle daily stress", fullDescription: "Learn proven stress reduction strategies.", icon: "🌊", duration: "3 weeks", students: "11.3k", rating: 4.7, color: "from-emerald-500/20 to-green-500/20",
+    lessons: [
+      { id: "stress-1", title: "Understanding Stress", duration: "15 min", description: "How stress affects body and mind.", videoId: "hnpQrMqDoqE" },
+      { id: "stress-2", title: "Progressive Muscle Relaxation", duration: "20 min", description: "Release physical tension.", videoId: "1nZEdqcGVzo" },
+      { id: "stress-3", title: "Time Management", duration: "18 min", description: "Organize to reduce overwhelm.", videoId: "iONDebHX9qk" },
+    ],
+  },
+  {
+    id: "anger", title: "Anger Management", description: "Channel anger constructively", fullDescription: "Transform anger into positive action.", icon: "🔥", duration: "4 weeks", students: "7.8k", rating: 4.6, color: "from-red-500/20 to-orange-500/20",
+    lessons: [
+      { id: "anger-1", title: "The Nature of Anger", duration: "15 min", description: "Understanding anger as an emotion.", videoId: "BsVq5R_F6RA" },
+      { id: "anger-2", title: "Trigger Identification", duration: "20 min", description: "Know your anger triggers.", videoId: "phZAoI8T0Ck" },
+      { id: "anger-3", title: "De-escalation Skills", duration: "18 min", description: "Calm down in the moment.", videoId: "k5RH3BdXDOY" },
+    ],
+  },
+  {
+    id: "social-anxiety", title: "Social Anxiety", description: "Build confidence in social settings", fullDescription: "Overcome social fears step by step.", icon: "👥", duration: "5 weeks", students: "8.1k", rating: 4.8, color: "from-violet-500/20 to-pink-500/20",
+    lessons: [
+      { id: "social-1", title: "What is Social Anxiety?", duration: "15 min", description: "Understanding social fears.", videoId: "8fFsBAnuObA" },
+      { id: "social-2", title: "Challenging Negative Thoughts", duration: "20 min", description: "CBT for social anxiety.", videoId: "mOw5FxhNUQY" },
+      { id: "social-3", title: "Exposure Techniques", duration: "22 min", description: "Gradual exposure practice.", videoId: "oM3A9KaH4hg" },
+    ],
+  },
 ];
 
 const IntegratedCourses = () => {
@@ -74,6 +97,7 @@ const IntegratedCourses = () => {
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [videoLesson, setVideoLesson] = useState<Lesson | null>(null);
+  const { awardXP } = useXPReward();
 
   useEffect(() => { if (user) fetchProgress(); }, [user]);
 
@@ -94,6 +118,17 @@ const IntegratedCourses = () => {
         await supabase.from("course_progress").insert({ user_id: user.id, course_id: courseId, lesson_id: lessonId });
         setCompletedLessons(prev => new Set([...prev, lessonId]));
         toast.success("Lesson completed! 🎉");
+        await awardXP(20, "course_lesson", `Completed lesson: ${lessonId}`);
+
+        // Check if full course is done
+        const course = courses.find(c => c.id === courseId);
+        if (course) {
+          const allDone = course.lessons.every(l => l.id === lessonId || completedLessons.has(l.id));
+          if (allDone) {
+            await awardXP(50, "course_complete", `Completed course: ${course.title}`);
+            toast.success("🏆 Course completed! +50 bonus XP");
+          }
+        }
       }
     } catch { toast.error("Failed to update"); }
   };
@@ -110,7 +145,6 @@ const IntegratedCourses = () => {
         <p className="text-muted-foreground">Learn evidence-based mental health techniques</p>
       </motion.div>
 
-      {/* Video Dialog */}
       <Dialog open={!!videoLesson} onOpenChange={() => setVideoLesson(null)}>
         <DialogContent className="max-w-3xl glass-card">
           <DialogHeader><DialogTitle className="font-serif">{videoLesson?.title}</DialogTitle></DialogHeader>
@@ -122,7 +156,6 @@ const IntegratedCourses = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Course Detail */}
       {selectedCourse ? (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
           <Button variant="ghost" onClick={() => setSelectedCourse(null)} className="text-muted-foreground">← Back</Button>
@@ -147,7 +180,7 @@ const IntegratedCourses = () => {
             </CardHeader>
             <CardContent>
               <Accordion type="single" collapsible>
-                {selectedCourse.lessons.map((lesson, i) => (
+                {selectedCourse.lessons.map((lesson) => (
                   <AccordionItem key={lesson.id} value={lesson.id}>
                     <AccordionTrigger className="hover:no-underline">
                       <div className="flex items-center gap-3 text-left">

@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
+import { useXPReward } from "@/hooks/useXPReward";
 
 interface GratitudeEntry {
   id: string;
@@ -32,6 +33,7 @@ const IntegratedGratitude = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { awardXP } = useXPReward();
 
   useEffect(() => { setCurrentPrompt(prompts[Math.floor(Math.random() * prompts.length)]); }, []);
   useEffect(() => { if (user) fetchEntries(); }, [user]);
@@ -54,6 +56,7 @@ const IntegratedGratitude = () => {
       toast({ title: "Gratitude Added ✨" });
       setNewEntry("");
       setCurrentPrompt(prompts[Math.floor(Math.random() * prompts.length)]);
+      await awardXP(5, "gratitude", "Added gratitude entry");
       fetchEntries();
     } catch { toast({ variant: "destructive", title: "Error" }); }
     finally { setIsLoading(false); }
