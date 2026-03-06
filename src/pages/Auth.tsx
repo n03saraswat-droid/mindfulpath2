@@ -26,7 +26,7 @@ const Auth = () => {
 
   // Redirect if already logged in
   if (user) {
-    navigate("/mood-tracker");
+    navigate("/app");
     return null;
   }
 
