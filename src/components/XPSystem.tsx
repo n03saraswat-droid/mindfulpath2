@@ -1,29 +1,34 @@
-import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Trophy, Flame, Star, Award, Zap, Target, Heart, BookOpen, MessageCircle, Sun } from "lucide-react";
+import { Trophy, Flame, Star, Award, Zap, Target, Heart, BookOpen, MessageCircle, Sun, Medal } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const BADGES = [
-  { id: "first-mood", label: "First Mood", icon: "😊", description: "Log your first mood", xpRequired: 0, condition: "mood_log" },
-  { id: "streak-3", label: "3-Day Streak", icon: "🔥", description: "3 day activity streak", xpRequired: 0, condition: "streak_3" },
-  { id: "streak-7", label: "Week Warrior", icon: "⚡", description: "7 day activity streak", xpRequired: 0, condition: "streak_7" },
-  { id: "streak-30", label: "Monthly Master", icon: "🏆", description: "30 day activity streak", xpRequired: 0, condition: "streak_30" },
-  { id: "xp-100", label: "Rising Star", icon: "⭐", description: "Earn 100 XP", xpRequired: 100, condition: "xp" },
-  { id: "xp-500", label: "Dedicated", icon: "💎", description: "Earn 500 XP", xpRequired: 500, condition: "xp" },
-  { id: "xp-1000", label: "Champion", icon: "👑", description: "Earn 1000 XP", xpRequired: 1000, condition: "xp" },
-  { id: "first-gratitude", label: "Grateful Heart", icon: "💗", description: "Write first gratitude", xpRequired: 0, condition: "gratitude" },
-  { id: "first-course", label: "Learner", icon: "📚", description: "Complete first lesson", xpRequired: 0, condition: "course" },
-  { id: "community-post", label: "Connector", icon: "🤝", description: "First community post", xpRequired: 0, condition: "community" },
+  { id: "first-mood", label: "First Mood", icon: "😊", description: "Log your first mood" },
+  { id: "streak-3", label: "3-Day Streak", icon: "🔥", description: "3 day activity streak" },
+  { id: "streak-7", label: "Week Warrior", icon: "⚡", description: "7 day activity streak" },
+  { id: "streak-30", label: "Monthly Master", icon: "🏆", description: "30 day activity streak" },
+  { id: "xp-100", label: "Rising Star", icon: "⭐", description: "Earn 100 XP" },
+  { id: "xp-500", label: "Dedicated", icon: "💎", description: "Earn 500 XP" },
+  { id: "xp-1000", label: "Champion", icon: "👑", description: "Earn 1000 XP" },
+  { id: "first-gratitude", label: "Grateful Heart", icon: "💗", description: "Write first gratitude" },
+  { id: "first-course", label: "Learner", icon: "📚", description: "Complete first lesson" },
+  { id: "community-post", label: "Connector", icon: "🤝", description: "First community post" },
+];
+
+const MEDALS = [
+  { id: "bronze", label: "Bronze Medal", icon: "🥉", description: "Reach Level 3", levelRequired: 3, color: "from-amber-700/30 to-amber-600/20" },
+  { id: "silver", label: "Silver Medal", icon: "🥈", description: "Reach Level 5", levelRequired: 5, color: "from-gray-400/30 to-gray-300/20" },
+  { id: "gold", label: "Gold Medal", icon: "🥇", description: "Reach Level 10", levelRequired: 10, color: "from-yellow-500/30 to-yellow-400/20" },
+  { id: "platinum", label: "Platinum Medal", icon: "💠", description: "Reach Level 20", levelRequired: 20, color: "from-cyan-400/30 to-blue-300/20" },
+  { id: "diamond", label: "Diamond Medal", icon: "💎", description: "Reach Level 50", levelRequired: 50, color: "from-violet-400/30 to-purple-300/20" },
 ];
 
 const XP_PER_LEVEL = 100;
-
 const getLevelFromXP = (xp: number) => Math.floor(xp / XP_PER_LEVEL) + 1;
 const getXPProgress = (xp: number) => (xp % XP_PER_LEVEL);
 
@@ -41,12 +46,7 @@ const XPSystem = () => {
   const { data: userXP } = useQuery({
     queryKey: ["user-xp", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("user_xp")
-        .select("*")
-        .eq("user_id", user!.id)
-        .maybeSingle();
-      if (error) throw error;
+      const { data } = await supabase.from("user_xp").select("*").eq("user_id", user!.id).maybeSingle();
       return data;
     },
     enabled: !!user,
@@ -55,14 +55,8 @@ const XPSystem = () => {
   const { data: xpEvents = [] } = useQuery({
     queryKey: ["xp-events", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("xp_events")
-        .select("*")
-        .eq("user_id", user!.id)
-        .order("created_at", { ascending: false })
-        .limit(20);
-      if (error) throw error;
-      return data;
+      const { data } = await supabase.from("xp_events").select("*").eq("user_id", user!.id).order("created_at", { ascending: false }).limit(20);
+      return data || [];
     },
     enabled: !!user,
   });
@@ -70,12 +64,8 @@ const XPSystem = () => {
   const { data: earnedBadges = [] } = useQuery({
     queryKey: ["user-badges", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("user_badges")
-        .select("*")
-        .eq("user_id", user!.id);
-      if (error) throw error;
-      return data;
+      const { data } = await supabase.from("user_badges").select("*").eq("user_id", user!.id);
+      return data || [];
     },
     enabled: !!user,
   });
@@ -92,8 +82,8 @@ const XPSystem = () => {
       <div className="flex items-center justify-center h-96">
         <Card className="glass-card p-8 text-center max-w-md">
           <Trophy className="w-16 h-16 text-primary mx-auto mb-4" />
-          <h3 className="font-serif text-2xl font-bold text-foreground mb-2">XP System</h3>
-          <p className="text-muted-foreground">Sign in to start earning XP, unlock badges, and climb the leaderboard!</p>
+          <h3 className="font-serif text-2xl font-bold text-foreground mb-2">XP & Medals</h3>
+          <p className="text-muted-foreground">Sign in to start earning XP, unlock badges and medals!</p>
         </Card>
       </div>
     );
@@ -136,42 +126,65 @@ const XPSystem = () => {
 
       {/* Stats Row */}
       <div className="grid grid-cols-3 gap-4">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <Card className="glass-card">
-            <CardContent className="p-4 text-center">
-              <Flame className="w-8 h-8 text-orange-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-foreground">{streak}</p>
-              <p className="text-xs text-muted-foreground">Day Streak</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <Card className="glass-card">
-            <CardContent className="p-4 text-center">
-              <Star className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-foreground">{earnedBadges.length}</p>
-              <p className="text-xs text-muted-foreground">Badges</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <Card className="glass-card">
-            <CardContent className="p-4 text-center">
-              <Zap className="w-8 h-8 text-primary mx-auto mb-2" />
-              <p className="text-2xl font-bold text-foreground">{longestStreak}</p>
-              <p className="text-xs text-muted-foreground">Best Streak</p>
-            </CardContent>
-          </Card>
-        </motion.div>
+        {[
+          { icon: Flame, value: streak, label: "Day Streak", color: "text-orange-500" },
+          { icon: Star, value: earnedBadges.length, label: "Badges", color: "text-yellow-500" },
+          { icon: Zap, value: longestStreak, label: "Best Streak", color: "text-primary" },
+        ].map((stat, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05 }}>
+            <Card className="glass-card">
+              <CardContent className="p-4 text-center">
+                <stat.icon className={`w-8 h-8 ${stat.color} mx-auto mb-2`} />
+                <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                <p className="text-xs text-muted-foreground">{stat.label}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Daily Challenges */}
+      {/* Medals */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
         <Card className="glass-card">
           <CardHeader>
             <CardTitle className="font-serif text-xl flex items-center gap-2">
-              <Target className="w-5 h-5 text-primary" />
-              Daily Challenges
+              <Medal className="w-5 h-5 text-yellow-500" />
+              Medals
+            </CardTitle>
+            <CardDescription>Earn medals by reaching higher levels</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+              {MEDALS.map((medal) => {
+                const earned = level >= medal.levelRequired;
+                return (
+                  <div
+                    key={medal.id}
+                    className={cn(
+                      "flex flex-col items-center gap-2 p-4 rounded-xl text-center transition-all border",
+                      earned
+                        ? `bg-gradient-to-br ${medal.color} border-primary/20 shadow-soft`
+                        : "bg-secondary/30 border-transparent opacity-40 grayscale"
+                    )}
+                  >
+                    <span className="text-3xl">{medal.icon}</span>
+                    <p className="text-xs font-semibold text-foreground">{medal.label}</p>
+                    <p className="text-[10px] text-muted-foreground">{medal.description}</p>
+                    {earned && <Badge variant="secondary" className="text-[9px]">Earned!</Badge>}
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Daily Challenges */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+        <Card className="glass-card">
+          <CardHeader>
+            <CardTitle className="font-serif text-xl flex items-center gap-2">
+              <Target className="w-5 h-5 text-primary" /> Daily Challenges
             </CardTitle>
             <CardDescription>Complete challenges to earn bonus XP</CardDescription>
           </CardHeader>
@@ -188,12 +201,11 @@ const XPSystem = () => {
       </motion.div>
 
       {/* Badges */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
         <Card className="glass-card">
           <CardHeader>
             <CardTitle className="font-serif text-xl flex items-center gap-2">
-              <Award className="w-5 h-5 text-yellow-500" />
-              Badges ({earnedBadges.length}/{BADGES.length})
+              <Award className="w-5 h-5 text-yellow-500" /> Badges ({earnedBadges.length}/{BADGES.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -201,13 +213,7 @@ const XPSystem = () => {
               {BADGES.map((badge) => {
                 const earned = earnedBadgeIds.has(badge.id);
                 return (
-                  <div
-                    key={badge.id}
-                    className={cn(
-                      "flex flex-col items-center gap-1 p-3 rounded-xl text-center transition-all",
-                      earned ? "bg-primary/10 shadow-soft" : "bg-secondary/30 opacity-50 grayscale"
-                    )}
-                  >
+                  <div key={badge.id} className={cn("flex flex-col items-center gap-1 p-3 rounded-xl text-center transition-all", earned ? "bg-primary/10 shadow-soft" : "bg-secondary/30 opacity-50 grayscale")}>
                     <span className="text-2xl">{badge.icon}</span>
                     <p className="text-xs font-medium text-foreground">{badge.label}</p>
                     <p className="text-[10px] text-muted-foreground">{badge.description}</p>
@@ -221,19 +227,15 @@ const XPSystem = () => {
 
       {/* Recent XP Activity */}
       {xpEvents.length > 0 && (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
           <Card className="glass-card">
-            <CardHeader>
-              <CardTitle className="font-serif text-xl">Recent Activity</CardTitle>
-            </CardHeader>
+            <CardHeader><CardTitle className="font-serif text-xl">Recent Activity</CardTitle></CardHeader>
             <CardContent className="space-y-2">
               {xpEvents.slice(0, 10).map((event: any) => (
                 <div key={event.id} className="flex items-center justify-between p-2 rounded-lg bg-secondary/20">
                   <div>
                     <p className="text-sm text-foreground">{event.description || event.event_type}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(event.created_at).toLocaleDateString()}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{new Date(event.created_at).toLocaleDateString()}</p>
                   </div>
                   <Badge className="gradient-calm text-primary-foreground">+{event.xp_earned} XP</Badge>
                 </div>

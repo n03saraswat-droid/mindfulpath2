@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ScrollToTop from "@/components/ScrollToTop";
+import Index from "./pages/Index";
 import MainApp from "./pages/MainApp";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -20,7 +21,8 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
-            <Route path="/" element={<MainApp />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/app" element={<MainApp />} />
             <Route path="/auth" element={<Auth />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

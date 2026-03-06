@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import MoodChart from "@/components/MoodChart";
 import { motion } from "framer-motion";
+import { useXPReward } from "@/hooks/useXPReward";
 
 type MoodType = "great" | "good" | "okay" | "low" | "struggling";
 
@@ -38,6 +39,7 @@ const IntegratedMoodTracker = () => {
   const [isFetching, setIsFetching] = useState(true);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { awardXP } = useXPReward();
 
   useEffect(() => { if (user) fetchEntries(); }, [user]);
 
@@ -60,7 +62,7 @@ const IntegratedMoodTracker = () => {
         setSelectedMood(todayEntryData.mood);
         setNote(todayEntryData.note || "");
       }
-    } catch (error) {
+    } catch {
       toast({ variant: "destructive", title: "Error", description: "Failed to load mood history." });
     } finally {
       setIsFetching(false);
@@ -80,9 +82,10 @@ const IntegratedMoodTracker = () => {
         const { error } = await supabase.from("mood_entries").insert({ user_id: user.id, mood: selectedMood, note: note.trim() || null, logged_at: today });
         if (error) throw error;
         toast({ title: "Mood Logged", description: "Great job tracking your mood! 🎉" });
+        await awardXP(10, "mood_log", "Logged daily mood");
       }
       fetchEntries();
-    } catch (error) {
+    } catch {
       toast({ variant: "destructive", title: "Error", description: "Failed to save mood." });
     } finally {
       setIsLoading(false);
@@ -113,8 +116,7 @@ const IntegratedMoodTracker = () => {
           <Card className="glass-card">
             <CardHeader>
               <CardTitle className="font-serif text-xl flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-primary" />
-                How are you feeling?
+                <Calendar className="w-5 h-5 text-primary" /> How are you feeling?
               </CardTitle>
               <CardDescription>{todayEntry ? "Update your mood" : "Log your mood"}</CardDescription>
             </CardHeader>
@@ -163,7 +165,6 @@ const IntegratedMoodTracker = () => {
         </motion.div>
       </div>
 
-      {/* Recent Entries */}
       {entries.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <Card className="glass-card">

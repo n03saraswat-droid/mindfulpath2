@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import AppSidebar from "@/components/AppSidebar";
 import IntegratedDashboard from "@/components/IntegratedDashboard";
 import IntegratedMoodTracker from "@/components/IntegratedMoodTracker";
@@ -9,13 +10,11 @@ import RealMoodAnalytics from "@/components/RealMoodAnalytics";
 import AudioLibrary from "@/components/AudioLibrary";
 import XPSystem from "@/components/XPSystem";
 import CommunityForum from "@/components/CommunityForum";
-import CoursesSection from "@/components/CoursesSection";
 import ResourcesSection from "@/components/ResourcesSection";
 import SelfCareSection from "@/components/SelfCareSection";
+import MeditationSection from "@/components/MeditationSection";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
 
-// Lazy-load heavy pages
 import { lazy, Suspense } from "react";
 const IntegratedGratitude = lazy(() => import("@/components/IntegratedGratitude"));
 const IntegratedCourses = lazy(() => import("@/components/IntegratedCourses"));
@@ -29,8 +28,26 @@ const LoadingSpinner = () => (
 const MainApp = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/auth", { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   useEffect(() => { window.scrollTo(0, 0); }, [activeSection]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-10 w-10 border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   const renderSection = () => {
     switch (activeSection) {
@@ -48,6 +65,8 @@ const MainApp = () => {
         </Suspense>
       );
       case "resources": return <ResourcesSection />;
+      case "self-care": return <SelfCareSection />;
+      case "meditation": return <MeditationSection />;
       case "gratitude": return (
         <Suspense fallback={<LoadingSpinner />}>
           <IntegratedGratitude />

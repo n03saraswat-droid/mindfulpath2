@@ -1,4 +1,4 @@
-import { Heart, LayoutDashboard, BarChart3, Brain, Music, Trophy, MessageCircle, Users, BookOpen, Bookmark, Sun, Sparkles, LogOut, LogIn, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, LayoutDashboard, BarChart3, Brain, Music, Trophy, MessageCircle, Users, BookOpen, Bookmark, Sun, Sparkles, LogOut, LogIn, ChevronLeft, ChevronRight, Wind, Leaf, Medal } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -18,10 +18,12 @@ const navItems = [
   { id: "analytics", label: "Mood Analytics", icon: Sparkles, group: "main" },
   { id: "chat", label: "AI Chat", icon: MessageCircle, group: "engage" },
   { id: "audio", label: "Audio Library", icon: Music, group: "engage" },
-  { id: "xp", label: "XP System", icon: Trophy, group: "engage" },
+  { id: "xp", label: "XP & Medals", icon: Trophy, group: "engage" },
   { id: "community", label: "Community", icon: Users, group: "engage" },
   { id: "courses", label: "Courses", icon: BookOpen, group: "learn" },
   { id: "resources", label: "Resources", icon: Bookmark, group: "learn" },
+  { id: "self-care", label: "Self Care", icon: Leaf, group: "learn" },
+  { id: "meditation", label: "Meditation", icon: Wind, group: "learn" },
   { id: "gratitude", label: "Gratitude", icon: Sun, group: "learn" },
 ];
 

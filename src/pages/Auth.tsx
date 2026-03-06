@@ -75,7 +75,7 @@ const Auth = () => {
             ? "You've successfully signed in."
             : "Your account has been created. You're now signed in.",
         });
-        navigate("/mood-tracker");
+        navigate("/app");
       }
     } catch (err) {
       toast({
