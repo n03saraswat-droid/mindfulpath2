@@ -250,27 +250,36 @@ const IntegratedCourses = () => {
             </CardHeader>
             <CardContent>
               <Accordion type="single" collapsible>
-                {selectedCourse.lessons.map((lesson) => (
-                  <AccordionItem key={lesson.id} value={lesson.id}>
-                    <AccordionTrigger className="hover:no-underline">
-                      <div className="flex items-center gap-3 text-left">
-                        <button onClick={(e) => { e.stopPropagation(); toggleLesson(selectedCourse.id, lesson.id); }}>
-                          {completedLessons.has(lesson.id) ? <CheckCircle2 className="w-5 h-5 text-primary" /> : <Circle className="w-5 h-5 text-muted-foreground" />}
-                        </button>
-                        <div>
-                          <p className="font-medium text-foreground">{lesson.title}</p>
-                          <p className="text-xs text-muted-foreground">{lesson.duration}</p>
+                {selectedCourse.lessons.map((lesson, idx) => {
+                  const isUnlocked = idx === 0 || completedLessons.has(selectedCourse.lessons[idx - 1].id);
+                  return (
+                    <AccordionItem key={lesson.id} value={lesson.id} disabled={!isUnlocked}>
+                      <AccordionTrigger className={cn("hover:no-underline", !isUnlocked && "opacity-50 cursor-not-allowed")}>
+                        <div className="flex items-center gap-3 text-left">
+                          {!isUnlocked ? (
+                            <span className="w-5 h-5 text-muted-foreground">🔒</span>
+                          ) : (
+                            <button onClick={(e) => { e.stopPropagation(); toggleLesson(selectedCourse.id, lesson.id); }}>
+                              {completedLessons.has(lesson.id) ? <CheckCircle2 className="w-5 h-5 text-primary" /> : <Circle className="w-5 h-5 text-muted-foreground" />}
+                            </button>
+                          )}
+                          <div>
+                            <p className="font-medium text-foreground">{lesson.title}</p>
+                            <p className="text-xs text-muted-foreground">{lesson.duration}{!isUnlocked ? " · Complete previous lesson to unlock" : ""}</p>
+                          </div>
                         </div>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <p className="text-sm text-muted-foreground mb-3">{lesson.description}</p>
-                      <Button size="sm" onClick={() => setVideoLesson(lesson)} className="gradient-calm text-primary-foreground">
-                        <Play className="w-3 h-3 mr-1" /> Watch
-                      </Button>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
+                      </AccordionTrigger>
+                      {isUnlocked && (
+                        <AccordionContent>
+                          <p className="text-sm text-muted-foreground mb-3">{lesson.description}</p>
+                          <Button size="sm" onClick={() => setVideoLesson(lesson)} className="gradient-calm text-primary-foreground">
+                            <Play className="w-3 h-3 mr-1" /> Watch
+                          </Button>
+                        </AccordionContent>
+                      )}
+                    </AccordionItem>
+                  );
+                })}
               </Accordion>
 
               {/* Quiz and Certificate section */}
