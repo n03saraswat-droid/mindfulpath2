@@ -90,6 +90,64 @@ const courses: Course[] = [
       { id: "social-3", title: "Exposure Techniques", duration: "22 min", description: "Gradual exposure practice.", videoId: "oM3A9KaH4hg" },
     ],
   },
+  {
+    id: "self-esteem", title: "Building Self-Esteem", description: "Develop a healthier self-image", fullDescription: "Transform your relationship with yourself through cognitive restructuring and positive psychology.", icon: "💪", duration: "5 weeks", students: "10.4k", rating: 4.7, color: "from-rose-500/20 to-pink-500/20",
+    lessons: [
+      { id: "esteem-1", title: "Understanding Self-Esteem", duration: "15 min", description: "What shapes our self-image.", videoId: "uOrzmFUJtrs" },
+      { id: "esteem-2", title: "Challenging the Inner Critic", duration: "20 min", description: "Identify and reframe negative self-talk.", videoId: "gGuZVuUBeiQ" },
+      { id: "esteem-3", title: "Building Self-Compassion", duration: "18 min", description: "Practice kindness toward yourself.", videoId: "IvtZBUSplr4" },
+      { id: "esteem-4", title: "Setting Healthy Boundaries", duration: "22 min", description: "Learn to say no and protect your energy.", videoId: "rtsHXBb0jEo" },
+    ],
+  },
+  {
+    id: "sleep", title: "Sleep & Mental Health", description: "Improve sleep for better wellness", fullDescription: "Understand the deep connection between sleep and mental health, and build better sleep habits.", icon: "🌙", duration: "2 weeks", students: "13.7k", rating: 4.8, color: "from-indigo-500/20 to-blue-500/20",
+    lessons: [
+      { id: "sleep-1", title: "Sleep & the Brain", duration: "15 min", description: "How sleep affects mental health.", videoId: "gedoSfZvBgE" },
+      { id: "sleep-2", title: "Sleep Hygiene Basics", duration: "18 min", description: "Creating an optimal sleep environment.", videoId: "nm1TxQj9IsQ" },
+      { id: "sleep-3", title: "Relaxation for Sleep", duration: "12 min", description: "Wind-down techniques for better rest.", videoId: "t0kACis_dJE" },
+    ],
+  },
+  {
+    id: "trauma", title: "Trauma & Healing", description: "Understand and process trauma", fullDescription: "Explore gentle, evidence-based approaches to understanding trauma responses and healing.", icon: "🛡️", duration: "8 weeks", students: "6.9k", rating: 4.9, color: "from-teal-500/20 to-emerald-500/20",
+    lessons: [
+      { id: "trauma-1", title: "Understanding Trauma", duration: "20 min", description: "What trauma is and how it affects us.", videoId: "4-tcKYx24aA" },
+      { id: "trauma-2", title: "The Body Keeps the Score", duration: "25 min", description: "How trauma lives in the body.", videoId: "53RX2ESUqpI" },
+      { id: "trauma-3", title: "Grounding Techniques", duration: "15 min", description: "Stay present when triggered.", videoId: "30VMIEmA114" },
+      { id: "trauma-4", title: "Building Safety", duration: "18 min", description: "Creating internal and external safety.", videoId: "nmJDkzDMllc" },
+    ],
+  },
+  {
+    id: "panic", title: "Panic Attack Recovery", description: "Manage and prevent panic attacks", fullDescription: "Learn grounding techniques, breathing exercises, and cognitive strategies for panic attacks.", icon: "⚡", duration: "3 weeks", students: "9.5k", rating: 4.7, color: "from-red-500/20 to-amber-500/20",
+    lessons: [
+      { id: "panic-1", title: "Understanding Panic", duration: "15 min", description: "What happens during a panic attack.", videoId: "S6k6SOtMi9M" },
+      { id: "panic-2", title: "Grounding in the Moment", duration: "12 min", description: "5-4-3-2-1 and other grounding methods.", videoId: "30VMIEmA114" },
+      { id: "panic-3", title: "Preventing Future Attacks", duration: "20 min", description: "Long-term strategies for panic management.", videoId: "tEmt1Znux58" },
+    ],
+  },
+  {
+    id: "ocd", title: "Understanding OCD", description: "Learn about OCD and coping strategies", fullDescription: "Understand obsessive-compulsive patterns and evidence-based approaches to managing them.", icon: "🔄", duration: "5 weeks", students: "5.3k", rating: 4.6, color: "from-cyan-500/20 to-blue-500/20",
+    lessons: [
+      { id: "ocd-1", title: "What is OCD?", duration: "18 min", description: "Understanding obsessions and compulsions.", videoId: "I8Jofzx_8p4" },
+      { id: "ocd-2", title: "ERP Therapy Basics", duration: "22 min", description: "Exposure and Response Prevention explained.", videoId: "laeYq51SYA0" },
+      { id: "ocd-3", title: "Living Well with OCD", duration: "20 min", description: "Daily management strategies.", videoId: "epDVMBNXsXY" },
+    ],
+  },
+  {
+    id: "eating-disorders", title: "Eating Disorders Awareness", description: "Understand and seek help for eating disorders", fullDescription: "Learn about different eating disorders, warning signs, and paths to recovery.", icon: "🍃", duration: "4 weeks", students: "4.8k", rating: 4.8, color: "from-lime-500/20 to-green-500/20",
+    lessons: [
+      { id: "ed-1", title: "Types of Eating Disorders", duration: "20 min", description: "Understanding anorexia, bulimia, BED, and more.", videoId: "3Bax8ijH038" },
+      { id: "ed-2", title: "Body Image & Media", duration: "18 min", description: "How media shapes our relationship with food.", videoId: "H788h4IteyM" },
+      { id: "ed-3", title: "Recovery & Support", duration: "22 min", description: "Steps toward healing and finding help.", videoId: "zMkMFxBNqkM" },
+    ],
+  },
+  {
+    id: "grief", title: "Grief & Loss", description: "Navigate the grieving process", fullDescription: "Understand grief, its stages, and find healthy ways to cope with loss.", icon: "🕊️", duration: "4 weeks", students: "6.2k", rating: 4.9, color: "from-slate-500/20 to-gray-500/20",
+    lessons: [
+      { id: "grief-1", title: "Understanding Grief", duration: "18 min", description: "The many faces of grief and loss.", videoId: "juET61B1P98" },
+      { id: "grief-2", title: "Coping with Loss", duration: "20 min", description: "Healthy strategies for processing grief.", videoId: "kyFSGKNJEuA" },
+      { id: "grief-3", title: "Finding Meaning", duration: "22 min", description: "Moving forward while honoring your loss.", videoId: "khkJkR-ipfw" },
+    ],
+  },
 ];
 
 const IntegratedCourses = () => {
