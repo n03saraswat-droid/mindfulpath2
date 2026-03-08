@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Send, Bot, User, AlertCircle, Loader2, LogIn, Plus, MessageSquare, Trash2, Copy, Check, Clock, Sparkles } from "lucide-react";
+import { Send, Bot, User, AlertCircle, Loader2, LogIn, Plus, MessageSquare, Trash2, Copy, Check, Clock, Sparkles, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -32,6 +32,8 @@ const IntegratedChat = () => {
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [editingConvId, setEditingConvId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
@@ -82,6 +84,14 @@ const IntegratedChat = () => {
   const deleteConversation = async (id: string) => {
     await supabase.from("chat_conversations").delete().eq("id", id);
     if (activeConversationId === id) startNewChat();
+    loadConversations();
+  };
+
+  const renameConversation = async (id: string) => {
+    const trimmed = editingTitle.trim();
+    if (!trimmed) { setEditingConvId(null); return; }
+    await supabase.from("chat_conversations").update({ title: trimmed }).eq("id", id);
+    setEditingConvId(null);
     loadConversations();
   };
 
@@ -256,18 +266,43 @@ const IntegratedChat = () => {
                       activeConversationId === conv.id ? "bg-primary/10 text-primary" : "hover:bg-accent"
                     )}
                   >
-                    <div className="flex-1 min-w-0" onClick={() => loadConversation(conv.id)}>
-                      <p className="text-sm font-medium truncate">{conv.title}</p>
+                    <div className="flex-1 min-w-0" onClick={() => { if (editingConvId !== conv.id) loadConversation(conv.id); }}>
+                      {editingConvId === conv.id ? (
+                        <input
+                          autoFocus
+                          className="text-sm font-medium w-full bg-transparent border-b border-primary outline-none py-0.5"
+                          value={editingTitle}
+                          onChange={(e) => setEditingTitle(e.target.value)}
+                          onBlur={() => renameConversation(conv.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") renameConversation(conv.id);
+                            if (e.key === "Escape") setEditingConvId(null);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      ) : (
+                        <p className="text-sm font-medium truncate">{conv.title}</p>
+                      )}
                       <p className="text-[10px] text-muted-foreground">{formatDate(conv.updated_at)}</p>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
-                      onClick={(e) => { e.stopPropagation(); deleteConversation(conv.id); }}
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </Button>
+                    <div className="flex items-center gap-0.5">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary"
+                        onClick={(e) => { e.stopPropagation(); setEditingConvId(conv.id); setEditingTitle(conv.title); }}
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+                        onClick={(e) => { e.stopPropagation(); deleteConversation(conv.id); }}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
