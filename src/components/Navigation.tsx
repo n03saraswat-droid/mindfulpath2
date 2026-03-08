@@ -34,7 +34,13 @@ const Navigation = () => {
               Home
             </button>
             <button
-              onClick={() => navigate("/resources")}
+              onClick={() => scrollToSection("courses")}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Courses
+            </button>
+            <button
+              onClick={() => scrollToSection("resources")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Resources
@@ -51,48 +57,24 @@ const Navigation = () => {
             >
               AI Support
             </button>
-            <button
-              onClick={() => navigate("/courses")}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Courses
-            </button>
-            {user && (
+            {user ? (
               <Button
-                onClick={() => navigate("/dashboard")}
-                variant="outline"
+                onClick={() => navigate("/app")}
                 size="sm"
-                className="border-primary/30 text-foreground hover:bg-primary/5"
+                className="gradient-calm text-primary-foreground hover:opacity-90 transition-opacity"
               >
                 <LayoutDashboard className="w-4 h-4 mr-1" />
                 Dashboard
               </Button>
+            ) : (
+              <Button
+                onClick={() => navigate("/auth")}
+                size="sm"
+                className="gradient-calm text-primary-foreground hover:opacity-90 transition-opacity"
+              >
+                Get Started
+              </Button>
             )}
-            <Button
-              onClick={() => navigate(user ? "/mood-tracker" : "/auth")}
-              variant="outline"
-              size="sm"
-              className="border-primary/30 text-foreground hover:bg-primary/5"
-            >
-              <BarChart3 className="w-4 h-4 mr-1" />
-              Mood
-            </Button>
-            <Button
-              onClick={() => navigate(user ? "/gratitude" : "/auth")}
-              variant="outline"
-              size="sm"
-              className="border-warmth text-foreground hover:bg-warmth/10"
-            >
-              <Sun className="w-4 h-4 mr-1" />
-              Gratitude
-            </Button>
-            <Button
-              onClick={() => scrollToSection("chat")}
-              size="sm"
-              className="gradient-calm text-primary-foreground hover:opacity-90 transition-opacity"
-            >
-              Talk to MindfulAI
-            </Button>
           </div>
 
           {/* Mobile Menu Button */}
