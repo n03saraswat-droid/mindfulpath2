@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Music, Play, Pause, SkipForward, SkipBack, X, Volume2, VolumeX } from "lucide-react";
+import { Music, Play, Pause, SkipForward, SkipBack, X, Volume2, VolumeX, Shuffle, Repeat, Repeat1 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Track } from "@/data/audioTracks";
@@ -13,6 +13,8 @@ declare global {
   }
 }
 
+export type RepeatMode = "off" | "all" | "one";
+
 interface AudioPlayerProps {
   currentTrack: Track | null;
   isPlaying: boolean;
@@ -21,6 +23,10 @@ interface AudioPlayerProps {
   onPrev: () => void;
   onClose: () => void;
   onPlayStateChange?: (playing: boolean) => void;
+  shuffle: boolean;
+  onShuffleToggle: () => void;
+  repeatMode: RepeatMode;
+  onRepeatToggle: () => void;
 }
 
 let apiLoaded = false;
@@ -62,6 +68,10 @@ const AudioPlayer = ({
   onPrev,
   onClose,
   onPlayStateChange,
+  shuffle,
+  onShuffleToggle,
+  repeatMode,
+  onRepeatToggle,
 }: AudioPlayerProps) => {
   const playerRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -164,7 +174,14 @@ const AudioPlayer = ({
             } catch {}
           },
           onStateChange: (event: any) => {
-            if (event.data === 0) onNext();
+            if (event.data === 0) {
+              // Track ended
+              if (repeatMode === "one") {
+                try { playerRef.current.seekTo(0, true); playerRef.current.playVideo(); } catch {}
+              } else {
+                onNext();
+              }
+            }
             if (event.data === 1) {
               onPlayStateChange?.(true);
               try {
@@ -335,6 +352,15 @@ const AudioPlayer = ({
 
               {/* Controls */}
               <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={cn("h-8 w-8", shuffle && "text-primary")}
+                  onClick={onShuffleToggle}
+                  title="Shuffle"
+                >
+                  <Shuffle className="w-4 h-4" />
+                </Button>
                 <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onPrev}>
                   <SkipBack className="w-4 h-4" />
                 </Button>
@@ -347,6 +373,15 @@ const AudioPlayer = ({
                 </Button>
                 <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onNext}>
                   <SkipForward className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={cn("h-8 w-8", repeatMode !== "off" && "text-primary")}
+                  onClick={onRepeatToggle}
+                  title={repeatMode === "off" ? "Repeat off" : repeatMode === "all" ? "Repeat all" : "Repeat one"}
+                >
+                  {repeatMode === "one" ? <Repeat1 className="w-4 h-4" /> : <Repeat className="w-4 h-4" />}
                 </Button>
                 <div
                   className="relative"

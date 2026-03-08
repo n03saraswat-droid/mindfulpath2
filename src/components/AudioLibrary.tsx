@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +6,7 @@ import { Music, Play, Sparkles, Clock, Heart, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { TRACKS, CATEGORIES, Track } from "@/data/audioTracks";
-import AudioPlayer from "@/components/AudioPlayer";
+import AudioPlayer, { RepeatMode } from "@/components/AudioPlayer";
 
 const AudioLibrary = () => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -14,6 +14,9 @@ const AudioLibrary = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [likedTracks, setLikedTracks] = useState<Set<string>>(new Set());
   const [hoveredTrack, setHoveredTrack] = useState<string | null>(null);
+  const [shuffle, setShuffle] = useState(false);
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>("off");
+  const shuffleHistoryRef = useRef<string[]>([]);
 
   const filteredTracks = activeCategory === "All" ? TRACKS : TRACKS.filter(t => t.category === activeCategory);
 
@@ -35,20 +38,40 @@ const AudioLibrary = () => {
   };
 
   const nextTrack = useCallback(() => {
-    if (!currentTrack) return;
-    const idx = filteredTracks.findIndex(t => t.id === currentTrack.id);
-    const next = filteredTracks[(idx + 1) % filteredTracks.length];
-    setCurrentTrack(next);
+    if (!currentTrack || filteredTracks.length === 0) return;
+    if (shuffle) {
+      const others = filteredTracks.filter(t => t.id !== currentTrack.id);
+      if (others.length === 0) return;
+      const random = others[Math.floor(Math.random() * others.length)];
+      shuffleHistoryRef.current.push(currentTrack.id);
+      setCurrentTrack(random);
+    } else {
+      const idx = filteredTracks.findIndex(t => t.id === currentTrack.id);
+      if (repeatMode === "off" && idx === filteredTracks.length - 1) {
+        // Stop at end when repeat is off
+        setIsPlaying(false);
+        return;
+      }
+      setCurrentTrack(filteredTracks[(idx + 1) % filteredTracks.length]);
+    }
     setIsPlaying(true);
-  }, [currentTrack, filteredTracks]);
+  }, [currentTrack, filteredTracks, shuffle, repeatMode]);
 
   const prevTrack = useCallback(() => {
-    if (!currentTrack) return;
+    if (!currentTrack || filteredTracks.length === 0) return;
+    if (shuffle && shuffleHistoryRef.current.length > 0) {
+      const prevId = shuffleHistoryRef.current.pop();
+      const prev = filteredTracks.find(t => t.id === prevId);
+      if (prev) { setCurrentTrack(prev); setIsPlaying(true); return; }
+    }
     const idx = filteredTracks.findIndex(t => t.id === currentTrack.id);
-    const prev = filteredTracks[(idx - 1 + filteredTracks.length) % filteredTracks.length];
-    setCurrentTrack(prev);
+    setCurrentTrack(filteredTracks[(idx - 1 + filteredTracks.length) % filteredTracks.length]);
     setIsPlaying(true);
-  }, [currentTrack, filteredTracks]);
+  }, [currentTrack, filteredTracks, shuffle]);
+
+  const toggleRepeat = useCallback(() => {
+    setRepeatMode(prev => prev === "off" ? "all" : prev === "all" ? "one" : "off");
+  }, []);
 
   const closePlayer = () => {
     setCurrentTrack(null);
@@ -187,6 +210,10 @@ const AudioLibrary = () => {
         onPrev={prevTrack}
         onClose={closePlayer}
         onPlayStateChange={(playing) => setIsPlaying(playing)}
+        shuffle={shuffle}
+        onShuffleToggle={() => setShuffle(prev => !prev)}
+        repeatMode={repeatMode}
+        onRepeatToggle={toggleRepeat}
       />
     </div>
   );
