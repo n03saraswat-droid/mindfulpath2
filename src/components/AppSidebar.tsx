@@ -37,6 +37,7 @@ const groups = [
 const AppSidebar = ({ activeSection, onSectionChange, collapsed, onToggleCollapse }: AppSidebarProps) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <motion.aside
