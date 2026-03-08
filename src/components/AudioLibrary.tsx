@@ -18,7 +18,11 @@ const AudioLibrary = () => {
   const [repeatMode, setRepeatMode] = useState<RepeatMode>("off");
   const shuffleHistoryRef = useRef<string[]>([]);
 
-  const filteredTracks = activeCategory === "All" ? TRACKS : TRACKS.filter(t => t.category === activeCategory);
+  const filteredTracks = activeCategory === "Favorites"
+    ? TRACKS.filter(t => likedTracks.has(t.id))
+    : activeCategory === "All"
+      ? TRACKS
+      : TRACKS.filter(t => t.category === activeCategory);
 
   const playTrack = (track: Track) => {
     if (currentTrack?.id === track.id) {
