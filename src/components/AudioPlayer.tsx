@@ -194,14 +194,18 @@ const AudioPlayer = ({
     } catch {}
   }, [isPlaying, playerReady]);
 
-  // Sync mute state
+  // Sync volume & mute state
   useEffect(() => {
     if (!playerRef.current || !playerReady) return;
     try {
-      if (muted) playerRef.current.mute();
-      else playerRef.current.unMute();
+      if (muted) {
+        playerRef.current.mute();
+      } else {
+        playerRef.current.unMute();
+        playerRef.current.setVolume(volume);
+      }
     } catch {}
-  }, [muted, playerReady]);
+  }, [muted, volume, playerReady]);
 
   // Cleanup on unmount
   useEffect(() => {
