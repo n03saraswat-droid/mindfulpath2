@@ -310,6 +310,7 @@ const IntegratedCourses = () => {
                         </AccordionContent>
                       )}
                     </AccordionItem>
+                    </motion.div>
                   );
                 })}
               </Accordion>
