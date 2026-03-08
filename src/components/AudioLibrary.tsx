@@ -2,8 +2,8 @@ import { useState, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Music, Play, Sparkles, Clock, Heart } from "lucide-react";
-import { motion } from "framer-motion";
+import { Music, Play, Sparkles, Clock, Heart, Info } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { TRACKS, CATEGORIES, Track } from "@/data/audioTracks";
 import AudioPlayer from "@/components/AudioPlayer";
@@ -13,6 +13,7 @@ const AudioLibrary = () => {
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [likedTracks, setLikedTracks] = useState<Set<string>>(new Set());
+  const [hoveredTrack, setHoveredTrack] = useState<string | null>(null);
 
   const filteredTracks = activeCategory === "All" ? TRACKS : TRACKS.filter(t => t.category === activeCategory);
 
@@ -98,53 +99,83 @@ const AudioLibrary = () => {
 
       {/* Track List */}
       <div className="space-y-2">
-        {filteredTracks.map((track, i) => (
-          <motion.div key={track.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.03 }}>
-            <Card
-              className={cn(
-                "glass-card cursor-pointer transition-all hover:shadow-soft",
-                currentTrack?.id === track.id && "ring-2 ring-primary/30"
-              )}
-              onClick={() => playTrack(track)}
-            >
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className={cn("w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center flex-shrink-0", track.color)}>
-                  {currentTrack?.id === track.id && isPlaying ? (
-                    <div className="flex gap-0.5 items-end h-5">
-                      {[1, 2, 3].map(b => (
-                        <motion.div
-                          key={b}
-                          className="w-1 bg-white rounded-full"
-                          animate={{ height: [8, 16, 8] }}
-                          transition={{ duration: 0.6, repeat: Infinity, delay: b * 0.15 }}
-                        />
-                      ))}
+        {filteredTracks.map((track, i) => {
+          const isActive = currentTrack?.id === track.id;
+          const isHovered = hoveredTrack === track.id;
+          const showDescription = track.description && (isActive || isHovered);
+
+          return (
+            <motion.div key={track.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.03 }}>
+              <Card
+                className={cn(
+                  "glass-card cursor-pointer transition-all hover:shadow-soft",
+                  isActive && "ring-2 ring-primary/30"
+                )}
+                onClick={() => playTrack(track)}
+                onMouseEnter={() => setHoveredTrack(track.id)}
+                onMouseLeave={() => setHoveredTrack(null)}
+              >
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-4">
+                    <div className={cn("w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center flex-shrink-0", track.color)}>
+                      {isActive && isPlaying ? (
+                        <div className="flex gap-0.5 items-end h-5">
+                          {[1, 2, 3].map(b => (
+                            <motion.div
+                              key={b}
+                              className="w-1 bg-white rounded-full"
+                              animate={{ height: [8, 16, 8] }}
+                              transition={{ duration: 0.6, repeat: Infinity, delay: b * 0.15 }}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <Music className="w-5 h-5 text-white" />
+                      )}
                     </div>
-                  ) : (
-                    <Music className="w-5 h-5 text-white" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-foreground truncate">{track.title}</h3>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>{track.artist}</span>
-                    <span>•</span>
-                    <span>{track.category}</span>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-foreground truncate">{track.title}</h3>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span>{track.artist}</span>
+                        <span>•</span>
+                        <span>{track.category}</span>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="text-xs hidden sm:flex">{track.mood}</Badge>
+                    <div className="flex items-center gap-2">
+                      {track.description && (
+                        <Info className={cn("w-3.5 h-3.5 transition-colors", showDescription ? "text-primary" : "text-muted-foreground/40")} />
+                      )}
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Clock className="w-3 h-3" /> {track.duration}
+                      </span>
+                      <button onClick={(e) => { e.stopPropagation(); toggleLike(track.id); }} className="p-1">
+                        <Heart className={cn("w-4 h-4 transition-colors", likedTracks.has(track.id) ? "fill-red-500 text-red-500" : "text-muted-foreground hover:text-red-500")} />
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <Badge variant="secondary" className="text-xs hidden sm:flex">{track.mood}</Badge>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> {track.duration}
-                  </span>
-                  <button onClick={(e) => { e.stopPropagation(); toggleLike(track.id); }} className="p-1">
-                    <Heart className={cn("w-4 h-4 transition-colors", likedTracks.has(track.id) ? "fill-red-500 text-red-500" : "text-muted-foreground hover:text-red-500")} />
-                  </button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+
+                  {/* Description expand */}
+                  <AnimatePresence>
+                    {showDescription && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <p className="text-xs text-muted-foreground leading-relaxed mt-3 pt-3 border-t border-border/50 pl-16">
+                          {track.description}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </CardContent>
+              </Card>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Audio Player */}
