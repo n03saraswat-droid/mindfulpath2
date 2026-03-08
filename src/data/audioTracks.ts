@@ -65,7 +65,7 @@ export const TRACKS: Track[] = [
   { id: "bg18", title: "Ch 18 – Moksha Sanyasa Yoga", artist: "Sanskrit Chanting", category: "Bhagavad Gita", duration: "30:00", mood: "Liberating", color: "from-amber-600 to-yellow-500", videoId: "FgcSLco9CwU" },
 
   // ── Hanuman Chalisa ──
-  { id: "h1", title: "Hanuman Chalisa", artist: "Hariharan", category: "Hanuman Bhajans", duration: "8:42", mood: "Courageous", color: "from-orange-600 to-red-500", videoId: "AETFvQonfhc" },
+  { id: "h1", title: "Hanuman Chalisa", artist: "Hariharan", category: "Hanuman Bhajans", duration: "8:42", mood: "Courageous", color: "from-orange-600 to-red-500", videoId: "BLlTFapgvOo" },
 
   // ── Calming Frequencies (Solfeggio) ──
   { id: "cf1", title: "174 Hz – Pain Relief", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "1:00:00", mood: "Relieving", color: "from-rose-400 to-pink-500", videoId: "ckh3EQFntLE" },
