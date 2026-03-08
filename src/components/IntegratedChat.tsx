@@ -365,9 +365,15 @@ const IntegratedChat = () => {
               >
                 <Bot className="w-10 h-10 text-primary-foreground" />
               </motion.div>
-              <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">Hello, I'm MindfulAI</h3>
+              <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">
+                {latestMood && MOOD_GREETINGS[latestMood] ? `${MOOD_GREETINGS[latestMood].emoji} Hello` : "Hello, I'm MindfulAI"}
+              </h3>
               <p className="text-muted-foreground max-w-md text-sm mb-6">
-                {user ? "Your safe space to explore thoughts and feelings. Everything here stays between us. How can I support you today?" : "Sign in to start a conversation."}
+                {!user
+                  ? "Sign in to start a conversation."
+                  : latestMood && MOOD_GREETINGS[latestMood]
+                    ? MOOD_GREETINGS[latestMood].greeting
+                    : "Your safe space to explore thoughts and feelings. Everything here stays between us. How can I support you today?"}
               </p>
 
               {/* Conversation Starters */}
