@@ -7,6 +7,7 @@ export interface Track {
   mood: string;
   color: string;
   videoId: string;
+  description?: string;
 }
 
 export const TRACKS: Track[] = [
