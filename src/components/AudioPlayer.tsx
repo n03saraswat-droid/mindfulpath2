@@ -352,6 +352,15 @@ const AudioPlayer = ({
 
               {/* Controls */}
               <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={cn("h-8 w-8", shuffle && "text-primary")}
+                  onClick={onShuffleToggle}
+                  title="Shuffle"
+                >
+                  <Shuffle className="w-4 h-4" />
+                </Button>
                 <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onPrev}>
                   <SkipBack className="w-4 h-4" />
                 </Button>
@@ -364,6 +373,15 @@ const AudioPlayer = ({
                 </Button>
                 <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onNext}>
                   <SkipForward className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={cn("h-8 w-8", repeatMode !== "off" && "text-primary")}
+                  onClick={onRepeatToggle}
+                  title={repeatMode === "off" ? "Repeat off" : repeatMode === "all" ? "Repeat all" : "Repeat one"}
+                >
+                  {repeatMode === "one" ? <Repeat1 className="w-4 h-4" /> : <Repeat className="w-4 h-4" />}
                 </Button>
                 <div
                   className="relative"
