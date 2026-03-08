@@ -27,9 +27,20 @@ const TRACKS: Track[] = [
   { id: "6", title: "Forest Rain", artist: "Mindful Path", category: "Nature", duration: "8:00", mood: "Soothing", color: "from-green-500 to-lime-500", audioUrl: "" },
   { id: "7", title: "Phoenix Rising", artist: "Mindful Path", category: "Uplifting Phonk", duration: "3:45", mood: "Motivating", color: "from-amber-500 to-orange-500", audioUrl: "" },
   { id: "8", title: "Inner Strength", artist: "Mindful Path", category: "Uplifting Phonk", duration: "2:42", mood: "Powerful", color: "from-rose-500 to-fuchsia-500", audioUrl: "" },
+  // Shlokas — Sacred Sanskrit Chants
+  { id: "s1", title: "Gayatri Mantra", artist: "Sacred Chants", category: "Shlokas", duration: "5:30", mood: "Divine", color: "from-amber-600 to-yellow-500", audioUrl: "" },
+  { id: "s2", title: "Om Namah Shivaya", artist: "Sacred Chants", category: "Shlokas", duration: "6:15", mood: "Devotional", color: "from-orange-600 to-amber-500", audioUrl: "" },
+  { id: "s3", title: "Mahamrityunjaya Mantra", artist: "Sacred Chants", category: "Shlokas", duration: "7:00", mood: "Healing", color: "from-red-600 to-orange-500", audioUrl: "" },
+  { id: "s4", title: "Hanuman Chalisa", artist: "Sacred Chants", category: "Shlokas", duration: "9:45", mood: "Courageous", color: "from-rose-600 to-red-500", audioUrl: "" },
+  { id: "s5", title: "Vishnu Sahasranama", artist: "Sacred Chants", category: "Shlokas", duration: "12:00", mood: "Peaceful", color: "from-sky-600 to-blue-500", audioUrl: "" },
+  { id: "s6", title: "Shanti Mantra", artist: "Sacred Chants", category: "Shlokas", duration: "4:20", mood: "Tranquil", color: "from-emerald-600 to-teal-500", audioUrl: "" },
+  { id: "s7", title: "Bhagavad Gita – Chapter 2", artist: "Sacred Chants", category: "Shlokas", duration: "8:30", mood: "Wisdom", color: "from-violet-600 to-purple-500", audioUrl: "" },
+  { id: "s8", title: "Durga Suktam", artist: "Sacred Chants", category: "Shlokas", duration: "6:40", mood: "Empowering", color: "from-fuchsia-600 to-pink-500", audioUrl: "" },
+  { id: "s9", title: "Rudram Chamakam", artist: "Sacred Chants", category: "Shlokas", duration: "11:15", mood: "Sacred", color: "from-indigo-600 to-blue-500", audioUrl: "" },
+  { id: "s10", title: "Lalitha Sahasranama", artist: "Sacred Chants", category: "Shlokas", duration: "14:00", mood: "Blissful", color: "from-pink-600 to-rose-500", audioUrl: "" },
 ];
 
-const CATEGORIES = ["All", "Uplifting Phonk", "Ambient", "Meditation", "Nature"];
+const CATEGORIES = ["All", "Uplifting Phonk", "Shlokas", "Ambient", "Meditation", "Nature"];
 
 const AudioLibrary = () => {
   const [activeCategory, setActiveCategory] = useState("All");
