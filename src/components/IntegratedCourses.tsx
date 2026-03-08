@@ -272,6 +272,29 @@ const IntegratedCourses = () => {
                   </AccordionItem>
                 ))}
               </Accordion>
+
+              {/* Quiz and Certificate section */}
+              <div className="flex flex-wrap gap-3 mt-6 pt-4 border-t border-border">
+                {courseQuizzes.find(q => q.courseId === selectedCourse.id) && (
+                  <CourseQuiz
+                    quiz={courseQuizzes.find(q => q.courseId === selectedCourse.id)!}
+                    courseIcon={selectedCourse.icon}
+                    onComplete={(score, total) => {
+                      if (score >= total * 0.8) {
+                        awardXP(30, "quiz_complete", `Passed quiz: ${selectedCourse.title}`);
+                      }
+                    }}
+                  />
+                )}
+                {getProgress(selectedCourse).percent === 100 && (
+                  <CourseCertificate
+                    courseName={selectedCourse.title}
+                    courseIcon={selectedCourse.icon}
+                    userName={displayName}
+                    completionDate={new Date()}
+                  />
+                )}
+              </div>
             </CardContent>
           </Card>
         </motion.div>
