@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Music, Play, Pause, SkipForward, SkipBack, X, Volume2, VolumeX, Shuffle, Repeat, Repeat1 } from "lucide-react";
+import { Music, Play, Pause, SkipForward, SkipBack, X, Volume2, VolumeX, Shuffle, Repeat, Repeat1, Timer, TimerOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Track } from "@/data/audioTracks";
