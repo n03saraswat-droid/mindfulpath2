@@ -6,7 +6,7 @@ import { Music, Play, Sparkles, Clock, Heart, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { TRACKS, CATEGORIES, Track } from "@/data/audioTracks";
-import AudioPlayer from "@/components/AudioPlayer";
+import AudioPlayer, { RepeatMode } from "@/components/AudioPlayer";
 
 const AudioLibrary = () => {
   const [activeCategory, setActiveCategory] = useState("All");
