@@ -66,7 +66,9 @@ const AudioPlayer = ({
   const playerRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [volume, setVolume] = useState(100);
   const [muted, setMuted] = useState(false);
+  const [showVolume, setShowVolume] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
   const currentVideoIdRef = useRef<string | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -192,14 +194,18 @@ const AudioPlayer = ({
     } catch {}
   }, [isPlaying, playerReady]);
 
-  // Sync mute state
+  // Sync volume & mute state
   useEffect(() => {
     if (!playerRef.current || !playerReady) return;
     try {
-      if (muted) playerRef.current.mute();
-      else playerRef.current.unMute();
+      if (muted) {
+        playerRef.current.mute();
+      } else {
+        playerRef.current.unMute();
+        playerRef.current.setVolume(volume);
+      }
     } catch {}
-  }, [muted, playerReady]);
+  }, [muted, volume, playerReady]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -342,18 +348,65 @@ const AudioPlayer = ({
                 <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onNext}>
                   <SkipForward className="w-4 h-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => setMuted((m) => !m)}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setShowVolume(true)}
+                  onMouseLeave={() => setShowVolume(false)}
                 >
-                  {muted ? (
-                    <VolumeX className="w-4 h-4 text-muted-foreground" />
-                  ) : (
-                    <Volume2 className="w-4 h-4 text-muted-foreground" />
-                  )}
-                </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => {
+                      if (muted) {
+                        setMuted(false);
+                        if (volume === 0) setVolume(50);
+                      } else {
+                        setMuted(true);
+                      }
+                    }}
+                  >
+                    {muted || volume === 0 ? (
+                      <VolumeX className="w-4 h-4 text-muted-foreground" />
+                    ) : (
+                      <Volume2 className="w-4 h-4 text-muted-foreground" />
+                    )}
+                  </Button>
+                  {/* Volume slider popup */}
+                  <AnimatePresence>
+                    {showVolume && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 5 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-card border border-border rounded-lg shadow-lg p-3 flex flex-col items-center gap-2"
+                      >
+                        <div className="h-24 w-1.5 bg-muted rounded-full relative cursor-pointer"
+                          onClick={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const fraction = 1 - Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+                            const newVol = Math.round(fraction * 100);
+                            setVolume(newVol);
+                            if (newVol > 0) setMuted(false);
+                          }}
+                        >
+                          <div
+                            className="absolute bottom-0 left-0 w-full bg-primary rounded-full transition-all"
+                            style={{ height: `${muted ? 0 : volume}%` }}
+                          />
+                          <div
+                            className="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-primary shadow-sm"
+                            style={{ bottom: `calc(${muted ? 0 : volume}% - 6px)` }}
+                          />
+                        </div>
+                        <span className="text-[10px] text-muted-foreground tabular-nums">
+                          {muted ? 0 : volume}%
+                        </span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
                 <Button
                   variant="ghost"
                   size="icon"
