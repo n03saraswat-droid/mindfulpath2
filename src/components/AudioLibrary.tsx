@@ -14,6 +14,9 @@ const AudioLibrary = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [likedTracks, setLikedTracks] = useState<Set<string>>(new Set());
   const [hoveredTrack, setHoveredTrack] = useState<string | null>(null);
+  const [shuffle, setShuffle] = useState(false);
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>("off");
+  const shuffleHistoryRef = useRef<string[]>([]);
 
   const filteredTracks = activeCategory === "All" ? TRACKS : TRACKS.filter(t => t.category === activeCategory);
 
