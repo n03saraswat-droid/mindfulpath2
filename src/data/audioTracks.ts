@@ -66,10 +66,23 @@ export const TRACKS: Track[] = [
 
   // ── Hanuman Chalisa ──
   { id: "h1", title: "Hanuman Chalisa", artist: "Hariharan", category: "Hanuman Bhajans", duration: "8:42", mood: "Courageous", color: "from-orange-600 to-red-500", videoId: "AETFvQonfhc" },
+
+  // ── Calming Frequencies (Solfeggio) ──
+  { id: "cf1", title: "174 Hz – Pain Relief", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "1:00:00", mood: "Relieving", color: "from-rose-400 to-pink-500", videoId: "ckh3EQFntLE" },
+  { id: "cf2", title: "285 Hz – Tissue Healing", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "1:00:00", mood: "Restorative", color: "from-fuchsia-400 to-purple-500", videoId: "uP2wPwgN-9I" },
+  { id: "cf3", title: "396 Hz – Release Fear", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "3:00:00", mood: "Liberating", color: "from-violet-400 to-indigo-500", videoId: "It63d2trrNA" },
+  { id: "cf4", title: "417 Hz – Remove Negativity", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "1:00:00", mood: "Cleansing", color: "from-indigo-400 to-blue-500", videoId: "_IB22mi3OHQ" },
+  { id: "cf5", title: "432 Hz – Natural Healing", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "11:54:55", mood: "Harmonizing", color: "from-blue-400 to-sky-500", videoId: "yrb1h0umtJo" },
+  { id: "cf6", title: "528 Hz – Love Frequency", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "1:00:00", mood: "Transforming", color: "from-sky-400 to-cyan-500", videoId: "XqWFAZ3MCcU" },
+  { id: "cf7", title: "639 Hz – Heart Healing", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "1:00:00", mood: "Connecting", color: "from-cyan-400 to-teal-500", videoId: "iL_A_E6iECo" },
+  { id: "cf8", title: "741 Hz – Detox & Clarity", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "1:00:00", mood: "Purifying", color: "from-teal-400 to-emerald-500", videoId: "P4Pn9rtpLjo" },
+  { id: "cf9", title: "852 Hz – Awakening Intuition", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "1:00:00", mood: "Awakening", color: "from-emerald-400 to-green-500", videoId: "ja5SzgVd078" },
+  { id: "cf10", title: "963 Hz – Crown Chakra", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "1:00:00", mood: "Divine", color: "from-amber-400 to-yellow-500", videoId: "_TzTpbT4XiQ" },
 ];
 
 export const CATEGORIES = [
   "All",
+  "Calming Frequencies",
   "Shlokas",
   "Bhagavad Gita",
   "Hanuman Bhajans",
