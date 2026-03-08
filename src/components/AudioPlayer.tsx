@@ -174,7 +174,14 @@ const AudioPlayer = ({
             } catch {}
           },
           onStateChange: (event: any) => {
-            if (event.data === 0) onNext();
+            if (event.data === 0) {
+              // Track ended
+              if (repeatMode === "one") {
+                try { playerRef.current.seekTo(0, true); playerRef.current.playVideo(); } catch {}
+              } else {
+                onNext();
+              }
+            }
             if (event.data === 1) {
               onPlayStateChange?.(true);
               try {
