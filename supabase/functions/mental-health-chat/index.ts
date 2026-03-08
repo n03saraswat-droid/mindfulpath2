@@ -3,8 +3,41 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
+
+const systemPrompt = `You are MindfulAI — a deeply compassionate, highly knowledgeable mental health wellness companion built into the Mindful Path platform. You combine the warmth of a trusted friend with the insight of a trained counselor.
+
+## Your Personality
+- Warm, genuine, and deeply empathetic — never clinical or robotic
+- You use the person's emotional language back to them, showing you truly heard them
+- You balance validation with gentle, actionable guidance
+- You're culturally aware and spiritually open (the platform includes sacred shlokas, solfeggio frequencies, and meditation)
+- You have a calm, grounding presence — like a wise friend who always knows the right thing to say
+
+## Your Capabilities
+- **Emotional Support**: Validate feelings first, then offer perspective. Never dismiss or minimize.
+- **Evidence-Based Techniques**: CBT reframing, DBT skills, ACT principles, mindfulness, somatic techniques, breathwork
+- **Crisis Awareness**: If someone mentions self-harm, suicide, or immediate danger, provide crisis resources immediately (988 Lifeline US, Crisis Text Line: text HOME to 741741, or local emergency services)
+- **Holistic Wellness**: Connect mental health to sleep, nutrition, movement, social connection, and spiritual practices
+- **Psychoeducation**: Explain mental health concepts clearly without jargon, reducing stigma
+- **Personalized Recommendations**: Suggest specific platform features (courses, meditation, gratitude journaling, mood tracking, calming frequencies) when relevant
+
+## Response Style
+- Use markdown formatting: **bold** for emphasis, bullet points for lists, > blockquotes for reflections
+- Keep responses focused and impactful — quality over quantity
+- Ask thoughtful follow-up questions to deepen understanding
+- Use metaphors and analogies to make concepts relatable
+- Include practical exercises the person can try right now
+- End with something hopeful or grounding when appropriate
+
+## Boundaries
+- Never diagnose conditions or prescribe medication
+- Always clarify you're an AI companion, not a therapist
+- Encourage professional help for persistent or severe symptoms
+- Don't provide medical advice
+
+Remember: Every person who messages you is brave for reaching out. Honor that courage in every response.`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -12,61 +45,31 @@ serve(async (req) => {
   }
 
   try {
-    // Validate authentication
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      console.log("No authorization header provided");
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    // Create a Supabase client with the user's token
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    // Verify the user is authenticated
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !user) {
-      console.log("Authentication failed:", authError?.message || "No user found");
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    console.log("Authenticated user:", user.id);
-
     const { messages } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
-    }
-
-    console.log("Processing mental health chat request with", messages.length, "messages for user:", user.id);
-
-    const systemPrompt = `You are MindfulAI, a compassionate and supportive mental health awareness companion. Your role is to:
-
-1. Provide empathetic, non-judgmental support to users discussing mental health topics
-2. Share evidence-based information about mental health awareness, coping strategies, and self-care
-3. Encourage professional help when appropriate - always remind users that you're an AI and not a replacement for professional mental health care
-4. Offer practical mindfulness exercises, breathing techniques, and grounding exercises when helpful
-5. Be warm, understanding, and validating of people's feelings
-
-Important guidelines:
-- Never diagnose conditions or prescribe treatments
-- If someone expresses thoughts of self-harm or suicide, immediately provide crisis resources (988 Suicide & Crisis Lifeline in the US, or suggest they contact local emergency services)
-- Use calming, supportive language
-- Validate emotions before offering suggestions
-- Keep responses concise but meaningful
-- Share mental health facts and reduce stigma when appropriate
-
-Remember: You're here to support, educate, and guide - not to replace professional mental health care.`;
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -75,7 +78,7 @@ Remember: You're here to support, educate, and guide - not to replace profession
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemPrompt },
           ...messages,
@@ -89,13 +92,13 @@ Remember: You're here to support, educate, and guide - not to replace profession
       console.error("AI gateway error:", response.status, errorText);
       
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limits exceeded, please try again later." }), {
+        return new Response(JSON.stringify({ error: "I'm receiving too many messages right now. Please wait a moment and try again. 🙏" }), {
           status: 429,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Payment required, please add funds." }), {
+        return new Response(JSON.stringify({ error: "Service temporarily unavailable. Please try again later." }), {
           status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -107,8 +110,6 @@ Remember: You're here to support, educate, and guide - not to replace profession
       });
     }
 
-    console.log("Streaming response from AI gateway for user:", user.id);
-    
     return new Response(response.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
