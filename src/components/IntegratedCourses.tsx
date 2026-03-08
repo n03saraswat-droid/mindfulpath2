@@ -158,6 +158,7 @@ const IntegratedCourses = () => {
   const [displayName, setDisplayName] = useState<string>("");
   const [newlyUnlocked, setNewlyUnlocked] = useState<Set<string>>(new Set());
   const { awardXP } = useXPReward();
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (user) {
