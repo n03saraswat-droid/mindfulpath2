@@ -68,6 +68,10 @@ const AudioPlayer = ({
   onPrev,
   onClose,
   onPlayStateChange,
+  shuffle,
+  onShuffleToggle,
+  repeatMode,
+  onRepeatToggle,
 }: AudioPlayerProps) => {
   const playerRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
