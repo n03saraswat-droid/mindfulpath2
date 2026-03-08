@@ -155,9 +155,21 @@ const IntegratedCourses = () => {
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [videoLesson, setVideoLesson] = useState<Lesson | null>(null);
+  const [displayName, setDisplayName] = useState<string>("");
   const { awardXP } = useXPReward();
 
-  useEffect(() => { if (user) fetchProgress(); }, [user]);
+  useEffect(() => {
+    if (user) {
+      fetchProgress();
+      fetchProfile();
+    }
+  }, [user]);
+
+  const fetchProfile = async () => {
+    if (!user) return;
+    const { data } = await supabase.from("profiles").select("display_name, email").eq("id", user.id).maybeSingle();
+    setDisplayName(data?.display_name || data?.email || user.email || "Student");
+  };
 
   const fetchProgress = async () => {
     if (!user) return;
