@@ -476,16 +476,57 @@ const AudioPlayer = ({
                     )}
                   </AnimatePresence>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 ml-1 text-muted-foreground hover:text-foreground"
-                  onClick={handleClose}
+                {/* Sleep timer */}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setShowSleepMenu(true)}
+                  onMouseLeave={() => setShowSleepMenu(false)}
                 >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn("h-8 w-8", sleepTimer !== null && "text-primary")}
+                    title={sleepTimer !== null ? `Sleep in ${sleepTimer} min` : "Sleep timer"}
+                  >
+                    {sleepTimer !== null ? <TimerOff className="w-4 h-4" /> : <Timer className="w-4 h-4 text-muted-foreground" />}
+                  </Button>
+                  <AnimatePresence>
+                    {showSleepMenu && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 5 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-card border border-border rounded-lg shadow-lg p-2 flex flex-col gap-1 min-w-[100px]"
+                      >
+                        <span className="text-[10px] text-muted-foreground text-center font-medium px-2 pb-1 border-b border-border">
+                          {sleepTimer !== null ? `${sleepTimer} min left` : "Sleep Timer"}
+                        </span>
+                        {SLEEP_OPTIONS.map(mins => (
+                          <button
+                            key={mins}
+                            onClick={() => { setSleepTimer(mins); setShowSleepMenu(false); }}
+                            className={cn(
+                              "text-xs px-3 py-1.5 rounded-md text-left transition-colors hover:bg-accent",
+                              sleepTimer === mins ? "text-primary font-medium" : "text-foreground"
+                            )}
+                          >
+                            {mins} min
+                          </button>
+                        ))}
+                        {sleepTimer !== null && (
+                          <button
+                            onClick={() => { setSleepTimer(null); setShowSleepMenu(false); }}
+                            className="text-xs px-3 py-1.5 rounded-md text-destructive hover:bg-destructive/10 transition-colors"
+                          >
+                            Cancel timer
+                          </button>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+                <Button
           </motion.div>
         )}
       </AnimatePresence>
