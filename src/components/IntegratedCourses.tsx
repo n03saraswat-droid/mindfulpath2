@@ -362,7 +362,11 @@ const IntegratedCourses = () => {
         </motion.div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {courses.map((course, i) => {
+          {courses.filter(c => {
+            if (!searchQuery.trim()) return true;
+            const q = searchQuery.toLowerCase();
+            return c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q) || c.fullDescription.toLowerCase().includes(q);
+          }).map((course, i) => {
             const progress = getProgress(course);
             return (
               <motion.div key={course.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
