@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Send, Bot, User, AlertCircle, Loader2, LogIn, Plus, MessageSquare, Trash2, Copy, Check, Clock, Sparkles } from "lucide-react";
+import { Send, Bot, User, AlertCircle, Loader2, LogIn, Plus, MessageSquare, Trash2, Copy, Check, Clock, Sparkles, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
