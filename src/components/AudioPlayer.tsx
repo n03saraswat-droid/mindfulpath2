@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Music, Play, Pause, SkipForward, SkipBack, X, Volume2, VolumeX, Shuffle, Repeat, Repeat1 } from "lucide-react";
+import { Music, Play, Pause, SkipForward, SkipBack, X, Volume2, VolumeX, Shuffle, Repeat, Repeat1, Timer, TimerOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Track } from "@/data/audioTracks";
@@ -81,6 +81,9 @@ const AudioPlayer = ({
   const [showVolume, setShowVolume] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
   const currentVideoIdRef = useRef<string | null>(null);
+  const [sleepTimer, setSleepTimer] = useState<number | null>(null); // minutes remaining
+  const [showSleepMenu, setShowSleepMenu] = useState(false);
+  const sleepIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
@@ -234,6 +237,36 @@ const AudioPlayer = ({
     };
   }, []);
 
+  // Sleep timer countdown
+  useEffect(() => {
+    if (sleepTimer !== null && sleepTimer > 0 && isPlaying) {
+      sleepIntervalRef.current = setInterval(() => {
+        setSleepTimer(prev => {
+          if (prev === null) return null;
+          if (prev <= 1) {
+            // Time's up — pause playback
+            onPlayPause();
+            return null;
+          }
+          return prev - 1;
+        });
+      }, 60000); // every minute
+    } else {
+      if (sleepIntervalRef.current) {
+        clearInterval(sleepIntervalRef.current);
+        sleepIntervalRef.current = null;
+      }
+    }
+    return () => {
+      if (sleepIntervalRef.current) {
+        clearInterval(sleepIntervalRef.current);
+        sleepIntervalRef.current = null;
+      }
+    };
+  }, [sleepTimer, isPlaying, onPlayPause]);
+
+  const SLEEP_OPTIONS = [5, 10, 15, 30, 45, 60];
+
   const handleClose = () => {
     if (playerRef.current) {
       try { playerRef.current.destroy(); } catch {}
@@ -241,6 +274,7 @@ const AudioPlayer = ({
       currentVideoIdRef.current = null;
       setPlayerReady(false);
     }
+    setSleepTimer(null);
     onClose();
   };
 
@@ -438,6 +472,56 @@ const AudioPlayer = ({
                         <span className="text-[10px] text-muted-foreground tabular-nums">
                           {muted ? 0 : volume}%
                         </span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+                {/* Sleep timer */}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setShowSleepMenu(true)}
+                  onMouseLeave={() => setShowSleepMenu(false)}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn("h-8 w-8", sleepTimer !== null && "text-primary")}
+                    title={sleepTimer !== null ? `Sleep in ${sleepTimer} min` : "Sleep timer"}
+                  >
+                    {sleepTimer !== null ? <TimerOff className="w-4 h-4" /> : <Timer className="w-4 h-4 text-muted-foreground" />}
+                  </Button>
+                  <AnimatePresence>
+                    {showSleepMenu && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 5 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-card border border-border rounded-lg shadow-lg p-2 flex flex-col gap-1 min-w-[100px]"
+                      >
+                        <span className="text-[10px] text-muted-foreground text-center font-medium px-2 pb-1 border-b border-border">
+                          {sleepTimer !== null ? `${sleepTimer} min left` : "Sleep Timer"}
+                        </span>
+                        {SLEEP_OPTIONS.map(mins => (
+                          <button
+                            key={mins}
+                            onClick={() => { setSleepTimer(mins); setShowSleepMenu(false); }}
+                            className={cn(
+                              "text-xs px-3 py-1.5 rounded-md text-left transition-colors hover:bg-accent",
+                              sleepTimer === mins ? "text-primary font-medium" : "text-foreground"
+                            )}
+                          >
+                            {mins} min
+                          </button>
+                        ))}
+                        {sleepTimer !== null && (
+                          <button
+                            onClick={() => { setSleepTimer(null); setShowSleepMenu(false); }}
+                            className="text-xs px-3 py-1.5 rounded-md text-destructive hover:bg-destructive/10 transition-colors"
+                          >
+                            Cancel timer
+                          </button>
+                        )}
                       </motion.div>
                     )}
                   </AnimatePresence>
