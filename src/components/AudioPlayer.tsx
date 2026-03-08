@@ -527,6 +527,15 @@ const AudioPlayer = ({
                   </AnimatePresence>
                 </div>
                 <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 ml-1 text-muted-foreground hover:text-foreground"
+                  onClick={handleClose}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
