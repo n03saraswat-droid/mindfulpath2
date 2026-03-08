@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, Award } from "lucide-react";
+import { BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, Award, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import CourseCertificate from "@/components/CourseCertificate";
 import CourseQuiz from "@/components/CourseQuiz";
