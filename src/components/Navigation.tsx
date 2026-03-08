@@ -102,10 +102,13 @@ const Navigation = () => {
                 Home
               </button>
               <button
-                onClick={() => {
-                  navigate("/resources");
-                  setIsOpen(false);
-                }}
+                onClick={() => scrollToSection("courses")}
+                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
+              >
+                Courses
+              </button>
+              <button
+                onClick={() => scrollToSection("resources")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Resources
@@ -120,63 +123,24 @@ const Navigation = () => {
                 onClick={() => scrollToSection("chat")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
-                Courses
-              </button>
-              <button
-                onClick={() => {
-                  navigate("/courses");
-                  setIsOpen(false);
-                }}
-                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
-              >
                 AI Support
               </button>
-              {user && (
+              {user ? (
                 <Button
-                  onClick={() => {
-                    navigate("/dashboard");
-                    setIsOpen(false);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="border-primary/30 text-foreground hover:bg-primary/5 w-full"
+                  onClick={() => { navigate("/app"); setIsOpen(false); }}
+                  className="gradient-calm text-primary-foreground w-full"
                 >
                   <LayoutDashboard className="w-4 h-4 mr-1" />
                   Dashboard
                 </Button>
+              ) : (
+                <Button
+                  onClick={() => { navigate("/auth"); setIsOpen(false); }}
+                  className="gradient-calm text-primary-foreground w-full"
+                >
+                  Get Started
+                </Button>
               )}
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => {
-                    navigate(user ? "/mood-tracker" : "/auth");
-                    setIsOpen(false);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="border-primary/30 text-foreground hover:bg-primary/5 flex-1"
-                >
-                  <BarChart3 className="w-4 h-4 mr-1" />
-                  Mood
-                </Button>
-                <Button
-                  onClick={() => {
-                    navigate(user ? "/gratitude" : "/auth");
-                    setIsOpen(false);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="border-warmth text-foreground hover:bg-warmth/10 flex-1"
-                >
-                  <Sun className="w-4 h-4 mr-1" />
-                  Gratitude
-                </Button>
-              </div>
-              <Button
-                onClick={() => scrollToSection("chat")}
-                className="gradient-calm text-primary-foreground w-full"
-              >
-                Talk to MindfulAI
-              </Button>
             </div>
           </div>
         )}

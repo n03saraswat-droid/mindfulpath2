@@ -29,18 +29,18 @@ const Footer = () => {
                 </a>
               </li>
               <li>
+                <a href="#courses" className="text-background/70 hover:text-background transition-colors">
+                  Courses
+                </a>
+              </li>
+              <li>
                 <a href="#resources" className="text-background/70 hover:text-background transition-colors">
                   Resources
                 </a>
               </li>
               <li>
-                <a href="#self-care" className="text-background/70 hover:text-background transition-colors">
-                  Self-Care
-                </a>
-              </li>
-              <li>
-                <a href="#chat" className="text-background/70 hover:text-background transition-colors">
-                  AI Support
+                <a href="/auth" className="text-background/70 hover:text-background transition-colors">
+                  Sign In
                 </a>
               </li>
             </ul>

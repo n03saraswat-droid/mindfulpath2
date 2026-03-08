@@ -130,7 +130,7 @@ const ResourcesSection = () => {
 
         <div className="text-center mt-12">
           <Button asChild size="lg" className="gap-2">
-            <Link to="/resources">
+            <Link to="/auth">
               View All Resources
               <ArrowRight className="w-4 h-4" />
             </Link>
