@@ -24,6 +24,14 @@ const CONVERSATION_STARTERS = [
   { icon: "💪", label: "Build my confidence", message: "I want to work on building my self-confidence. Where do I start?" },
 ];
 
+const MOOD_GREETINGS: Record<string, { emoji: string; greeting: string }> = {
+  great: { emoji: "🌟", greeting: "You're feeling great today! That's wonderful. Want to explore what's fueling your positivity?" },
+  good: { emoji: "😊", greeting: "Glad you're doing well! Let's keep that momentum going. What's on your mind?" },
+  okay: { emoji: "🌤️", greeting: "Doing okay is perfectly fine. I'm here if you want to talk through anything." },
+  low: { emoji: "💙", greeting: "I see you've been feeling a bit low. I'm here for you — let's talk about it." },
+  struggling: { emoji: "🤗", greeting: "I know things have been tough. You're not alone — I'm right here with you. Take your time." },
+};
+
 const IntegratedChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -34,6 +42,7 @@ const IntegratedChat = () => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [editingConvId, setEditingConvId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
+  const [latestMood, setLatestMood] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
@@ -44,6 +53,22 @@ const IntegratedChat = () => {
   };
 
   useEffect(() => { if (messages.length > 0) scrollToBottom(); }, [messages]);
+
+  // Load latest mood
+  useEffect(() => {
+    if (!user) return;
+    const fetchMood = async () => {
+      const { data } = await supabase
+        .from("mood_entries")
+        .select("mood")
+        .eq("user_id", user.id)
+        .order("logged_at", { ascending: false })
+        .limit(1)
+        .single();
+      if (data) setLatestMood(data.mood);
+    };
+    fetchMood();
+  }, [user]);
 
   // Load conversation list
   useEffect(() => {
@@ -340,9 +365,15 @@ const IntegratedChat = () => {
               >
                 <Bot className="w-10 h-10 text-primary-foreground" />
               </motion.div>
-              <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">Hello, I'm MindfulAI</h3>
+              <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">
+                {latestMood && MOOD_GREETINGS[latestMood] ? `${MOOD_GREETINGS[latestMood].emoji} Hello` : "Hello, I'm MindfulAI"}
+              </h3>
               <p className="text-muted-foreground max-w-md text-sm mb-6">
-                {user ? "Your safe space to explore thoughts and feelings. Everything here stays between us. How can I support you today?" : "Sign in to start a conversation."}
+                {!user
+                  ? "Sign in to start a conversation."
+                  : latestMood && MOOD_GREETINGS[latestMood]
+                    ? MOOD_GREETINGS[latestMood].greeting
+                    : "Your safe space to explore thoughts and feelings. Everything here stays between us. How can I support you today?"}
               </p>
 
               {/* Conversation Starters */}
