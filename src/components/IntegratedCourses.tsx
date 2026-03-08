@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, Award } from "lucide-react";
+import { BookOpen, CheckCircle2, Circle, Clock, Users, Star, Play, Award, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import CourseCertificate from "@/components/CourseCertificate";
 import CourseQuiz from "@/components/CourseQuiz";
@@ -158,6 +158,7 @@ const IntegratedCourses = () => {
   const [displayName, setDisplayName] = useState<string>("");
   const [newlyUnlocked, setNewlyUnlocked] = useState<Set<string>>(new Set());
   const { awardXP } = useXPReward();
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -225,6 +226,25 @@ const IntegratedCourses = () => {
         <h2 className="font-serif text-3xl font-bold text-foreground mb-2">Courses</h2>
         <p className="text-muted-foreground">Learn evidence-based mental health techniques</p>
       </motion.div>
+
+      {/* Search Bar */}
+      {!selectedCourse && (
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search courses by title or topic..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      )}
 
       <Dialog open={!!videoLesson} onOpenChange={() => setVideoLesson(null)}>
         <DialogContent className="max-w-3xl glass-card">
@@ -342,7 +362,11 @@ const IntegratedCourses = () => {
         </motion.div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {courses.map((course, i) => {
+          {courses.filter(c => {
+            if (!searchQuery.trim()) return true;
+            const q = searchQuery.toLowerCase();
+            return c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q) || c.fullDescription.toLowerCase().includes(q);
+          }).map((course, i) => {
             const progress = getProgress(course);
             return (
               <motion.div key={course.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
