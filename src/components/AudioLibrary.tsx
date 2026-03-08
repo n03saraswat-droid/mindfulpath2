@@ -140,6 +140,17 @@ const AudioLibrary = () => {
 
       {/* Categories */}
       <div className="flex gap-2 flex-wrap">
+        {/* Favorites pill */}
+        <button
+          onClick={() => setActiveCategory("Favorites")}
+          className={cn(
+            "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5",
+            activeCategory === "Favorites" ? "gradient-calm text-primary-foreground shadow-soft" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+          )}
+        >
+          <Heart className={cn("w-3.5 h-3.5", likedTracks.size > 0 && "fill-current")} />
+          Favorites {likedTracks.size > 0 && `(${likedTracks.size})`}
+        </button>
         {CATEGORIES.map(cat => (
           <button
             key={cat}
