@@ -156,6 +156,7 @@ const IntegratedCourses = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [videoLesson, setVideoLesson] = useState<Lesson | null>(null);
   const [displayName, setDisplayName] = useState<string>("");
+  const [newlyUnlocked, setNewlyUnlocked] = useState<Set<string>>(new Set());
   const { awardXP } = useXPReward();
 
   useEffect(() => {
@@ -190,9 +191,19 @@ const IntegratedCourses = () => {
         toast.success("Lesson completed! 🎉");
         await awardXP(20, "course_lesson", `Completed lesson: ${lessonId}`);
 
-        // Check if full course is done
+        // Mark the next lesson as newly unlocked for animation
         const course = courses.find(c => c.id === courseId);
         if (course) {
+          const idx = course.lessons.findIndex(l => l.id === lessonId);
+          if (idx >= 0 && idx < course.lessons.length - 1) {
+            const nextLessonId = course.lessons[idx + 1].id;
+            setNewlyUnlocked(prev => new Set([...prev, nextLessonId]));
+            // Clear animation after it plays
+            setTimeout(() => {
+              setNewlyUnlocked(prev => { const n = new Set(prev); n.delete(nextLessonId); return n; });
+            }, 2000);
+          }
+
           const allDone = course.lessons.every(l => l.id === lessonId || completedLessons.has(l.id));
           if (allDone) {
             await awardXP(50, "course_complete", `Completed course: ${course.title}`);
@@ -253,11 +264,28 @@ const IntegratedCourses = () => {
                 {selectedCourse.lessons.map((lesson, idx) => {
                   const isUnlocked = idx === 0 || completedLessons.has(selectedCourse.lessons[idx - 1].id);
                   return (
-                    <AccordionItem key={lesson.id} value={lesson.id} disabled={!isUnlocked}>
+                    <motion.div
+                      key={lesson.id}
+                      initial={newlyUnlocked.has(lesson.id) ? { scale: 0.95, opacity: 0.5 } : false}
+                      animate={newlyUnlocked.has(lesson.id) ? { scale: 1, opacity: 1 } : {}}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    >
+                    <AccordionItem key={lesson.id} value={lesson.id} disabled={!isUnlocked} className={cn(
+                      newlyUnlocked.has(lesson.id) && "ring-2 ring-primary/50 rounded-lg shadow-[0_0_15px_hsl(var(--primary)/0.3)] transition-shadow duration-1000"
+                    )}>
                       <AccordionTrigger className={cn("hover:no-underline", !isUnlocked && "opacity-50 cursor-not-allowed")}>
                         <div className="flex items-center gap-3 text-left">
                           {!isUnlocked ? (
                             <span className="w-5 h-5 text-muted-foreground">🔒</span>
+                          ) : newlyUnlocked.has(lesson.id) ? (
+                            <motion.span
+                              initial={{ rotate: -20, scale: 1.3 }}
+                              animate={{ rotate: 0, scale: 1 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                              className="w-5 h-5 inline-block"
+                            >
+                              🔓
+                            </motion.span>
                           ) : (
                             <button onClick={(e) => { e.stopPropagation(); toggleLesson(selectedCourse.id, lesson.id); }}>
                               {completedLessons.has(lesson.id) ? <CheckCircle2 className="w-5 h-5 text-primary" /> : <Circle className="w-5 h-5 text-muted-foreground" />}
@@ -265,7 +293,11 @@ const IntegratedCourses = () => {
                           )}
                           <div>
                             <p className="font-medium text-foreground">{lesson.title}</p>
-                            <p className="text-xs text-muted-foreground">{lesson.duration}{!isUnlocked ? " · Complete previous lesson to unlock" : ""}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {lesson.duration}
+                              {!isUnlocked ? " · Complete previous lesson to unlock" : ""}
+                              {newlyUnlocked.has(lesson.id) ? " · 🎉 Unlocked!" : ""}
+                            </p>
                           </div>
                         </div>
                       </AccordionTrigger>
@@ -278,6 +310,7 @@ const IntegratedCourses = () => {
                         </AccordionContent>
                       )}
                     </AccordionItem>
+                    </motion.div>
                   );
                 })}
               </Accordion>
