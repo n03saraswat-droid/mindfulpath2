@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Music, Play, Sparkles, Clock, Heart, Info } from "lucide-react";
+import { Music, Play, Sparkles, Clock, Heart, Info, Waves } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { TRACKS, CATEGORIES, Track } from "@/data/audioTracks";
@@ -94,6 +94,41 @@ const AudioLibrary = () => {
             </p>
             <Button onClick={() => { setActiveCategory("Shlokas"); playTrack(TRACKS.find(t => t.id === "s1")!); }} className="mt-4 gradient-calm text-primary-foreground">
               <Play className="w-4 h-4 mr-2" /> Play Shlokas
+            </Button>
+          </div>
+        </Card>
+      </motion.div>
+
+      {/* Calming Frequencies Featured Section */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+        <Card className="glass-card overflow-hidden">
+          <div className="bg-gradient-to-br from-violet-500/20 via-blue-500/10 to-cyan-500/20 p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <Waves className="w-6 h-6 text-violet-500" />
+              <Badge className="bg-violet-500/20 text-violet-600 border-0">Solfeggio</Badge>
+            </div>
+            <h2 className="font-serif text-3xl font-bold text-foreground mb-2">Calming Frequencies</h2>
+            <p className="text-muted-foreground max-w-lg mb-3">
+              Ancient solfeggio frequencies for deep healing — from pain relief at 174 Hz to spiritual enlightenment at 963 Hz. Each tone targets specific chakras and promotes cellular restoration.
+            </p>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {TRACKS.filter(t => t.category === "Calming Frequencies").slice(0, 5).map(t => (
+                <button
+                  key={t.id}
+                  onClick={() => { setActiveCategory("Calming Frequencies"); playTrack(t); }}
+                  className={cn(
+                    "text-xs px-3 py-1.5 rounded-full border border-border/50 transition-all hover:scale-105",
+                    currentTrack?.id === t.id
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card/50 text-muted-foreground hover:bg-accent"
+                  )}
+                >
+                  {t.title.replace(" – ", " · ")}
+                </button>
+              ))}
+            </div>
+            <Button onClick={() => { setActiveCategory("Calming Frequencies"); playTrack(TRACKS.find(t => t.id === "cf1")!); }} className="gradient-calm text-primary-foreground">
+              <Play className="w-4 h-4 mr-2" /> Play All Frequencies
             </Button>
           </div>
         </Card>
