@@ -120,14 +120,11 @@ const CommunityForum = () => {
 
   const handleLike = async (postId: string) => {
     if (!user) return;
-    const liked = userLikes.includes(postId);
     try {
-      if (liked) {
-        await supabase.from("post_likes").delete().eq("post_id", postId).eq("user_id", user.id);
-        await supabase.from("community_posts").update({ likes_count: Math.max(0, (posts.find((p: any) => p.id === postId)?.likes_count || 1) - 1) }).eq("id", postId);
-      } else {
-        await supabase.from("post_likes").insert({ post_id: postId, user_id: user.id });
-        await supabase.from("community_posts").update({ likes_count: (posts.find((p: any) => p.id === postId)?.likes_count || 0) + 1 }).eq("id", postId);
+      const { error } = await supabase.rpc("toggle_post_like", { _post_id: postId });
+      if (error) {
+        console.error("Like toggle error:", error);
+        return;
       }
       queryClient.invalidateQueries({ queryKey: ["community-posts"] });
       queryClient.invalidateQueries({ queryKey: ["user-likes"] });

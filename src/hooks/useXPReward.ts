@@ -11,82 +11,26 @@ export const useXPReward = () => {
     if (!user) return;
 
     try {
-      // Insert XP event
-      await supabase.from("xp_events").insert({
-        user_id: user.id,
-        xp_earned: xp,
-        event_type: eventType,
-        description,
+      const { data, error } = await supabase.rpc("award_xp", {
+        _event_type: eventType,
+        _description: description,
       });
 
-      // Upsert user_xp
-      const { data: existing } = await supabase
-        .from("user_xp")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (existing) {
-        await supabase
-          .from("user_xp")
-          .update({
-            xp_total: existing.xp_total + xp,
-            level: Math.floor((existing.xp_total + xp) / 100) + 1,
-          })
-          .eq("user_id", user.id);
-      } else {
-        await supabase.from("user_xp").insert({
-          user_id: user.id,
-          xp_total: xp,
-          level: Math.floor(xp / 100) + 1,
-        });
+      if (error) {
+        console.error("XP award error:", error);
+        return;
       }
 
-      // Check and award badges
-      const newTotal = (existing?.xp_total || 0) + xp;
-      const badgesToCheck = [
-        { id: "xp-100", threshold: 100 },
-        { id: "xp-500", threshold: 500 },
-        { id: "xp-1000", threshold: 1000 },
-      ];
+      const result = data as { xp_earned: number; new_total: number; new_level: number; badges_unlocked: string[] };
 
-      const eventBadges: Record<string, string> = {
-        mood_log: "first-mood",
-        gratitude: "first-gratitude",
-        course_lesson: "first-course",
-        community_post: "community-post",
-      };
-
-      const badgeId = eventBadges[eventType];
-      if (badgeId) {
-        const { data: hasBadge } = await supabase
-          .from("user_badges")
-          .select("id")
-          .eq("user_id", user.id)
-          .eq("badge_id", badgeId)
-          .maybeSingle();
-        if (!hasBadge) {
-          await supabase.from("user_badges").insert({ user_id: user.id, badge_id: badgeId });
+      // Show badge notifications
+      if (result.badges_unlocked && result.badges_unlocked.length > 0) {
+        for (const badgeId of result.badges_unlocked) {
           toast.success("🏅 Badge unlocked!", { description: `You earned the "${badgeId}" badge!` });
         }
       }
 
-      for (const b of badgesToCheck) {
-        if (newTotal >= b.threshold) {
-          const { data: hasBadge } = await supabase
-            .from("user_badges")
-            .select("id")
-            .eq("user_id", user.id)
-            .eq("badge_id", b.id)
-            .maybeSingle();
-          if (!hasBadge) {
-            await supabase.from("user_badges").insert({ user_id: user.id, badge_id: b.id });
-            toast.success("🏅 Badge unlocked!", { description: `You earned the "${b.id}" badge!` });
-          }
-        }
-      }
-
-      toast.success(`+${xp} XP`, { description });
+      toast.success(`+${result.xp_earned} XP`, { description });
       queryClient.invalidateQueries({ queryKey: ["user-xp"] });
       queryClient.invalidateQueries({ queryKey: ["xp-events"] });
       queryClient.invalidateQueries({ queryKey: ["user-badges"] });
