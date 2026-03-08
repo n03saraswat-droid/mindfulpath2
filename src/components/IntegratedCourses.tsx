@@ -156,6 +156,7 @@ const IntegratedCourses = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [videoLesson, setVideoLesson] = useState<Lesson | null>(null);
   const [displayName, setDisplayName] = useState<string>("");
+  const [newlyUnlocked, setNewlyUnlocked] = useState<Set<string>>(new Set());
   const { awardXP } = useXPReward();
 
   useEffect(() => {
