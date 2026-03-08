@@ -149,12 +149,13 @@ const AudioLibrary = () => {
 
       {/* Audio Player */}
       <AudioPlayer
-        currentTrack={isPlaying ? currentTrack : currentTrack}
+        currentTrack={currentTrack}
         isPlaying={isPlaying}
         onPlayPause={() => setIsPlaying(prev => !prev)}
         onNext={nextTrack}
         onPrev={prevTrack}
         onClose={closePlayer}
+        onPlayStateChange={(playing) => setIsPlaying(playing)}
       />
     </div>
   );
