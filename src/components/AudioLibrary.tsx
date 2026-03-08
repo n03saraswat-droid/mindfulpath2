@@ -38,20 +38,40 @@ const AudioLibrary = () => {
   };
 
   const nextTrack = useCallback(() => {
-    if (!currentTrack) return;
-    const idx = filteredTracks.findIndex(t => t.id === currentTrack.id);
-    const next = filteredTracks[(idx + 1) % filteredTracks.length];
-    setCurrentTrack(next);
+    if (!currentTrack || filteredTracks.length === 0) return;
+    if (shuffle) {
+      const others = filteredTracks.filter(t => t.id !== currentTrack.id);
+      if (others.length === 0) return;
+      const random = others[Math.floor(Math.random() * others.length)];
+      shuffleHistoryRef.current.push(currentTrack.id);
+      setCurrentTrack(random);
+    } else {
+      const idx = filteredTracks.findIndex(t => t.id === currentTrack.id);
+      if (repeatMode === "off" && idx === filteredTracks.length - 1) {
+        // Stop at end when repeat is off
+        setIsPlaying(false);
+        return;
+      }
+      setCurrentTrack(filteredTracks[(idx + 1) % filteredTracks.length]);
+    }
     setIsPlaying(true);
-  }, [currentTrack, filteredTracks]);
+  }, [currentTrack, filteredTracks, shuffle, repeatMode]);
 
   const prevTrack = useCallback(() => {
-    if (!currentTrack) return;
+    if (!currentTrack || filteredTracks.length === 0) return;
+    if (shuffle && shuffleHistoryRef.current.length > 0) {
+      const prevId = shuffleHistoryRef.current.pop();
+      const prev = filteredTracks.find(t => t.id === prevId);
+      if (prev) { setCurrentTrack(prev); setIsPlaying(true); return; }
+    }
     const idx = filteredTracks.findIndex(t => t.id === currentTrack.id);
-    const prev = filteredTracks[(idx - 1 + filteredTracks.length) % filteredTracks.length];
-    setCurrentTrack(prev);
+    setCurrentTrack(filteredTracks[(idx - 1 + filteredTracks.length) % filteredTracks.length]);
     setIsPlaying(true);
-  }, [currentTrack, filteredTracks]);
+  }, [currentTrack, filteredTracks, shuffle]);
+
+  const toggleRepeat = useCallback(() => {
+    setRepeatMode(prev => prev === "off" ? "all" : prev === "all" ? "one" : "off");
+  }, []);
 
   const closePlayer = () => {
     setCurrentTrack(null);
