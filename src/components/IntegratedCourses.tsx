@@ -191,9 +191,19 @@ const IntegratedCourses = () => {
         toast.success("Lesson completed! 🎉");
         await awardXP(20, "course_lesson", `Completed lesson: ${lessonId}`);
 
-        // Check if full course is done
+        // Mark the next lesson as newly unlocked for animation
         const course = courses.find(c => c.id === courseId);
         if (course) {
+          const idx = course.lessons.findIndex(l => l.id === lessonId);
+          if (idx >= 0 && idx < course.lessons.length - 1) {
+            const nextLessonId = course.lessons[idx + 1].id;
+            setNewlyUnlocked(prev => new Set([...prev, nextLessonId]));
+            // Clear animation after it plays
+            setTimeout(() => {
+              setNewlyUnlocked(prev => { const n = new Set(prev); n.delete(nextLessonId); return n; });
+            }, 2000);
+          }
+
           const allDone = course.lessons.every(l => l.id === lessonId || completedLessons.has(l.id));
           if (allDone) {
             await awardXP(50, "course_complete", `Completed course: ${course.title}`);
