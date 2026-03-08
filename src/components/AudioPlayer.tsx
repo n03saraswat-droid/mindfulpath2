@@ -237,7 +237,36 @@ const AudioPlayer = ({
     };
   }, []);
 
-  const handleClose = () => {
+  // Sleep timer countdown
+  useEffect(() => {
+    if (sleepTimer !== null && sleepTimer > 0 && isPlaying) {
+      sleepIntervalRef.current = setInterval(() => {
+        setSleepTimer(prev => {
+          if (prev === null) return null;
+          if (prev <= 1) {
+            // Time's up — pause playback
+            onPlayPause();
+            return null;
+          }
+          return prev - 1;
+        });
+      }, 60000); // every minute
+    } else {
+      if (sleepIntervalRef.current) {
+        clearInterval(sleepIntervalRef.current);
+        sleepIntervalRef.current = null;
+      }
+    }
+    return () => {
+      if (sleepIntervalRef.current) {
+        clearInterval(sleepIntervalRef.current);
+        sleepIntervalRef.current = null;
+      }
+    };
+  }, [sleepTimer, isPlaying, onPlayPause]);
+
+  const SLEEP_OPTIONS = [5, 10, 15, 30, 45, 60];
+
     if (playerRef.current) {
       try { playerRef.current.destroy(); } catch {}
       playerRef.current = null;
