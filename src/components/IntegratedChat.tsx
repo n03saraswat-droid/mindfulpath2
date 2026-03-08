@@ -87,6 +87,14 @@ const IntegratedChat = () => {
     loadConversations();
   };
 
+  const renameConversation = async (id: string) => {
+    const trimmed = editingTitle.trim();
+    if (!trimmed) { setEditingConvId(null); return; }
+    await supabase.from("chat_conversations").update({ title: trimmed }).eq("id", id);
+    setEditingConvId(null);
+    loadConversations();
+  };
+
   const copyMessage = (content: string, id: string) => {
     navigator.clipboard.writeText(content);
     setCopiedId(id);
