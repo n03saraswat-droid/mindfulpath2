@@ -77,6 +77,54 @@ const resources = [
     ],
     color: "bg-accent text-accent-foreground",
   },
+  {
+    icon: Brain,
+    title: "Workplace Wellness",
+    description: "Mental health in the workplace",
+    items: [
+      { label: "Burnout prevention", url: "https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon" },
+      { label: "Work-life balance", url: "https://www.mentalhealth.org.uk/explore-mental-health/a-z-topics/work-life-balance" },
+      { label: "Dealing with work stress", url: "https://www.apa.org/topics/healthy-workplaces/work-stress" },
+      { label: "Remote work wellness", url: "https://www.headspace.com/work" }
+    ],
+    color: "bg-primary/10 text-primary",
+  },
+  {
+    icon: Heart,
+    title: "Grief & Loss",
+    description: "Navigating loss and bereavement",
+    items: [
+      { label: "Understanding grief stages", url: "https://www.helpguide.org/articles/grief/coping-with-grief-and-loss.htm" },
+      { label: "Grief support groups", url: "https://www.griefshare.org/" },
+      { label: "Coping with sudden loss", url: "https://www.cruse.org.uk/get-support" },
+      { label: "Children and grief", url: "https://www.childbereavementuk.org/" }
+    ],
+    color: "bg-warmth text-warmth-foreground",
+  },
+  {
+    icon: Users,
+    title: "Youth Mental Health",
+    description: "Resources for teens and young adults",
+    items: [
+      { label: "Teen mental health basics", url: "https://www.youngminds.org.uk/" },
+      { label: "Cyberbullying support", url: "https://www.stopbullying.gov/cyberbullying" },
+      { label: "Student wellbeing", url: "https://www.studentminds.org.uk/" },
+      { label: "Parent guides", url: "https://childmind.org/audience/for-families/" }
+    ],
+    color: "bg-serenity text-serenity-foreground",
+  },
+  {
+    icon: BookOpen,
+    title: "Substance & Addiction",
+    description: "Recovery and support resources",
+    items: [
+      { label: "Understanding addiction", url: "https://www.drugabuse.gov/drug-topics" },
+      { label: "Recovery programs", url: "https://www.samhsa.gov/find-help" },
+      { label: "Dual diagnosis support", url: "https://www.nami.org/About-Mental-Illness/Common-with-Mental-Illness/Substance-Use-Disorders" },
+      { label: "Family support", url: "https://al-anon.org/" }
+    ],
+    color: "bg-hope/20 text-primary",
+  },
 ];
 
 const ResourcesSection = () => {

@@ -182,30 +182,94 @@ const resourceCategories = [
     description: "Finding the right care for you with guidance on therapy types, finding providers, and understanding costs.",
     longDescription: "Sometimes we need professional support, and that's okay. Our resources help you understand different types of therapy, find the right therapist for your needs, know what to expect from treatment, and navigate insurance and costs.",
     items: [
-      { 
-        label: "Finding a therapist", 
-        url: "https://www.psychologytoday.com/intl/counsellors",
-        description: "Search for therapists by specialty, location, and insurance."
-      },
-      { 
-        label: "Types of therapy", 
-        url: "https://www.apa.org/topics/psychotherapy/understanding",
-        description: "Learn about CBT, DBT, psychodynamic, and other therapy approaches."
-      },
-      { 
-        label: "What to expect", 
-        url: "https://www.mind.org.uk/information-support/drugs-and-treatments/talking-therapy-and-counselling/what-to-expect/",
-        description: "A guide to your first therapy sessions and the therapeutic process."
-      },
-      { 
-        label: "Insurance & costs", 
-        url: "https://www.mhanational.org/finding-therapy",
-        description: "Navigate insurance coverage and find affordable mental health care."
-      }
+      { label: "Finding a therapist", url: "https://www.psychologytoday.com/intl/counsellors", description: "Search for therapists by specialty, location, and insurance." },
+      { label: "Types of therapy", url: "https://www.apa.org/topics/psychotherapy/understanding", description: "Learn about CBT, DBT, psychodynamic, and other therapy approaches." },
+      { label: "What to expect", url: "https://www.mind.org.uk/information-support/drugs-and-treatments/talking-therapy-and-counselling/what-to-expect/", description: "A guide to your first therapy sessions and the therapeutic process." },
+      { label: "Insurance & costs", url: "https://www.mhanational.org/finding-therapy", description: "Navigate insurance coverage and find affordable mental health care." }
     ],
     color: "bg-accent text-accent-foreground",
     borderColor: "border-accent",
     tags: ["therapy", "professional", "treatment", "insurance"]
+  },
+  {
+    id: "workplace",
+    icon: Brain,
+    title: "Workplace Wellness",
+    description: "Mental health resources for the workplace, burnout prevention, and work-life balance strategies.",
+    longDescription: "Work-related stress and burnout are increasingly common. These resources help you maintain mental wellness at work, set boundaries, and create a healthier professional life.",
+    items: [
+      { label: "Burnout prevention", url: "https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon", description: "Recognize and prevent workplace burnout before it becomes chronic." },
+      { label: "Work-life balance", url: "https://www.mentalhealth.org.uk/explore-mental-health/a-z-topics/work-life-balance", description: "Strategies for maintaining healthy boundaries between work and personal life." },
+      { label: "Dealing with work stress", url: "https://www.apa.org/topics/healthy-workplaces/work-stress", description: "Evidence-based techniques for managing workplace pressure." },
+      { label: "Remote work wellness", url: "https://www.headspace.com/work", description: "Maintaining mental health while working from home." }
+    ],
+    color: "bg-primary/10 text-primary",
+    borderColor: "border-primary/30",
+    tags: ["work", "burnout", "stress", "career"]
+  },
+  {
+    id: "grief",
+    icon: Heart,
+    title: "Grief & Loss",
+    description: "Resources for navigating grief, bereavement, and finding support during difficult times.",
+    longDescription: "Grief is a deeply personal experience. These resources provide guidance, support communities, and coping strategies for those dealing with loss of any kind.",
+    items: [
+      { label: "Understanding grief stages", url: "https://www.helpguide.org/articles/grief/coping-with-grief-and-loss.htm", description: "Learn about the grieving process and what to expect." },
+      { label: "Grief support groups", url: "https://www.griefshare.org/", description: "Find local and online grief support communities." },
+      { label: "Coping with sudden loss", url: "https://www.cruse.org.uk/get-support", description: "Resources for processing unexpected bereavement." },
+      { label: "Children and grief", url: "https://www.childbereavementuk.org/", description: "Helping children understand and cope with loss." }
+    ],
+    color: "bg-warmth text-warmth-foreground",
+    borderColor: "border-warmth",
+    tags: ["grief", "loss", "bereavement", "coping"]
+  },
+  {
+    id: "youth",
+    icon: Users,
+    title: "Youth Mental Health",
+    description: "Dedicated resources for teens, young adults, and parents supporting youth mental wellness.",
+    longDescription: "Young people face unique mental health challenges. These resources provide age-appropriate information, support channels, and guidance for both youth and the adults who support them.",
+    items: [
+      { label: "Teen mental health basics", url: "https://www.youngminds.org.uk/", description: "Understanding mental health challenges specific to teenagers." },
+      { label: "Cyberbullying support", url: "https://www.stopbullying.gov/cyberbullying", description: "Resources for dealing with online harassment and bullying." },
+      { label: "Student wellbeing", url: "https://www.studentminds.org.uk/", description: "Mental health support for university and college students." },
+      { label: "Parent guides", url: "https://childmind.org/audience/for-families/", description: "Help parents understand and support their child's mental health." }
+    ],
+    color: "bg-serenity text-serenity-foreground",
+    borderColor: "border-serenity",
+    tags: ["youth", "teens", "parenting", "students"]
+  },
+  {
+    id: "addiction",
+    icon: Shield,
+    title: "Substance & Addiction",
+    description: "Recovery resources, support programs, and information about addiction and mental health.",
+    longDescription: "Addiction often co-occurs with mental health conditions. These resources provide information about substance use disorders, recovery programs, and support for individuals and families.",
+    items: [
+      { label: "Understanding addiction", url: "https://www.drugabuse.gov/drug-topics", description: "Science-based information about substance use disorders." },
+      { label: "Recovery programs", url: "https://www.samhsa.gov/find-help", description: "Find treatment facilities, support groups, and recovery resources." },
+      { label: "Dual diagnosis support", url: "https://www.nami.org/About-Mental-Illness/Common-with-Mental-Illness/Substance-Use-Disorders", description: "Managing addiction alongside mental health conditions." },
+      { label: "Family support", url: "https://al-anon.org/", description: "Resources for families affected by a loved one's addiction." }
+    ],
+    color: "bg-destructive/10 text-destructive",
+    borderColor: "border-destructive/30",
+    tags: ["addiction", "recovery", "substance use", "family"]
+  },
+  {
+    id: "relationships",
+    icon: Users,
+    title: "Healthy Relationships",
+    description: "Build stronger connections and navigate relationship challenges with evidence-based strategies.",
+    longDescription: "Healthy relationships are vital for mental wellness. These resources cover communication skills, conflict resolution, boundary setting, and recognizing unhealthy patterns.",
+    items: [
+      { label: "Communication skills", url: "https://www.gottman.com/blog/", description: "Research-backed strategies for better communication in relationships." },
+      { label: "Conflict resolution", url: "https://www.helpguide.org/articles/relationships-communication/conflict-resolution-skills.htm", description: "Resolve disagreements constructively and strengthen bonds." },
+      { label: "Recognizing toxic patterns", url: "https://www.loveisrespect.org/", description: "Identify and address unhealthy relationship dynamics." },
+      { label: "Building trust", url: "https://www.psychologytoday.com/intl/basics/relationships", description: "Strategies for fostering trust and emotional intimacy." }
+    ],
+    color: "bg-hope/20 text-primary",
+    borderColor: "border-hope",
+    tags: ["relationships", "communication", "boundaries", "connection"]
   },
 ];
 
