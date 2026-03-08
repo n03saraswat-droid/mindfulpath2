@@ -37,19 +37,19 @@ const HeroSection = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-up" style={{ animationDelay: "0.3s" }}>
             <Button
-              onClick={() => navigate("/auth")}
+              onClick={() => navigate(user ? "/app" : "/auth")}
               size="lg"
               className="gradient-calm text-primary-foreground hover:opacity-90 transition-all shadow-soft px-8 py-6 text-lg"
             >
-              Get Started Free
+              {user ? "Go to Dashboard" : "Get Started Free"}
             </Button>
             <Button
               variant="outline"
               size="lg"
               className="border-primary/30 text-foreground hover:bg-primary/5 px-8 py-6 text-lg"
-              onClick={() => document.getElementById("resources")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => document.getElementById("courses")?.scrollIntoView({ behavior: "smooth" })}
             >
-              Explore Resources
+              Explore Courses
             </Button>
           </div>
 

@@ -151,7 +151,7 @@ const CoursesSection = () => {
                     variant="ghost" 
                     size="sm" 
                     className="text-xs group-hover:text-primary"
-                    onClick={() => navigate("/courses")}
+                    onClick={() => navigate("/auth")}
                   >
                     Start Course
                     <ChevronRight className="w-3 h-3 ml-1" />
