@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, Heart, LayoutDashboard } from "lucide-react";
+import { Menu, X, Heart, LayoutDashboard, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
