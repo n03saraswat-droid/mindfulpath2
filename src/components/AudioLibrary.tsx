@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Music, Play, Sparkles, Clock, Heart, Info } from "lucide-react";
+import { Music, Play, Sparkles, Clock, Heart, Info, Waves } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { TRACKS, CATEGORIES, Track } from "@/data/audioTracks";
