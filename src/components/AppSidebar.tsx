@@ -55,7 +55,7 @@ const AppSidebar = ({ activeSection, onSectionChange, collapsed, onToggleCollaps
       {/* Logo */}
       <div className="flex items-center gap-2 p-4 border-b border-white/10">
         <div className="w-10 h-10 rounded-xl gradient-calm flex items-center justify-center flex-shrink-0 shadow-glow">
-          <Heart className="w-5 h-5 text-primary-foreground" />
+          <Heart className="w-5 h-5 text-white" />
         </div>
         <AnimatePresence>
           {!collapsed && (
