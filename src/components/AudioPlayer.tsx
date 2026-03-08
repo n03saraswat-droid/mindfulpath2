@@ -29,10 +29,7 @@ const apiReadyCallbacks: (() => void)[] = [];
 
 function loadYouTubeAPI(): Promise<void> {
   return new Promise((resolve) => {
-    if (apiReady) {
-      resolve();
-      return;
-    }
+    if (apiReady) { resolve(); return; }
     apiReadyCallbacks.push(resolve);
     if (!apiLoaded) {
       apiLoaded = true;
@@ -48,6 +45,15 @@ function loadYouTubeAPI(): Promise<void> {
   });
 }
 
+function formatTime(seconds: number): string {
+  if (!seconds || !isFinite(seconds)) return "0:00";
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  if (h > 0) return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
 const AudioPlayer = ({
   currentTrack,
   isPlaying,
@@ -59,19 +65,52 @@ const AudioPlayer = ({
 }: AudioPlayerProps) => {
   const playerRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [muted, setMuted] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
   const currentVideoIdRef = useRef<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isSeeking, setIsSeeking] = useState(false);
+
+  // Progress polling
+  useEffect(() => {
+    if (playerReady && isPlaying && !isSeeking) {
+      progressIntervalRef.current = setInterval(() => {
+        if (!playerRef.current) return;
+        try {
+          const ct = playerRef.current.getCurrentTime();
+          const dur = playerRef.current.getDuration();
+          if (ct !== undefined) setCurrentTime(ct);
+          if (dur !== undefined && dur > 0) setDuration(dur);
+        } catch {}
+      }, 500);
+    } else {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+        progressIntervalRef.current = null;
+      }
+    }
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+        progressIntervalRef.current = null;
+      }
+    };
+  }, [playerReady, isPlaying, isSeeking]);
+
+  // Reset progress on track change
+  useEffect(() => {
+    setCurrentTime(0);
+    setDuration(0);
+  }, [currentTrack?.videoId]);
 
   // Load YouTube API once
-  useEffect(() => {
-    loadYouTubeAPI();
-  }, []);
+  useEffect(() => { loadYouTubeAPI(); }, []);
 
   // Create or update player when track changes
   useEffect(() => {
     if (!currentTrack) {
-      // Destroy player when no track
       if (playerRef.current) {
         try { playerRef.current.destroy(); } catch {}
         playerRef.current = null;
@@ -85,22 +124,18 @@ const AudioPlayer = ({
       await loadYouTubeAPI();
 
       if (currentVideoIdRef.current === currentTrack.videoId && playerRef.current) {
-        // Same video, just play
         try { playerRef.current.playVideo(); } catch {}
         return;
       }
 
-      // Destroy old player
       if (playerRef.current) {
         try { playerRef.current.destroy(); } catch {}
         playerRef.current = null;
         setPlayerReady(false);
       }
 
-      // Ensure container exists
       if (!containerRef.current) return;
 
-      // Create a fresh div for the player
       const el = document.createElement("div");
       el.id = "yt-player-" + Date.now();
       containerRef.current.innerHTML = "";
@@ -113,14 +148,8 @@ const AudioPlayer = ({
         width: "1",
         videoId: currentTrack.videoId,
         playerVars: {
-          autoplay: 1,
-          controls: 0,
-          disablekb: 1,
-          fs: 0,
-          modestbranding: 1,
-          rel: 0,
-          showinfo: 0,
-          origin: window.location.origin,
+          autoplay: 1, controls: 0, disablekb: 1, fs: 0,
+          modestbranding: 1, rel: 0, showinfo: 0, origin: window.location.origin,
         },
         events: {
           onReady: () => {
@@ -128,24 +157,23 @@ const AudioPlayer = ({
             try {
               playerRef.current.setVolume(100);
               playerRef.current.playVideo();
+              const dur = playerRef.current.getDuration();
+              if (dur > 0) setDuration(dur);
             } catch {}
           },
           onStateChange: (event: any) => {
-            // YT.PlayerState: ENDED=0, PLAYING=1, PAUSED=2, BUFFERING=3
-            if (event.data === 0) {
-              // Track ended, play next
-              onNext();
+            if (event.data === 0) onNext();
+            if (event.data === 1) {
+              onPlayStateChange?.(true);
+              try {
+                const dur = playerRef.current.getDuration();
+                if (dur > 0) setDuration(dur);
+              } catch {}
             }
-            if (event.data === 1 && onPlayStateChange) {
-              onPlayStateChange(true);
-            }
-            if (event.data === 2 && onPlayStateChange) {
-              onPlayStateChange(false);
-            }
+            if (event.data === 2) onPlayStateChange?.(false);
           },
           onError: (event: any) => {
             console.warn("YouTube player error:", event.data, "for video:", currentTrack.videoId);
-            // Auto-skip on error (unavailable video)
             setTimeout(() => onNext(), 1500);
           },
         },
@@ -159,11 +187,8 @@ const AudioPlayer = ({
   useEffect(() => {
     if (!playerRef.current || !playerReady) return;
     try {
-      if (isPlaying) {
-        playerRef.current.playVideo();
-      } else {
-        playerRef.current.pauseVideo();
-      }
+      if (isPlaying) playerRef.current.playVideo();
+      else playerRef.current.pauseVideo();
     } catch {}
   }, [isPlaying, playerReady]);
 
@@ -171,11 +196,8 @@ const AudioPlayer = ({
   useEffect(() => {
     if (!playerRef.current || !playerReady) return;
     try {
-      if (muted) {
-        playerRef.current.mute();
-      } else {
-        playerRef.current.unMute();
-      }
+      if (muted) playerRef.current.mute();
+      else playerRef.current.unMute();
     } catch {}
   }, [muted, playerReady]);
 
@@ -199,6 +221,22 @@ const AudioPlayer = ({
     onClose();
   };
 
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!playerRef.current || !playerReady || duration <= 0) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const fraction = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const seekTo = fraction * duration;
+    setCurrentTime(seekTo);
+    try { playerRef.current.seekTo(seekTo, true); } catch {}
+  };
+
+  const handleSeekMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isSeeking) return;
+    handleSeek(e);
+  };
+
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
   return (
     <>
       {/* Hidden YouTube player container */}
@@ -217,6 +255,37 @@ const AudioPlayer = ({
             exit={{ y: 100, opacity: 0 }}
             className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card/95 backdrop-blur-xl"
           >
+            {/* Progress bar */}
+            <div
+              className="absolute top-0 left-0 right-0 h-1.5 bg-muted/30 cursor-pointer group"
+              onClick={handleSeek}
+              onMouseDown={() => setIsSeeking(true)}
+              onMouseMove={handleSeekMove}
+              onMouseUp={() => setIsSeeking(false)}
+              onMouseLeave={() => setIsSeeking(false)}
+              role="slider"
+              aria-label="Seek"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(progress)}
+            >
+              {/* Buffered/loaded background */}
+              <div
+                className="absolute top-0 left-0 h-full bg-primary/30 transition-all duration-300"
+                style={{ width: `${Math.min(progress + 5, 100)}%` }}
+              />
+              {/* Played progress */}
+              <div
+                className="absolute top-0 left-0 h-full bg-primary transition-all duration-150"
+                style={{ width: `${progress}%` }}
+              />
+              {/* Seek thumb */}
+              <div
+                className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ left: `calc(${progress}% - 6px)` }}
+              />
+            </div>
+
             <div className="container mx-auto px-4 py-3 flex items-center gap-4">
               {/* Track icon */}
               <div
@@ -241,14 +310,21 @@ const AudioPlayer = ({
                 )}
               </div>
 
-              {/* Track info */}
+              {/* Track info + time */}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-foreground truncate">
                   {currentTrack.title}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {currentTrack.artist} • {currentTrack.category}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="text-xs text-muted-foreground truncate">
+                    {currentTrack.artist} • {currentTrack.category}
+                  </p>
+                  {duration > 0 && (
+                    <span className="text-[10px] text-muted-foreground/70 tabular-nums whitespace-nowrap">
+                      {formatTime(currentTime)} / {formatTime(duration)}
+                    </span>
+                  )}
+                </div>
               </div>
 
               {/* Controls */}
