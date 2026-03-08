@@ -1,7 +1,8 @@
-import { Heart, LayoutDashboard, BarChart3, Brain, Music, Trophy, MessageCircle, Users, BookOpen, Bookmark, Sun, Sparkles, LogOut, LogIn, ChevronLeft, ChevronRight, Wind, Leaf, Medal } from "lucide-react";
+import { Heart, LayoutDashboard, BarChart3, Brain, Music, Trophy, MessageCircle, Users, BookOpen, Bookmark, Sun, Moon, Sparkles, LogOut, LogIn, ChevronLeft, ChevronRight, Wind, Leaf, Medal } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/contexts/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AppSidebarProps {
@@ -36,6 +37,7 @@ const groups = [
 const AppSidebar = ({ activeSection, onSectionChange, collapsed, onToggleCollapse }: AppSidebarProps) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <motion.aside
@@ -131,6 +133,13 @@ const AppSidebar = ({ activeSection, onSectionChange, collapsed, onToggleCollaps
 
       {/* Bottom Actions */}
       <div className="p-3 border-t border-white/10 space-y-2">
+        <button
+          onClick={toggleTheme}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
+        >
+          {theme === "dark" ? <Sun className="w-5 h-5 flex-shrink-0" /> : <Moon className="w-5 h-5 flex-shrink-0" />}
+          {!collapsed && <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>}
+        </button>
         {user ? (
           <button
             onClick={() => { signOut(); navigate("/"); }}
