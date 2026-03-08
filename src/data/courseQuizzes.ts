@@ -492,5 +492,401 @@ export const courseQuizzes: CourseQuizData[] = [
         explanation: "Mind wandering is normal and expected. The practice is to gently notice when it happens and kindly redirect attention back to your focus point."
       }
     ]
+  },
+  {
+    courseId: "social-anxiety",
+    title: "Social Anxiety Quiz",
+    questions: [
+      {
+        id: "soc-1",
+        question: "What is social anxiety disorder?",
+        options: [
+          "Being shy occasionally",
+          "Intense fear of being judged or embarrassed in social situations",
+          "Disliking all people",
+          "Being introverted"
+        ],
+        correctAnswer: 1,
+        explanation: "Social anxiety disorder involves intense, persistent fear of being watched, judged, or embarrassed in social situations, going beyond normal shyness."
+      },
+      {
+        id: "soc-2",
+        question: "What cognitive distortion is common in social anxiety?",
+        options: [
+          "Optimism bias",
+          "Mind reading — assuming others are thinking negatively about you",
+          "Always seeing the bright side",
+          "Ignoring social cues"
+        ],
+        correctAnswer: 1,
+        explanation: "Mind reading is a common cognitive distortion where you assume you know what others are thinking, usually assuming it's negative."
+      },
+      {
+        id: "soc-3",
+        question: "What is exposure therapy for social anxiety?",
+        options: [
+          "Avoiding all feared situations permanently",
+          "Gradually and repeatedly facing feared social situations in a safe way",
+          "Forcing yourself into the most terrifying situation immediately",
+          "Only talking about fears without acting"
+        ],
+        correctAnswer: 1,
+        explanation: "Exposure therapy involves gradually and systematically facing feared social situations, starting with less anxiety-provoking ones and building up."
+      },
+      {
+        id: "soc-4",
+        question: "Which safety behavior can maintain social anxiety?",
+        options: [
+          "Making eye contact",
+          "Speaking clearly",
+          "Avoiding speaking up, rehearsing every word, or staying near exits",
+          "Being yourself"
+        ],
+        correctAnswer: 2,
+        explanation: "Safety behaviors like avoiding participation, over-rehearsing, or positioning near exits provide short-term relief but maintain anxiety long-term by preventing learning."
+      },
+      {
+        id: "soc-5",
+        question: "How does self-focused attention affect social anxiety?",
+        options: [
+          "It reduces anxiety",
+          "It has no effect",
+          "It increases anxiety by making you hyper-aware of your own perceived flaws",
+          "It helps you perform better socially"
+        ],
+        correctAnswer: 2,
+        explanation: "Excessive self-focused attention increases social anxiety by making you overly aware of your own sensations and perceived shortcomings rather than engaging with others."
+      }
+    ]
+  },
+  {
+    courseId: "trauma",
+    title: "Trauma & Healing Quiz",
+    questions: [
+      {
+        id: "trm-1",
+        question: "What is a trauma response?",
+        options: [
+          "Choosing to be dramatic",
+          "The body and mind's automatic reaction to a threatening or overwhelming event",
+          "A sign of weakness",
+          "Something only soldiers experience"
+        ],
+        correctAnswer: 1,
+        explanation: "A trauma response is the body and mind's automatic, protective reaction to a threatening or overwhelming event. It is not a choice or a sign of weakness."
+      },
+      {
+        id: "trm-2",
+        question: "What does 'The Body Keeps the Score' mean?",
+        options: [
+          "You should exercise more",
+          "Trauma is stored in the body and manifests as physical symptoms",
+          "Your body counts how many bad things happen",
+          "Physical health is unrelated to mental health"
+        ],
+        correctAnswer: 1,
+        explanation: "This concept means that trauma is not just a psychological experience — it gets stored in the body and can manifest as physical symptoms, tension, and pain."
+      },
+      {
+        id: "trm-3",
+        question: "What is a grounding technique?",
+        options: [
+          "Standing barefoot on the ground",
+          "A strategy that uses the senses to bring you back to the present moment",
+          "Lying flat on the floor",
+          "Gardening"
+        ],
+        correctAnswer: 1,
+        explanation: "Grounding techniques use sensory awareness (like the 5-4-3-2-1 method) to anchor you in the present moment when triggered by trauma memories."
+      },
+      {
+        id: "trm-4",
+        question: "What is a trauma trigger?",
+        options: [
+          "The original traumatic event",
+          "A stimulus that reminds you of the trauma and activates a stress response",
+          "A type of gun",
+          "Something that only affects you if you let it"
+        ],
+        correctAnswer: 1,
+        explanation: "A trauma trigger is any sensory input (sound, smell, sight, etc.) that reminds the brain of the traumatic event and activates the body's stress response."
+      },
+      {
+        id: "trm-5",
+        question: "Why is safety important in trauma recovery?",
+        options: [
+          "It's not important",
+          "Because establishing physical and emotional safety is the foundation for healing",
+          "Only physical safety matters",
+          "Safety prevents all triggers"
+        ],
+        correctAnswer: 1,
+        explanation: "Establishing safety — both physical and emotional — is the critical first stage of trauma recovery, as healing cannot occur when someone still feels threatened."
+      }
+    ]
+  },
+  {
+    courseId: "panic",
+    title: "Panic Attack Recovery Quiz",
+    questions: [
+      {
+        id: "pan-1",
+        question: "What is a panic attack?",
+        options: [
+          "A heart attack",
+          "A sudden episode of intense fear with physical symptoms like racing heart and shortness of breath",
+          "Being slightly nervous",
+          "A permanent condition"
+        ],
+        correctAnswer: 1,
+        explanation: "A panic attack is a sudden surge of intense fear or discomfort that peaks within minutes, accompanied by physical symptoms like racing heart, sweating, and shortness of breath."
+      },
+      {
+        id: "pan-2",
+        question: "What is the 5-4-3-2-1 grounding technique?",
+        options: [
+          "Counting backwards from 5",
+          "Identifying 5 things you see, 4 you hear, 3 you touch, 2 you smell, 1 you taste",
+          "Taking 5 deep breaths",
+          "A type of exercise"
+        ],
+        correctAnswer: 1,
+        explanation: "The 5-4-3-2-1 technique engages all five senses to anchor you in the present moment, helping interrupt the panic cycle."
+      },
+      {
+        id: "pan-3",
+        question: "Can a panic attack cause actual physical harm?",
+        options: [
+          "Yes, they can be fatal",
+          "No, while extremely uncomfortable, panic attacks are not physically dangerous",
+          "Only if they last more than an hour",
+          "They always lead to fainting"
+        ],
+        correctAnswer: 1,
+        explanation: "While panic attacks feel terrifying and produce real physical symptoms, they are not physically dangerous and will pass on their own."
+      },
+      {
+        id: "pan-4",
+        question: "What is 'fear of fear' in panic disorder?",
+        options: [
+          "Being afraid of horror movies",
+          "The anxiety about having another panic attack, which can trigger more attacks",
+          "A rare phobia",
+          "Something that goes away on its own"
+        ],
+        correctAnswer: 1,
+        explanation: "Fear of fear (anticipatory anxiety) is the dread of having another panic attack, which creates a cycle where anxiety about panicking can itself trigger panic attacks."
+      },
+      {
+        id: "pan-5",
+        question: "What breathing technique helps during a panic attack?",
+        options: [
+          "Breathing as fast as possible",
+          "Holding your breath",
+          "Slow, controlled breathing — inhale 4 counts, hold 4, exhale 6",
+          "Breathing into a paper bag always works"
+        ],
+        correctAnswer: 2,
+        explanation: "Slow, controlled breathing (like box breathing or extended exhale) activates the parasympathetic nervous system, counteracting the panic response."
+      }
+    ]
+  },
+  {
+    courseId: "ocd",
+    title: "Understanding OCD Quiz",
+    questions: [
+      {
+        id: "ocd-1",
+        question: "What does OCD stand for?",
+        options: [
+          "Obsessive Cleaning Disorder",
+          "Obsessive-Compulsive Disorder",
+          "Over-Cautious Disorder",
+          "Occasional Checking Disorder"
+        ],
+        correctAnswer: 1,
+        explanation: "OCD stands for Obsessive-Compulsive Disorder, characterized by unwanted, intrusive thoughts (obsessions) and repetitive behaviors (compulsions)."
+      },
+      {
+        id: "ocd-2",
+        question: "What is the difference between obsessions and compulsions?",
+        options: [
+          "They are the same thing",
+          "Obsessions are unwanted thoughts; compulsions are behaviors performed to reduce the anxiety",
+          "Obsessions are behaviors; compulsions are thoughts",
+          "Only one of them is part of OCD"
+        ],
+        correctAnswer: 1,
+        explanation: "Obsessions are unwanted, intrusive thoughts or urges that cause distress. Compulsions are repetitive behaviors or mental acts performed to reduce the anxiety caused by obsessions."
+      },
+      {
+        id: "ocd-3",
+        question: "What is ERP therapy?",
+        options: [
+          "Emergency Response Protocol",
+          "Exposure and Response Prevention — facing fears without performing compulsions",
+          "Emotional Reprocessing Plan",
+          "A type of medication"
+        ],
+        correctAnswer: 1,
+        explanation: "ERP (Exposure and Response Prevention) is the gold-standard treatment for OCD, involving gradual exposure to anxiety triggers while resisting compulsive behaviors."
+      },
+      {
+        id: "ocd-4",
+        question: "Is OCD just about being neat and organized?",
+        options: [
+          "Yes, OCD is just being very tidy",
+          "No, OCD involves distressing intrusive thoughts and can manifest in many ways",
+          "OCD only involves hand-washing",
+          "OCD is a personality trait, not a disorder"
+        ],
+        correctAnswer: 1,
+        explanation: "OCD is far more than tidiness. It involves distressing, unwanted thoughts and can manifest as fears about harm, contamination, symmetry, religious/moral concerns, and many other themes."
+      },
+      {
+        id: "ocd-5",
+        question: "Why do compulsions make OCD worse over time?",
+        options: [
+          "They don't — compulsions cure OCD",
+          "They provide temporary relief but reinforce the cycle of obsession and anxiety",
+          "Compulsions have no effect",
+          "They only make it worse if done incorrectly"
+        ],
+        correctAnswer: 1,
+        explanation: "Compulsions provide temporary relief but reinforce the brain's belief that the obsession was a real threat, strengthening the OCD cycle over time."
+      }
+    ]
+  },
+  {
+    courseId: "eating-disorders",
+    title: "Eating Disorders Awareness Quiz",
+    questions: [
+      {
+        id: "ed-1",
+        question: "Which of these is an eating disorder?",
+        options: [
+          "Being a picky eater",
+          "Anorexia nervosa, bulimia nervosa, and binge eating disorder",
+          "Only anorexia",
+          "Choosing to diet occasionally"
+        ],
+        correctAnswer: 1,
+        explanation: "Eating disorders include anorexia nervosa, bulimia nervosa, binge eating disorder (BED), ARFID, and others. They are serious mental health conditions, not lifestyle choices."
+      },
+      {
+        id: "ed-2",
+        question: "Can you tell if someone has an eating disorder by looking at them?",
+        options: [
+          "Yes, they always look underweight",
+          "No, eating disorders affect people of all body sizes",
+          "Only overweight people have eating disorders",
+          "You can always tell by their behavior at meals"
+        ],
+        correctAnswer: 1,
+        explanation: "Eating disorders affect people of all body sizes, ages, genders, and backgrounds. You cannot determine someone's health or eating disorder status based on appearance."
+      },
+      {
+        id: "ed-3",
+        question: "How does media influence body image?",
+        options: [
+          "Media has no effect on body image",
+          "Media always promotes healthy body image",
+          "Unrealistic beauty standards in media can contribute to body dissatisfaction",
+          "Only social media affects body image"
+        ],
+        correctAnswer: 2,
+        explanation: "Media often promotes unrealistic and narrow beauty standards, which research shows can contribute to body dissatisfaction and disordered eating behaviors."
+      },
+      {
+        id: "ed-4",
+        question: "What is the first step toward eating disorder recovery?",
+        options: [
+          "Going on a different diet",
+          "Seeking professional help from specialists trained in eating disorders",
+          "Trying to recover completely on your own",
+          "Ignoring the problem"
+        ],
+        correctAnswer: 1,
+        explanation: "The first step is seeking professional help from healthcare providers trained in eating disorders, as these are complex conditions requiring specialized treatment."
+      },
+      {
+        id: "ed-5",
+        question: "Are eating disorders a choice?",
+        options: [
+          "Yes, people choose to have eating disorders",
+          "No, they are complex mental illnesses influenced by genetic, psychological, and social factors",
+          "Only some eating disorders are choices",
+          "They are just phases that people grow out of"
+        ],
+        correctAnswer: 1,
+        explanation: "Eating disorders are not choices. They are serious mental illnesses with biological, psychological, and social contributing factors that require professional treatment."
+      }
+    ]
+  },
+  {
+    courseId: "grief",
+    title: "Grief & Loss Quiz",
+    questions: [
+      {
+        id: "grf-1",
+        question: "Are the 'stages of grief' a linear process?",
+        options: [
+          "Yes, everyone goes through them in order",
+          "No, grief is unique and people may experience stages in any order or revisit them",
+          "There are exactly 5 stages everyone experiences",
+          "The stages only apply to death"
+        ],
+        correctAnswer: 1,
+        explanation: "Grief is not linear. People may experience stages in any order, skip some, or revisit them. Everyone's grief journey is unique."
+      },
+      {
+        id: "grf-2",
+        question: "What types of loss can cause grief?",
+        options: [
+          "Only the death of a loved one",
+          "Death, divorce, job loss, health changes, and other significant losses",
+          "Only sudden losses",
+          "Only losses that others consider important"
+        ],
+        correctAnswer: 1,
+        explanation: "Grief can result from many types of loss: death, relationship endings, job loss, health changes, loss of identity, moving, and other significant life changes."
+      },
+      {
+        id: "grf-3",
+        question: "What is 'complicated grief'?",
+        options: [
+          "Normal grief",
+          "Grief that is prolonged and significantly impairs daily functioning for an extended period",
+          "Grief about a complicated person",
+          "Feeling multiple emotions at once"
+        ],
+        correctAnswer: 1,
+        explanation: "Complicated (prolonged) grief is when intense grief symptoms persist for an extended period and significantly impair a person's ability to function in daily life."
+      },
+      {
+        id: "grf-4",
+        question: "Is there a 'right' way to grieve?",
+        options: [
+          "Yes, you must cry and talk about it",
+          "You should get over it within a few weeks",
+          "No, everyone grieves differently and there is no single right way",
+          "You should grieve alone"
+        ],
+        correctAnswer: 2,
+        explanation: "There is no single right way to grieve. People express and process grief differently based on their personality, culture, relationship with what was lost, and support system."
+      },
+      {
+        id: "grf-5",
+        question: "How can you support someone who is grieving?",
+        options: [
+          "Tell them to move on",
+          "Avoid mentioning the loss",
+          "Be present, listen without judgment, and let them grieve at their own pace",
+          "Try to fix their feelings"
+        ],
+        correctAnswer: 2,
+        explanation: "The best support is being present, listening without judgment, acknowledging their pain, and allowing them to grieve at their own pace without pressure to 'get over it.'"
+      }
+    ]
   }
 ];
