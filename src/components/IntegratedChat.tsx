@@ -266,18 +266,43 @@ const IntegratedChat = () => {
                       activeConversationId === conv.id ? "bg-primary/10 text-primary" : "hover:bg-accent"
                     )}
                   >
-                    <div className="flex-1 min-w-0" onClick={() => loadConversation(conv.id)}>
-                      <p className="text-sm font-medium truncate">{conv.title}</p>
+                    <div className="flex-1 min-w-0" onClick={() => { if (editingConvId !== conv.id) loadConversation(conv.id); }}>
+                      {editingConvId === conv.id ? (
+                        <input
+                          autoFocus
+                          className="text-sm font-medium w-full bg-transparent border-b border-primary outline-none py-0.5"
+                          value={editingTitle}
+                          onChange={(e) => setEditingTitle(e.target.value)}
+                          onBlur={() => renameConversation(conv.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") renameConversation(conv.id);
+                            if (e.key === "Escape") setEditingConvId(null);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      ) : (
+                        <p className="text-sm font-medium truncate">{conv.title}</p>
+                      )}
                       <p className="text-[10px] text-muted-foreground">{formatDate(conv.updated_at)}</p>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
-                      onClick={(e) => { e.stopPropagation(); deleteConversation(conv.id); }}
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </Button>
+                    <div className="flex items-center gap-0.5">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary"
+                        onClick={(e) => { e.stopPropagation(); setEditingConvId(conv.id); setEditingTitle(conv.title); }}
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+                        onClick={(e) => { e.stopPropagation(); deleteConversation(conv.id); }}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
