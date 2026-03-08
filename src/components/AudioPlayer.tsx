@@ -267,12 +267,14 @@ const AudioPlayer = ({
 
   const SLEEP_OPTIONS = [5, 10, 15, 30, 45, 60];
 
+  const handleClose = () => {
     if (playerRef.current) {
       try { playerRef.current.destroy(); } catch {}
       playerRef.current = null;
       currentVideoIdRef.current = null;
       setPlayerReady(false);
     }
+    setSleepTimer(null);
     onClose();
   };
 
