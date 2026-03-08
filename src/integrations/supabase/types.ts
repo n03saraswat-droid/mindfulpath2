@@ -314,7 +314,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      award_xp: {
+        Args: { _description: string; _event_type: string }
+        Returns: Json
+      }
+      toggle_post_like: { Args: { _post_id: string }; Returns: Json }
     }
     Enums: {
       mood_type: "great" | "good" | "okay" | "low" | "struggling"
