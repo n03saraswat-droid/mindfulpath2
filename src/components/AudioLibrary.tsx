@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,8 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { TRACKS, CATEGORIES, Track } from "@/data/audioTracks";
 import AudioPlayer, { RepeatMode } from "@/components/AudioPlayer";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const AudioLibrary = () => {
+  const { user } = useAuth();
   const [activeCategory, setActiveCategory] = useState("All");
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -17,6 +20,21 @@ const AudioLibrary = () => {
   const [shuffle, setShuffle] = useState(false);
   const [repeatMode, setRepeatMode] = useState<RepeatMode>("off");
   const shuffleHistoryRef = useRef<string[]>([]);
+
+  // Load favorites from database
+  useEffect(() => {
+    if (!user) return;
+    const loadFavorites = async () => {
+      const { data } = await supabase
+        .from("track_favorites")
+        .select("track_id")
+        .eq("user_id", user.id);
+      if (data) {
+        setLikedTracks(new Set(data.map(r => r.track_id)));
+      }
+    };
+    loadFavorites();
+  }, [user]);
 
   const filteredTracks = activeCategory === "Favorites"
     ? TRACKS.filter(t => likedTracks.has(t.id))
@@ -33,12 +51,21 @@ const AudioLibrary = () => {
     }
   };
 
-  const toggleLike = (id: string) => {
+  const toggleLike = async (id: string) => {
+    if (!user) return;
+    const isLiked = likedTracks.has(id);
+    // Optimistic update
     setLikedTracks(prev => {
       const n = new Set(prev);
-      n.has(id) ? n.delete(id) : n.add(id);
+      isLiked ? n.delete(id) : n.add(id);
       return n;
     });
+    // Persist
+    if (isLiked) {
+      await supabase.from("track_favorites").delete().eq("user_id", user.id).eq("track_id", id);
+    } else {
+      await supabase.from("track_favorites").insert({ user_id: user.id, track_id: id });
+    }
   };
 
   const nextTrack = useCallback(() => {
