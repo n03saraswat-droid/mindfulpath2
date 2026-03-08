@@ -1,7 +1,8 @@
-import { Heart, LayoutDashboard, BarChart3, Brain, Music, Trophy, MessageCircle, Users, BookOpen, Bookmark, Sun, Sparkles, LogOut, LogIn, ChevronLeft, ChevronRight, Wind, Leaf, Medal } from "lucide-react";
+import { Heart, LayoutDashboard, BarChart3, Brain, Music, Trophy, MessageCircle, Users, BookOpen, Bookmark, Sun, Moon, Sparkles, LogOut, LogIn, ChevronLeft, ChevronRight, Wind, Leaf, Medal } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/contexts/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AppSidebarProps {
