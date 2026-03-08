@@ -64,35 +64,14 @@ export const TRACKS: Track[] = [
   { id: "bg17", title: "Ch 17 – Shraddhatraya Vibhaga Yoga", artist: "Sanskrit Chanting", category: "Bhagavad Gita", duration: "11:00", mood: "Faithful", color: "from-yellow-600 to-lime-500", videoId: "gRSLrNUQuKU" },
   { id: "bg18", title: "Ch 18 – Moksha Sanyasa Yoga", artist: "Sanskrit Chanting", category: "Bhagavad Gita", duration: "30:00", mood: "Liberating", color: "from-amber-600 to-yellow-500", videoId: "FgcSLco9CwU" },
 
-  // ── Ramayana – All 7 Kandas ──
-  { id: "r1", title: "Bala Kanda", artist: "Ramayana Audiobook", category: "Ramayana", duration: "3:27:00", mood: "Beginnings", color: "from-amber-600 to-yellow-500", videoId: "OhwhbdNt5RI" },
-  { id: "r2", title: "Ayodhya Kanda", artist: "Ramayana Audiobook", category: "Ramayana", duration: "4:15:00", mood: "Devotional", color: "from-orange-600 to-amber-500", videoId: "QWvygspy4EA" },
-  { id: "r3", title: "Aranya Kanda", artist: "Ramayana Audiobook", category: "Ramayana", duration: "2:48:00", mood: "Adventurous", color: "from-red-600 to-orange-500", videoId: "LHyWMr3nRQE" },
-  { id: "r4", title: "Kishkindha Kanda", artist: "Ramayana Audiobook", category: "Ramayana", duration: "3:10:00", mood: "Alliance", color: "from-rose-600 to-red-500", videoId: "yLNGxuFTPYc" },
-  { id: "r5", title: "Sundara Kanda", artist: "Ramayana Audiobook", category: "Ramayana", duration: "3:30:00", mood: "Courageous", color: "from-pink-600 to-rose-500", videoId: "iR8aFv-nLvg" },
-  { id: "r6", title: "Yuddha Kanda", artist: "Ramayana Audiobook", category: "Ramayana", duration: "5:20:00", mood: "Heroic", color: "from-fuchsia-600 to-pink-500", videoId: "j5iMrGfv5MA" },
-  { id: "r7", title: "Uttara Kanda", artist: "Ramayana Audiobook", category: "Ramayana", duration: "3:00:00", mood: "Concluding", color: "from-purple-600 to-fuchsia-500", videoId: "pKf-51ZSVB8" },
-
-  // ── Hanuman Bhajans ──
+  // ── Hanuman Chalisa ──
   { id: "h1", title: "Hanuman Chalisa", artist: "Hariharan", category: "Hanuman Bhajans", duration: "8:42", mood: "Courageous", color: "from-orange-600 to-red-500", videoId: "AETFvQonfhc" },
-  { id: "h2", title: "Bajrang Baan", artist: "Hariharan", category: "Hanuman Bhajans", duration: "7:46", mood: "Powerful", color: "from-red-600 to-rose-500", videoId: "h1lT6cxwsPw" },
-  { id: "h3", title: "Hanuman Ashtak", artist: "Arvinder Singh", category: "Hanuman Bhajans", duration: "8:00", mood: "Devotional", color: "from-amber-600 to-orange-500", videoId: "ZxpRLfstDfA" },
-  { id: "h4", title: "Sankat Mochan Hanumanashtak", artist: "Narendra Chanchal", category: "Hanuman Bhajans", duration: "9:30", mood: "Protective", color: "from-rose-600 to-red-500", videoId: "aWSJn2xB1FU" },
-  { id: "h5", title: "Hanuman Aarti", artist: "Hariharan", category: "Hanuman Bhajans", duration: "4:30", mood: "Sacred", color: "from-yellow-600 to-amber-500", videoId: "sS7UcKNEaqg" },
-  { id: "h6", title: "Jai Hanuman Gyan Gun Sagar", artist: "Devotional", category: "Hanuman Bhajans", duration: "8:00", mood: "Celebratory", color: "from-orange-500 to-yellow-500", videoId: "HxZUtzV4CT0" },
-  { id: "h7", title: "Ram Lakhan Janaki Jai Bolo Hanuman Ki", artist: "Lakhbir Singh Lakkha", category: "Hanuman Bhajans", duration: "6:30", mood: "Joyful", color: "from-pink-600 to-orange-500", videoId: "irIBDF4PIyY" },
-  { id: "h8", title: "Mangal Murti Maruti Nandan", artist: "Devotional", category: "Hanuman Bhajans", duration: "5:45", mood: "Blessed", color: "from-amber-500 to-red-500", videoId: "tuq8_8PBqxg" },
-  { id: "h9", title: "Hanuman Bhujang Stotram", artist: "Sacred Chants", category: "Hanuman Bhajans", duration: "7:00", mood: "Majestic", color: "from-red-500 to-amber-500", videoId: "9vv8OHq_yrY" },
-  { id: "h10", title: "Veer Hanumana Ati Balwana", artist: "Devotional", category: "Hanuman Bhajans", duration: "5:00", mood: "Fearless", color: "from-orange-600 to-rose-500", videoId: "iuCzp8De6GY" },
-  { id: "h11", title: "Pawanputra Hanuman", artist: "Devotional", category: "Hanuman Bhajans", duration: "6:15", mood: "Inspiring", color: "from-rose-500 to-orange-500", videoId: "pX6paHO1Orw" },
-  { id: "h12", title: "Shri Hanuman Vandana", artist: "Devotional", category: "Hanuman Bhajans", duration: "5:30", mood: "Reverent", color: "from-yellow-500 to-orange-500", videoId: "nLalwUEhdxg" },
 ];
 
 export const CATEGORIES = [
   "All",
   "Shlokas",
   "Bhagavad Gita",
-  "Ramayana",
   "Hanuman Bhajans",
   "Uplifting Phonk",
   "Ambient",
