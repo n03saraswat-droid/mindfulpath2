@@ -13,6 +13,8 @@ declare global {
   }
 }
 
+export type RepeatMode = "off" | "all" | "one";
+
 interface AudioPlayerProps {
   currentTrack: Track | null;
   isPlaying: boolean;
@@ -21,6 +23,10 @@ interface AudioPlayerProps {
   onPrev: () => void;
   onClose: () => void;
   onPlayStateChange?: (playing: boolean) => void;
+  shuffle: boolean;
+  onShuffleToggle: () => void;
+  repeatMode: RepeatMode;
+  onRepeatToggle: () => void;
 }
 
 let apiLoaded = false;
