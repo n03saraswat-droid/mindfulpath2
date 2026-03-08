@@ -210,6 +210,10 @@ const AudioLibrary = () => {
         onPrev={prevTrack}
         onClose={closePlayer}
         onPlayStateChange={(playing) => setIsPlaying(playing)}
+        shuffle={shuffle}
+        onShuffleToggle={() => setShuffle(prev => !prev)}
+        repeatMode={repeatMode}
+        onRepeatToggle={toggleRepeat}
       />
     </div>
   );
