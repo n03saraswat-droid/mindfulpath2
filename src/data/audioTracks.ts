@@ -94,8 +94,13 @@ export const TRACKS: Track[] = [
   { id: "bg17", title: "Ch 17 – Shraddhatraya Vibhaga Yoga", artist: "Sanskrit Chanting", category: "Bhagavad Gita", duration: "11:00", mood: "Faithful", color: "from-yellow-600 to-lime-500", videoId: "gRSLrNUQuKU" },
   { id: "bg18", title: "Ch 18 – Moksha Sanyasa Yoga", artist: "Sanskrit Chanting", category: "Bhagavad Gita", duration: "30:00", mood: "Liberating", color: "from-amber-600 to-yellow-500", videoId: "FgcSLco9CwU" },
 
-  // ── Hanuman Chalisa ──
+  // ── Hanuman Bhajans ──
   { id: "h1", title: "Hanuman Chalisa", artist: "Hariharan", category: "Hanuman Bhajans", duration: "8:42", mood: "Courageous", color: "from-orange-600 to-red-500", videoId: "BLlTFapgvOo" },
+  { id: "h2", title: "Sankat Mochan Hanumanashtak", artist: "Rasraj Ji Maharaj", category: "Hanuman Bhajans", duration: "12:00", mood: "Devotional", color: "from-amber-600 to-orange-500", videoId: "hCkoIoEVyDk" },
+  { id: "h3", title: "Bajrang Baan", artist: "Rasraj Ji Maharaj", category: "Hanuman Bhajans", duration: "15:00", mood: "Powerful", color: "from-red-600 to-rose-500", videoId: "2PU96sVA2Mg" },
+  { id: "h4", title: "Hanuman Aarti", artist: "Rasraj Ji Maharaj", category: "Hanuman Bhajans", duration: "6:00", mood: "Sacred", color: "from-yellow-600 to-amber-500", videoId: "Q6n2Lz9s9uA" },
+  { id: "h5", title: "Mangal Murti Maruti Nandan", artist: "Rasraj Ji Maharaj", category: "Hanuman Bhajans", duration: "10:00", mood: "Blissful", color: "from-orange-500 to-yellow-500", videoId: "1sYqg9tK0s4" },
+  { id: "h6", title: "Hanuman Vandana", artist: "Rasraj Ji Maharaj", category: "Hanuman Bhajans", duration: "8:00", mood: "Divine", color: "from-rose-600 to-orange-500", videoId: "Q9b9YyF6G2Q" },
 
   // ── Calming Frequencies (Solfeggio) ──
   { id: "cf1", title: "174 Hz – Pain Relief", artist: "Healing Frequencies", category: "Calming Frequencies", duration: "1:00:00", mood: "Relieving", color: "from-rose-400 to-pink-500", videoId: "ckh3EQFntLE", description: "The lowest solfeggio frequency acts as a natural anaesthetic, reducing physical and emotional pain. It helps relieve tension in the body, promotes a sense of safety, and grounds your energy for deep relaxation." },
