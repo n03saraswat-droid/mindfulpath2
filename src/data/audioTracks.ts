@@ -34,16 +34,16 @@ export const TRACKS: Track[] = [
   { id: "n3", title: "Thunderstorm & Rain", artist: "Nature Sounds", category: "Nature", duration: "8:00:00", mood: "Grounding", color: "from-gray-600 to-slate-500", videoId: "nDq6TstdEi8" },
 
   // ── Shlokas / Mantras ──
-  { id: "s1", title: "Gayatri Mantra", artist: "Sacred Chants", category: "Shlokas", duration: "29:00", mood: "Divine", color: "from-amber-600 to-yellow-500", videoId: "HVCzGaoMGec" },
-  { id: "s2", title: "Om Namah Shivaya", artist: "Sacred Chants", category: "Shlokas", duration: "1:07:47", mood: "Devotional", color: "from-orange-600 to-amber-500", videoId: "jYdaQJzcAcw" },
-  { id: "s3", title: "Mahamrityunjaya Mantra", artist: "Sacred Chants", category: "Shlokas", duration: "26:26", mood: "Healing", color: "from-red-600 to-orange-500", videoId: "CANrEJiPsRw" },
-  { id: "s4", title: "Vishnu Sahasranama", artist: "M.S. Subbulakshmi", category: "Shlokas", duration: "29:36", mood: "Peaceful", color: "from-sky-600 to-blue-500", videoId: "eTINGFxbDfs" },
-  { id: "s5", title: "Shanti Mantra", artist: "Sacred Chants", category: "Shlokas", duration: "5:34", mood: "Tranquil", color: "from-emerald-600 to-teal-500", videoId: "JdhfE_SzwB4" },
-  { id: "s6", title: "Durga Suktam", artist: "Sacred Chants", category: "Shlokas", duration: "8:49", mood: "Empowering", color: "from-fuchsia-600 to-pink-500", videoId: "JhLnDBflGtk" },
-  { id: "s7", title: "Sri Rudram", artist: "Vedic Chanting", category: "Shlokas", duration: "35:21", mood: "Sacred", color: "from-indigo-600 to-blue-500", videoId: "oHuXPmLZRdI" },
-  { id: "s8", title: "Lalitha Sahasranama", artist: "Sacred Chants", category: "Shlokas", duration: "41:37", mood: "Blissful", color: "from-pink-600 to-rose-500", videoId: "EXtpj2hZpE0" },
-  { id: "s9", title: "Rudram Chamakam", artist: "Vedic Chanting", category: "Shlokas", duration: "30:00", mood: "Purifying", color: "from-blue-600 to-indigo-500", videoId: "Iq78oO-QNNQ" },
-  { id: "s10", title: "Om Gan Ganpataye Namah", artist: "Sacred Chants", category: "Shlokas", duration: "11:00", mood: "Auspicious", color: "from-yellow-600 to-amber-500", videoId: "CmxqHqTnUgs" },
+  { id: "s1", title: "Gayatri Mantra", artist: "Sacred Chants", category: "Shlokas", duration: "29:00", mood: "Divine", color: "from-amber-600 to-yellow-500", videoId: "P5eWHjYhrG8" },
+  { id: "s2", title: "Om Namah Shivaya", artist: "Sacred Chants", category: "Shlokas", duration: "1:07:47", mood: "Devotional", color: "from-orange-600 to-amber-500", videoId: "GqP41gUPRtQ" },
+  { id: "s3", title: "Mahamrityunjaya Mantra", artist: "Sacred Chants", category: "Shlokas", duration: "26:26", mood: "Healing", color: "from-red-600 to-orange-500", videoId: "V8zXSQnHqzA" },
+  { id: "s4", title: "Vishnu Sahasranama", artist: "M.S. Subbulakshmi", category: "Shlokas", duration: "29:36", mood: "Peaceful", color: "from-sky-600 to-blue-500", videoId: "ATflgO0S0A4" },
+  { id: "s5", title: "Shanti Mantra", artist: "Sacred Chants", category: "Shlokas", duration: "5:34", mood: "Tranquil", color: "from-emerald-600 to-teal-500", videoId: "R0Jq9jK9hK0" },
+  { id: "s6", title: "Durga Suktam", artist: "Sacred Chants", category: "Shlokas", duration: "8:49", mood: "Empowering", color: "from-fuchsia-600 to-pink-500", videoId: "6mT3rU8yQe0" },
+  { id: "s7", title: "Sri Rudram", artist: "Vedic Chanting", category: "Shlokas", duration: "35:21", mood: "Sacred", color: "from-indigo-600 to-blue-500", videoId: "5S1dXyF3y6Q" },
+  { id: "s8", title: "Lalitha Sahasranama", artist: "Sacred Chants", category: "Shlokas", duration: "41:37", mood: "Blissful", color: "from-pink-600 to-rose-500", videoId: "YwqvG9kJgq4" },
+  { id: "s9", title: "Rudram Chamakam", artist: "Vedic Chanting", category: "Shlokas", duration: "30:00", mood: "Purifying", color: "from-blue-600 to-indigo-500", videoId: "HkR6xF5s7uQ" },
+  { id: "s10", title: "Om Gan Ganpataye Namah", artist: "Sacred Chants", category: "Shlokas", duration: "11:00", mood: "Auspicious", color: "from-yellow-600 to-amber-500", videoId: "KZV8y4vA5Q0" },
 
   // ── Bhagavad Gita – All 18 Chapters ──
   { id: "bg1", title: "Ch 1 – Arjuna Vishada Yoga", artist: "Sanskrit Chanting", category: "Bhagavad Gita", duration: "15:55", mood: "Contemplative", color: "from-amber-600 to-yellow-500", videoId: "z4IQ4Laivtk" },
