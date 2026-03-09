@@ -62,6 +62,9 @@ const Auth = () => {
           message = "Invalid email or password. Please try again.";
         } else if (message.includes("User already registered")) {
           message = "This email is already registered. Please sign in instead.";
+          setIsLogin(true);
+        } else if (message.includes("Email not confirmed")) {
+          message = "Please check your email to confirm your account before signing in.";
         }
         toast({
           variant: "destructive",
