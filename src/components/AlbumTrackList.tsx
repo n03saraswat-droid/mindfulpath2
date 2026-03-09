@@ -29,11 +29,11 @@ const AlbumTrackList = ({
     <div className="space-y-6">
       {/* Album Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
+          <ArrowLeft className="w-4 h-4" /> Back to Library
+        </button>
         <Card className="glass-card overflow-hidden">
           <div className="flex flex-col sm:flex-row gap-6 p-6">
-            <button onClick={onBack} className="absolute top-4 left-4 sm:hidden p-2 rounded-full bg-black/20 backdrop-blur-sm text-white">
-              <ArrowLeft className="w-5 h-5" />
-            </button>
             <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-xl overflow-hidden flex-shrink-0 shadow-lg mx-auto sm:mx-0">
               <img src={album.coverArt} alt={album.title} className="w-full h-full object-cover" />
             </div>
@@ -48,9 +48,6 @@ const AlbumTrackList = ({
                 <Button onClick={onShuffleAll} variant="outline" size="icon">
                   <Shuffle className="w-4 h-4" />
                 </Button>
-                <button onClick={onBack} className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  <ArrowLeft className="w-4 h-4" /> Back
-                </button>
               </div>
             </div>
           </div>
