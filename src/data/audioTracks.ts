@@ -1,3 +1,12 @@
+import shloksCover from "@/assets/albums/shlokas-cover.jpg";
+import bhagavadGitaCover from "@/assets/albums/bhagavad-gita-cover.jpg";
+import hanumanCover from "@/assets/albums/hanuman-cover.jpg";
+import frequenciesCover from "@/assets/albums/frequencies-cover.jpg";
+import phonkCover from "@/assets/albums/phonk-cover.jpg";
+import ambientCover from "@/assets/albums/ambient-cover.jpg";
+import meditationCover from "@/assets/albums/meditation-cover.jpg";
+import natureCover from "@/assets/albums/nature-cover.jpg";
+
 export interface Track {
   id: string;
   title: string;
@@ -9,6 +18,26 @@ export interface Track {
   videoId: string;
   description?: string;
 }
+
+export interface Album {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  coverArt: string;
+  color: string;
+}
+
+export const ALBUMS: Album[] = [
+  { id: "album-shlokas", title: "Sacred Shlokas", category: "Shlokas", description: "Ancient Sanskrit mantras for spiritual healing and inner peace", coverArt: shloksCover, color: "from-amber-600 to-yellow-500" },
+  { id: "album-gita", title: "Bhagavad Gita", category: "Bhagavad Gita", description: "All 18 chapters of the divine scripture in Sanskrit", coverArt: bhagavadGitaCover, color: "from-orange-600 to-amber-500" },
+  { id: "album-hanuman", title: "Hanuman Bhajans", category: "Hanuman Bhajans", description: "Devotional hymns dedicated to Lord Hanuman", coverArt: hanumanCover, color: "from-orange-600 to-red-500" },
+  { id: "album-frequencies", title: "Calming Frequencies", category: "Calming Frequencies", description: "Solfeggio healing tones from 174 Hz to 963 Hz", coverArt: frequenciesCover, color: "from-violet-500 to-cyan-500" },
+  { id: "album-phonk", title: "Uplifting Phonk", category: "Uplifting Phonk", description: "High-energy motivational beats to fuel your drive", coverArt: phonkCover, color: "from-purple-500 to-pink-500" },
+  { id: "album-ambient", title: "Ambient", category: "Ambient", description: "Ethereal soundscapes for deep relaxation", coverArt: ambientCover, color: "from-teal-500 to-emerald-500" },
+  { id: "album-meditation", title: "Meditation", category: "Meditation", description: "Immersive sounds for mindful meditation practice", coverArt: meditationCover, color: "from-indigo-500 to-violet-500" },
+  { id: "album-nature", title: "Nature Sounds", category: "Nature", description: "Soothing sounds from forests, oceans, and storms", coverArt: natureCover, color: "from-green-500 to-emerald-500" },
+];
 
 export const TRACKS: Track[] = [
   // ── Uplifting Phonk / Motivational ──

@@ -1,18 +1,18 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Music, Play, Sparkles, Clock, Heart, Info, Waves } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { TRACKS, CATEGORIES, Track } from "@/data/audioTracks";
+import { Heart } from "lucide-react";
+import { TRACKS, ALBUMS, Track } from "@/data/audioTracks";
 import AudioPlayer, { RepeatMode } from "@/components/AudioPlayer";
+import AlbumGrid from "@/components/AlbumGrid";
+import AlbumTrackList from "@/components/AlbumTrackList";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
+type View = "albums" | "tracks" | "favorites";
+
 const AudioLibrary = () => {
   const { user } = useAuth();
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [view, setView] = useState<View>("albums");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [likedTracks, setLikedTracks] = useState<Set<string>>(new Set());
@@ -21,7 +21,6 @@ const AudioLibrary = () => {
   const [repeatMode, setRepeatMode] = useState<RepeatMode>("off");
   const shuffleHistoryRef = useRef<string[]>([]);
 
-  // Load favorites from database
   useEffect(() => {
     if (!user) return;
     const loadFavorites = async () => {
@@ -29,18 +28,16 @@ const AudioLibrary = () => {
         .from("track_favorites")
         .select("track_id")
         .eq("user_id", user.id);
-      if (data) {
-        setLikedTracks(new Set(data.map(r => r.track_id)));
-      }
+      if (data) setLikedTracks(new Set(data.map(r => r.track_id)));
     };
     loadFavorites();
   }, [user]);
 
-  const filteredTracks = activeCategory === "Favorites"
+  const activeTracks = view === "favorites"
     ? TRACKS.filter(t => likedTracks.has(t.id))
-    : activeCategory === "All"
-      ? TRACKS
-      : TRACKS.filter(t => t.category === activeCategory);
+    : selectedCategory
+      ? TRACKS.filter(t => t.category === selectedCategory)
+      : TRACKS;
 
   const playTrack = (track: Track) => {
     if (currentTrack?.id === track.id) {
@@ -54,13 +51,11 @@ const AudioLibrary = () => {
   const toggleLike = async (id: string) => {
     if (!user) return;
     const isLiked = likedTracks.has(id);
-    // Optimistic update
     setLikedTracks(prev => {
       const n = new Set(prev);
       isLiked ? n.delete(id) : n.add(id);
       return n;
     });
-    // Persist
     if (isLiked) {
       await supabase.from("track_favorites").delete().eq("user_id", user.id).eq("track_id", id);
     } else {
@@ -69,216 +64,99 @@ const AudioLibrary = () => {
   };
 
   const nextTrack = useCallback(() => {
-    if (!currentTrack || filteredTracks.length === 0) return;
+    if (!currentTrack || activeTracks.length === 0) return;
     if (shuffle) {
-      const others = filteredTracks.filter(t => t.id !== currentTrack.id);
+      const others = activeTracks.filter(t => t.id !== currentTrack.id);
       if (others.length === 0) return;
-      const random = others[Math.floor(Math.random() * others.length)];
       shuffleHistoryRef.current.push(currentTrack.id);
-      setCurrentTrack(random);
+      setCurrentTrack(others[Math.floor(Math.random() * others.length)]);
     } else {
-      const idx = filteredTracks.findIndex(t => t.id === currentTrack.id);
-      if (repeatMode === "off" && idx === filteredTracks.length - 1) {
-        // Stop at end when repeat is off
-        setIsPlaying(false);
-        return;
-      }
-      setCurrentTrack(filteredTracks[(idx + 1) % filteredTracks.length]);
+      const idx = activeTracks.findIndex(t => t.id === currentTrack.id);
+      if (repeatMode === "off" && idx === activeTracks.length - 1) { setIsPlaying(false); return; }
+      setCurrentTrack(activeTracks[(idx + 1) % activeTracks.length]);
     }
     setIsPlaying(true);
-  }, [currentTrack, filteredTracks, shuffle, repeatMode]);
+  }, [currentTrack, activeTracks, shuffle, repeatMode]);
 
   const prevTrack = useCallback(() => {
-    if (!currentTrack || filteredTracks.length === 0) return;
+    if (!currentTrack || activeTracks.length === 0) return;
     if (shuffle && shuffleHistoryRef.current.length > 0) {
       const prevId = shuffleHistoryRef.current.pop();
-      const prev = filteredTracks.find(t => t.id === prevId);
+      const prev = activeTracks.find(t => t.id === prevId);
       if (prev) { setCurrentTrack(prev); setIsPlaying(true); return; }
     }
-    const idx = filteredTracks.findIndex(t => t.id === currentTrack.id);
-    setCurrentTrack(filteredTracks[(idx - 1 + filteredTracks.length) % filteredTracks.length]);
+    const idx = activeTracks.findIndex(t => t.id === currentTrack.id);
+    setCurrentTrack(activeTracks[(idx - 1 + activeTracks.length) % activeTracks.length]);
     setIsPlaying(true);
-  }, [currentTrack, filteredTracks, shuffle]);
+  }, [currentTrack, activeTracks, shuffle]);
 
   const toggleRepeat = useCallback(() => {
     setRepeatMode(prev => prev === "off" ? "all" : prev === "all" ? "one" : "off");
   }, []);
 
-  const closePlayer = () => {
-    setCurrentTrack(null);
-    setIsPlaying(false);
+  const closePlayer = () => { setCurrentTrack(null); setIsPlaying(false); };
+
+  const openAlbum = (category: string) => { setSelectedCategory(category); setView("tracks"); };
+  const goBack = () => { setView("albums"); setSelectedCategory(null); };
+  const openFavorites = () => { setView("favorites"); setSelectedCategory(null); };
+
+  const currentAlbum = ALBUMS.find(a => a.category === selectedCategory);
+
+  const playAll = () => {
+    if (activeTracks.length > 0) { setCurrentTrack(activeTracks[0]); setIsPlaying(true); setShuffle(false); }
+  };
+  const shuffleAll = () => {
+    if (activeTracks.length > 0) {
+      const random = activeTracks[Math.floor(Math.random() * activeTracks.length)];
+      setCurrentTrack(random); setIsPlaying(true); setShuffle(true);
+    }
   };
 
   return (
     <div className="space-y-6 pb-24">
-      {/* Featured Section */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <Card className="glass-card overflow-hidden">
-          <div className="bg-gradient-to-br from-amber-500/20 via-orange-500/10 to-red-500/20 p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <Sparkles className="w-6 h-6 text-amber-500" />
-              <Badge className="bg-amber-500/20 text-amber-600 border-0">Featured</Badge>
-            </div>
-            <h2 className="font-serif text-3xl font-bold text-foreground mb-2">Sacred Shlokas Collection</h2>
-            <p className="text-muted-foreground max-w-lg">
-              Ancient Sanskrit mantras and sacred chants for spiritual healing, inner peace, and mental clarity. Experience the divine vibrations that have guided seekers for millennia.
-            </p>
-            <Button onClick={() => { setActiveCategory("Shlokas"); playTrack(TRACKS.find(t => t.id === "s1")!); }} className="mt-4 gradient-calm text-primary-foreground">
-              <Play className="w-4 h-4 mr-2" /> Play Shlokas
-            </Button>
-          </div>
-        </Card>
-      </motion.div>
+      {view === "albums" && (
+        <AlbumGrid
+          albums={ALBUMS}
+          likedCount={likedTracks.size}
+          onAlbumClick={openAlbum}
+          onFavoritesClick={openFavorites}
+        />
+      )}
 
-      {/* Calming Frequencies Featured Section */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <Card className="glass-card overflow-hidden">
-          <div className="bg-gradient-to-br from-violet-500/20 via-blue-500/10 to-cyan-500/20 p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <Waves className="w-6 h-6 text-violet-500" />
-              <Badge className="bg-violet-500/20 text-violet-600 border-0">Solfeggio</Badge>
-            </div>
-            <h2 className="font-serif text-3xl font-bold text-foreground mb-2">Calming Frequencies</h2>
-            <p className="text-muted-foreground max-w-lg mb-3">
-              Ancient solfeggio frequencies for deep healing — from pain relief at 174 Hz to spiritual enlightenment at 963 Hz. Each tone targets specific chakras and promotes cellular restoration.
-            </p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {TRACKS.filter(t => t.category === "Calming Frequencies").slice(0, 5).map(t => (
-                <button
-                  key={t.id}
-                  onClick={() => { setActiveCategory("Calming Frequencies"); playTrack(t); }}
-                  className={cn(
-                    "text-xs px-3 py-1.5 rounded-full border border-border/50 transition-all hover:scale-105",
-                    currentTrack?.id === t.id
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card/50 text-muted-foreground hover:bg-accent"
-                  )}
-                >
-                  {t.title.replace(" – ", " · ")}
-                </button>
-              ))}
-            </div>
-            <Button onClick={() => { setActiveCategory("Calming Frequencies"); playTrack(TRACKS.find(t => t.id === "cf1")!); }} className="gradient-calm text-primary-foreground">
-              <Play className="w-4 h-4 mr-2" /> Play All Frequencies
-            </Button>
-          </div>
-        </Card>
-      </motion.div>
+      {view === "tracks" && currentAlbum && (
+        <AlbumTrackList
+          album={currentAlbum}
+          tracks={activeTracks}
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+          likedTracks={likedTracks}
+          hoveredTrack={hoveredTrack}
+          onPlay={playTrack}
+          onToggleLike={toggleLike}
+          onHover={setHoveredTrack}
+          onBack={goBack}
+          onPlayAll={playAll}
+          onShuffleAll={shuffleAll}
+        />
+      )}
 
-      {/* Categories */}
-      <div className="flex gap-2 flex-wrap">
-        {/* Favorites pill */}
-        <button
-          onClick={() => setActiveCategory("Favorites")}
-          className={cn(
-            "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5",
-            activeCategory === "Favorites" ? "gradient-calm text-primary-foreground shadow-soft" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-          )}
-        >
-          <Heart className={cn("w-3.5 h-3.5", likedTracks.size > 0 && "fill-current")} />
-          Favorites {likedTracks.size > 0 && `(${likedTracks.size})`}
-        </button>
-        {CATEGORIES.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={cn(
-              "px-4 py-2 rounded-full text-sm font-medium transition-all",
-              activeCategory === cat ? "gradient-calm text-primary-foreground shadow-soft" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-            )}
-          >
-            {cat}
-            {cat !== "All" && (
-              <span className="ml-1.5 text-xs opacity-70">
-                ({TRACKS.filter(t => t.category === cat).length})
-              </span>
-            )}
-          </button>
-        ))}
-      </div>
+      {view === "favorites" && (
+        <AlbumTrackList
+          album={{ id: "favorites", title: "Favorites", category: "Favorites", description: "Your liked tracks", coverArt: "", color: "from-red-500 to-pink-500" }}
+          tracks={activeTracks}
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+          likedTracks={likedTracks}
+          hoveredTrack={hoveredTrack}
+          onPlay={playTrack}
+          onToggleLike={toggleLike}
+          onHover={setHoveredTrack}
+          onBack={goBack}
+          onPlayAll={playAll}
+          onShuffleAll={shuffleAll}
+        />
+      )}
 
-      {/* Track List */}
-      <div className="space-y-2">
-        {filteredTracks.map((track, i) => {
-          const isActive = currentTrack?.id === track.id;
-          const isHovered = hoveredTrack === track.id;
-          const showDescription = track.description && (isActive || isHovered);
-
-          return (
-            <motion.div key={track.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.03 }}>
-              <Card
-                className={cn(
-                  "glass-card cursor-pointer transition-all hover:shadow-soft",
-                  isActive && "ring-2 ring-primary/30"
-                )}
-                onClick={() => playTrack(track)}
-                onMouseEnter={() => setHoveredTrack(track.id)}
-                onMouseLeave={() => setHoveredTrack(null)}
-              >
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <div className={cn("w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center flex-shrink-0", track.color)}>
-                      {isActive && isPlaying ? (
-                        <div className="flex gap-0.5 items-end h-5">
-                          {[1, 2, 3].map(b => (
-                            <motion.div
-                              key={b}
-                              className="w-1 bg-white rounded-full"
-                              animate={{ height: [8, 16, 8] }}
-                              transition={{ duration: 0.6, repeat: Infinity, delay: b * 0.15 }}
-                            />
-                          ))}
-                        </div>
-                      ) : (
-                        <Music className="w-5 h-5 text-white" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-foreground truncate">{track.title}</h3>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span>{track.artist}</span>
-                        <span>•</span>
-                        <span>{track.category}</span>
-                      </div>
-                    </div>
-                    <Badge variant="secondary" className="text-xs hidden sm:flex">{track.mood}</Badge>
-                    <div className="flex items-center gap-2">
-                      {track.description && (
-                        <Info className={cn("w-3.5 h-3.5 transition-colors", showDescription ? "text-primary" : "text-muted-foreground/40")} />
-                      )}
-                      <span className="text-xs text-muted-foreground flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {track.duration}
-                      </span>
-                      <button onClick={(e) => { e.stopPropagation(); toggleLike(track.id); }} className="p-1">
-                        <Heart className={cn("w-4 h-4 transition-colors", likedTracks.has(track.id) ? "fill-red-500 text-red-500" : "text-muted-foreground hover:text-red-500")} />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Description expand */}
-                  <AnimatePresence>
-                    {showDescription && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <p className="text-xs text-muted-foreground leading-relaxed mt-3 pt-3 border-t border-border/50 pl-16">
-                          {track.description}
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </CardContent>
-              </Card>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* Audio Player */}
       <AudioPlayer
         currentTrack={currentTrack}
         isPlaying={isPlaying}
