@@ -9,6 +9,8 @@ import MeditationSection from "@/components/MeditationSection";
 import ChatSection from "@/components/ChatSection";
 import CoursesSection from "@/components/CoursesSection";
 import ShlokasSection from "@/components/ShlokasSection";
+import ReviewsSection from "@/components/ReviewsSection";
+import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -40,6 +42,8 @@ const Index = () => {
         <SelfCareSection />
         <MeditationSection />
         <ChatSection />
+        <ReviewsSection />
+        <FAQSection />
       </main>
       <Footer />
     </div>
