@@ -42,6 +42,8 @@ const Index = () => {
         <SelfCareSection />
         <MeditationSection />
         <ChatSection />
+        <ReviewsSection />
+        <FAQSection />
       </main>
       <Footer />
     </div>
