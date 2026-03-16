@@ -48,16 +48,10 @@ const Navigation = () => {
               Resources
             </button>
             <button
-              onClick={() => scrollToSection("meditation")}
+              onClick={() => scrollToSection("demos")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              Meditation
-            </button>
-            <button
-              onClick={() => scrollToSection("chat")}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              AI Support
+              Demos
             </button>
             <button
               onClick={() => navigate("/team")}
@@ -129,16 +123,10 @@ const Navigation = () => {
                 Resources
               </button>
               <button
-                onClick={() => scrollToSection("meditation")}
+                onClick={() => scrollToSection("demos")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
-                Meditation
-              </button>
-              <button
-                onClick={() => scrollToSection("chat")}
-                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
-              >
-                AI Support
+                Demos
               </button>
               <button
                 onClick={() => { navigate("/team"); setIsOpen(false); }}

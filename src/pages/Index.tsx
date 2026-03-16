@@ -5,8 +5,8 @@ import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import ResourcesSection from "@/components/ResourcesSection";
 import SelfCareSection from "@/components/SelfCareSection";
-import MeditationSection from "@/components/MeditationSection";
-import ChatSection from "@/components/ChatSection";
+import DemoSection from "@/components/DemoSection";
+import FeaturesShowcase from "@/components/FeaturesShowcase";
 import CoursesSection from "@/components/CoursesSection";
 import ShlokasSection from "@/components/ShlokasSection";
 import ReviewsSection from "@/components/ReviewsSection";
@@ -36,12 +36,12 @@ const Index = () => {
       <Navigation />
       <main>
         <HeroSection />
+        <FeaturesShowcase />
+        <DemoSection />
         <CoursesSection />
         <ShlokasSection />
         <ResourcesSection />
         <SelfCareSection />
-        <MeditationSection />
-        <ChatSection />
         <ReviewsSection />
         <FAQSection />
       </main>
