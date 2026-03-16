@@ -60,6 +60,12 @@ const Navigation = () => {
               AI Support
             </button>
             <button
+              onClick={() => navigate("/team")}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Our Team
+            </button>
+            <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
               aria-label="Toggle theme"
