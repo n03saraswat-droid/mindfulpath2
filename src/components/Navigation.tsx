@@ -140,6 +140,12 @@ const Navigation = () => {
               >
                 AI Support
               </button>
+              <button
+                onClick={() => { navigate("/team"); setIsOpen(false); }}
+                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
+              >
+                Our Team
+              </button>
               {user ? (
                 <Button
                   onClick={() => { navigate("/app"); setIsOpen(false); }}
