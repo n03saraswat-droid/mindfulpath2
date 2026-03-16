@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import AppSidebar from "@/components/AppSidebar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import IntegratedDashboard from "@/components/IntegratedDashboard";
 import IntegratedMoodTracker from "@/components/IntegratedMoodTracker";
 import IntegratedChat from "@/components/IntegratedChat";
@@ -78,20 +79,29 @@ const MainApp = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar
+      {/* Desktop sidebar — hidden on mobile */}
+      <div className="hidden md:block">
+        <AppSidebar
+          activeSection={activeSection}
+          onSectionChange={setActiveSection}
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
+      </div>
+
+      {/* Mobile bottom nav — hidden on desktop */}
+      <MobileBottomNav
         activeSection={activeSection}
         onSectionChange={setActiveSection}
-        collapsed={sidebarCollapsed}
-        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
 
       <motion.main
         initial={false}
-        animate={{ marginLeft: sidebarCollapsed ? 72 : 260 }}
+        animate={{ marginLeft: typeof window !== "undefined" && window.innerWidth >= 768 ? (sidebarCollapsed ? 72 : 260) : 0 }}
         transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="min-h-screen"
+        className="min-h-screen pb-20 md:pb-0"
       >
-        <div className="container mx-auto px-4 md:px-8 py-8 max-w-6xl">
+        <div className="container mx-auto px-4 md:px-8 py-6 md:py-8 max-w-6xl">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
