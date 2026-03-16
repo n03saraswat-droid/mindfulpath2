@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import MainApp from "./pages/MainApp";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import Team from "./pages/Team";
 
 const queryClient = new QueryClient();
 
