@@ -60,6 +60,12 @@ const Navigation = () => {
               AI Support
             </button>
             <button
+              onClick={() => navigate("/team")}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Our Team
+            </button>
+            <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
               aria-label="Toggle theme"
@@ -133,6 +139,12 @@ const Navigation = () => {
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 AI Support
+              </button>
+              <button
+                onClick={() => { navigate("/team"); setIsOpen(false); }}
+                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
+              >
+                Our Team
               </button>
               {user ? (
                 <Button
