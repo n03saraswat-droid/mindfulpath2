@@ -35,25 +35,25 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             <button
-              onClick={() => scrollToSection("home")}
+              onClick={() => handleNavClick("home")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Home
             </button>
             <button
-              onClick={() => scrollToSection("courses")}
+              onClick={() => handleNavClick("courses")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Courses
             </button>
             <button
-              onClick={() => scrollToSection("resources")}
+              onClick={() => handleNavClick("resources")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Resources
             </button>
             <button
-              onClick={() => scrollToSection("demos")}
+              onClick={() => handleNavClick("demos")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Demos
@@ -110,25 +110,25 @@ const Navigation = () => {
           <div className="md:hidden py-4 border-t border-border animate-fade-in">
             <div className="flex flex-col gap-4">
               <button
-                onClick={() => scrollToSection("home")}
+                onClick={() => handleNavClick("home")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Home
               </button>
               <button
-                onClick={() => scrollToSection("courses")}
+                onClick={() => handleNavClick("courses")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Courses
               </button>
               <button
-                onClick={() => scrollToSection("resources")}
+                onClick={() => handleNavClick("resources")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Resources
               </button>
               <button
-                onClick={() => scrollToSection("demos")}
+                onClick={() => handleNavClick("demos")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Demos
