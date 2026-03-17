@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, Heart, LayoutDashboard, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,13 +8,18 @@ import { useTheme } from "@/contexts/ThemeContext";
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const handleNavClick = useCallback((id: string) => {
     setIsOpen(false);
-  };
+    if (location.pathname === "/") {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate(`/#${id}`);
+    }
+  }, [location.pathname, navigate]);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -30,25 +35,25 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             <button
-              onClick={() => scrollToSection("home")}
+              onClick={() => handleNavClick("home")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Home
             </button>
             <button
-              onClick={() => scrollToSection("courses")}
+              onClick={() => handleNavClick("courses")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Courses
             </button>
             <button
-              onClick={() => scrollToSection("resources")}
+              onClick={() => handleNavClick("resources")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Resources
             </button>
             <button
-              onClick={() => scrollToSection("demos")}
+              onClick={() => handleNavClick("demos")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Demos
@@ -105,25 +110,25 @@ const Navigation = () => {
           <div className="md:hidden py-4 border-t border-border animate-fade-in">
             <div className="flex flex-col gap-4">
               <button
-                onClick={() => scrollToSection("home")}
+                onClick={() => handleNavClick("home")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Home
               </button>
               <button
-                onClick={() => scrollToSection("courses")}
+                onClick={() => handleNavClick("courses")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Courses
               </button>
               <button
-                onClick={() => scrollToSection("resources")}
+                onClick={() => handleNavClick("resources")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Resources
               </button>
               <button
-                onClick={() => scrollToSection("demos")}
+                onClick={() => handleNavClick("demos")}
                 className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
               >
                 Demos
