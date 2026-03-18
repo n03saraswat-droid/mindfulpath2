@@ -32,6 +32,8 @@ const moreItems = [
 
 const MobileBottomNav = ({ activeSection, onSectionChange }: MobileBottomNavProps) => {
   const [showMore, setShowMore] = useState(false);
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
 
   const isMoreActive = moreItems.some((item) => item.id === activeSection);
 
