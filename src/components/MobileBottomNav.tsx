@@ -1,7 +1,9 @@
-import { LayoutDashboard, BarChart3, MessageCircle, Music, BookOpen, MoreHorizontal, X, Brain, Sparkles, Trophy, Users, Bookmark, Leaf, Wind, Sun } from "lucide-react";
+import { LayoutDashboard, BarChart3, MessageCircle, Music, BookOpen, MoreHorizontal, X, Brain, Sparkles, Trophy, Users, Bookmark, Leaf, Wind, Sun, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface MobileBottomNavProps {
   activeSection: string;
@@ -30,6 +32,8 @@ const moreItems = [
 
 const MobileBottomNav = ({ activeSection, onSectionChange }: MobileBottomNavProps) => {
   const [showMore, setShowMore] = useState(false);
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
 
   const isMoreActive = moreItems.some((item) => item.id === activeSection);
 
@@ -87,6 +91,13 @@ const MobileBottomNav = ({ activeSection, onSectionChange }: MobileBottomNavProp
                     </button>
                   );
                 })}
+                <button
+                  onClick={async () => { setShowMore(false); await signOut(); navigate("/"); }}
+                  className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl text-xs font-medium text-destructive hover:bg-destructive/10 transition-all"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="truncate w-full text-center">Log Out</span>
+                </button>
               </div>
             </motion.div>
           </>
