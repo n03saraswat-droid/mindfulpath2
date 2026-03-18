@@ -1,7 +1,9 @@
-import { LayoutDashboard, BarChart3, MessageCircle, Music, BookOpen, MoreHorizontal, X, Brain, Sparkles, Trophy, Users, Bookmark, Leaf, Wind, Sun } from "lucide-react";
+import { LayoutDashboard, BarChart3, MessageCircle, Music, BookOpen, MoreHorizontal, X, Brain, Sparkles, Trophy, Users, Bookmark, Leaf, Wind, Sun, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface MobileBottomNavProps {
   activeSection: string;
