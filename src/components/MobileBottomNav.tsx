@@ -91,6 +91,13 @@ const MobileBottomNav = ({ activeSection, onSectionChange }: MobileBottomNavProp
                     </button>
                   );
                 })}
+                <button
+                  onClick={async () => { setShowMore(false); await signOut(); navigate("/"); }}
+                  className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl text-xs font-medium text-destructive hover:bg-destructive/10 transition-all"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="truncate w-full text-center">Log Out</span>
+                </button>
               </div>
             </motion.div>
           </>
