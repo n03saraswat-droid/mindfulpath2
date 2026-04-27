@@ -78,7 +78,12 @@ const MainApp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative gradient-hero overflow-hidden">
+      {/* Decorative ambient blurs — same language as the landing hero */}
+      <div className="pointer-events-none absolute top-20 -left-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-float" />
+      <div className="pointer-events-none absolute bottom-32 -right-20 w-[28rem] h-[28rem] bg-accent/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "3s" }} />
+      <div className="pointer-events-none absolute top-1/2 left-1/3 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse-soft" />
+
       {/* Desktop sidebar — hidden on mobile */}
       <div className="hidden md:block">
         <AppSidebar
