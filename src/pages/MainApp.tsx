@@ -78,7 +78,12 @@ const MainApp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative gradient-hero overflow-hidden">
+      {/* Decorative ambient blurs — same language as the landing hero */}
+      <div className="pointer-events-none absolute top-20 -left-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-float" />
+      <div className="pointer-events-none absolute bottom-32 -right-20 w-[28rem] h-[28rem] bg-accent/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "3s" }} />
+      <div className="pointer-events-none absolute top-1/2 left-1/3 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse-soft" />
+
       {/* Desktop sidebar — hidden on mobile */}
       <div className="hidden md:block">
         <AppSidebar
@@ -99,7 +104,7 @@ const MainApp = () => {
         initial={false}
         animate={{ marginLeft: typeof window !== "undefined" && window.innerWidth >= 768 ? (sidebarCollapsed ? 72 : 260) : 0 }}
         transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="min-h-screen pb-20 md:pb-0"
+        className="min-h-screen pb-20 md:pb-0 relative z-10"
       >
         <div className="container mx-auto px-4 md:px-8 py-6 md:py-8 max-w-6xl">
           <AnimatePresence mode="wait">

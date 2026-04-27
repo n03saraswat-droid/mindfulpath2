@@ -103,12 +103,27 @@ const IntegratedDashboard = () => {
   const level = Math.floor(xp / 100) + 1;
 
   return (
-    <div className="space-y-6">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h2 className="font-serif text-3xl font-bold text-foreground mb-1">
-          Welcome back, {profile?.display_name || "Friend"} 👋
-        </h2>
-        <p className="text-muted-foreground">Your mental wellness at a glance</p>
+    <div className="space-y-8">
+      {/* Hero header — mirrors landing page styling */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative overflow-hidden rounded-3xl glass-card p-8 md:p-10"
+      >
+        <div className="absolute -top-16 -right-16 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-float" />
+        <div className="absolute -bottom-20 -left-10 w-56 h-56 bg-accent/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
+
+        <div className="relative">
+          <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-sm text-primary px-4 py-1.5 rounded-full mb-4">
+            <Sparkles className="w-4 h-4" />
+            <span className="text-xs font-medium">Your Wellness Dashboard</span>
+          </div>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2 text-balance">
+            Welcome back,{" "}
+            <span className="text-primary">{profile?.display_name || "Friend"}</span> 👋
+          </h2>
+          <p className="text-muted-foreground text-base md:text-lg">Your mental wellness at a glance</p>
+        </div>
       </motion.div>
 
       {/* Stats Grid */}
