@@ -104,7 +104,7 @@ const MainApp = () => {
         initial={false}
         animate={{ marginLeft: typeof window !== "undefined" && window.innerWidth >= 768 ? (sidebarCollapsed ? 72 : 260) : 0 }}
         transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="min-h-screen pb-20 md:pb-0"
+        className="min-h-screen pb-20 md:pb-0 relative z-10"
       >
         <div className="container mx-auto px-4 md:px-8 py-6 md:py-8 max-w-6xl">
           <AnimatePresence mode="wait">
