@@ -11,6 +11,7 @@ import MainApp from "./pages/MainApp";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import Team from "./pages/Team";
+import Onboarding from "./pages/Onboarding";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
               <Route path="/app" element={<MainApp />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/team" element={<Team />} />
+              <Route path="/onboarding" element={<Onboarding />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

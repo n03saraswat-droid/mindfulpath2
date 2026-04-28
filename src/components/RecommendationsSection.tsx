@@ -108,7 +108,7 @@ const RecommendationsSection = ({ onNavigateSection }: RecommendationsSectionPro
     );
   }
 
-  const payload = recs?.payload as Payload | undefined;
+  const payload = recs?.payload as unknown as Payload | undefined;
 
   return (
     <div className="space-y-8">

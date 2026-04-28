@@ -78,7 +78,8 @@ const Auth = () => {
             ? "You've successfully signed in."
             : "Your account has been created. You're now signed in.",
         });
-        navigate("/app");
+        // New sign-ups go straight to onboarding; sign-ins go to the app (MainApp will redirect to onboarding if prefs are missing).
+        navigate(isLogin ? "/app" : "/onboarding");
       }
     } catch (err) {
       toast({
