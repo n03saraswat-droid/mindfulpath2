@@ -80,9 +80,13 @@ const MainApp = () => {
   return (
     <div className="min-h-screen relative gradient-hero overflow-hidden">
       {/* Decorative ambient blurs — same language as the landing hero */}
-      <div className="pointer-events-none absolute top-20 -left-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-float" />
-      <div className="pointer-events-none absolute bottom-32 -right-20 w-[28rem] h-[28rem] bg-accent/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "3s" }} />
-      <div className="pointer-events-none absolute top-1/2 left-1/3 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse-soft" />
+      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
+        <div className="absolute top-10 -left-24 w-[26rem] h-[26rem] bg-primary/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-1/3 -right-24 w-[30rem] h-[30rem] bg-accent/25 rounded-full blur-3xl animate-float" style={{ animationDelay: "3s" }} />
+        <div className="absolute bottom-10 left-1/4 w-[24rem] h-[24rem] bg-primary/15 rounded-full blur-3xl animate-float" style={{ animationDelay: "5s" }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[22rem] h-[22rem] bg-accent/10 rounded-full blur-3xl animate-pulse-soft" />
+        <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: "2s" }} />
+      </div>
 
       {/* Desktop sidebar — hidden on mobile */}
       <div className="hidden md:block">
