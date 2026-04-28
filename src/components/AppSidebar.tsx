@@ -1,4 +1,4 @@
-import { Heart, LayoutDashboard, BarChart3, Brain, Music, Trophy, MessageCircle, Users, BookOpen, Bookmark, Sun, Moon, Sparkles, LogOut, LogIn, ChevronLeft, ChevronRight, Wind, Leaf, Medal } from "lucide-react";
+import { Heart, LayoutDashboard, BarChart3, Brain, Music, Trophy, MessageCircle, Users, BookOpen, Bookmark, Sun, Moon, Sparkles, LogOut, LogIn, ChevronLeft, ChevronRight, Wind, Leaf, Medal, Wand2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,7 @@ interface AppSidebarProps {
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, group: "main" },
+  { id: "recommendations", label: "For You", icon: Wand2, group: "main" },
   { id: "mood", label: "Mood Tracker", icon: BarChart3, group: "main" },
   { id: "emotion-engine", label: "Emotion Engine", icon: Brain, group: "main" },
   { id: "analytics", label: "Mood Analytics", icon: Sparkles, group: "main" },

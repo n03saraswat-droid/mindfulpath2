@@ -329,6 +329,72 @@ export type Database = {
         }
         Relationships: []
       }
+      user_preferences: {
+        Row: {
+          biggest_challenge: string | null
+          created_at: string
+          daily_minutes: number
+          goals: string[]
+          id: string
+          interests: string[]
+          preferred_formats: string[]
+          preferred_time_of_day: string | null
+          stress_level: number
+          typical_mood: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          biggest_challenge?: string | null
+          created_at?: string
+          daily_minutes?: number
+          goals?: string[]
+          id?: string
+          interests?: string[]
+          preferred_formats?: string[]
+          preferred_time_of_day?: string | null
+          stress_level?: number
+          typical_mood?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          biggest_challenge?: string | null
+          created_at?: string
+          daily_minutes?: number
+          goals?: string[]
+          id?: string
+          interests?: string[]
+          preferred_formats?: string[]
+          preferred_time_of_day?: string | null
+          stress_level?: number
+          typical_mood?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_recommendations: {
+        Row: {
+          generated_at: string
+          id: string
+          payload: Json
+          user_id: string
+        }
+        Insert: {
+          generated_at?: string
+          id?: string
+          payload: Json
+          user_id: string
+        }
+        Update: {
+          generated_at?: string
+          id?: string
+          payload?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_xp: {
         Row: {
           id: string
