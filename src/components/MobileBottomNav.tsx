@@ -1,4 +1,4 @@
-import { LayoutDashboard, BarChart3, MessageCircle, Music, BookOpen, MoreHorizontal, X, Brain, Sparkles, Trophy, Users, Bookmark, Leaf, Wind, Sun, LogOut } from "lucide-react";
+import { LayoutDashboard, BarChart3, MessageCircle, Music, BookOpen, MoreHorizontal, X, Brain, Sparkles, Trophy, Users, Bookmark, Leaf, Wind, Sun, LogOut, Wand2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,6 +19,7 @@ const primaryTabs = [
 ];
 
 const moreItems = [
+  { id: "recommendations", label: "For You", icon: Wand2 },
   { id: "emotion-engine", label: "Emotion Engine", icon: Brain },
   { id: "analytics", label: "Analytics", icon: Sparkles },
   { id: "xp", label: "XP & Medals", icon: Trophy },

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import AppSidebar from "@/components/AppSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import IntegratedDashboard from "@/components/IntegratedDashboard";
@@ -14,6 +16,7 @@ import CommunityForum from "@/components/CommunityForum";
 import ResourcesSection from "@/components/ResourcesSection";
 import SelfCareSection from "@/components/SelfCareSection";
 import MeditationSection from "@/components/MeditationSection";
+import RecommendationsSection from "@/components/RecommendationsSection";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { lazy, Suspense } from "react";
@@ -27,20 +30,50 @@ const LoadingSpinner = () => (
 );
 
 const MainApp = () => {
-  const [activeSection, setActiveSection] = useState("dashboard");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeSection, setActiveSection] = useState(searchParams.get("section") || "dashboard");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
+  // Gate: redirect to onboarding if the user has no preferences row yet.
+  const { data: prefs, isLoading: prefsLoading } = useQuery({
+    queryKey: ["user-preferences", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("user_preferences").select("user_id").eq("user_id", user!.id).maybeSingle();
+      return data;
+    },
+    enabled: !!user,
+  });
+
   useEffect(() => {
-    if (!loading && !user) {
-      navigate("/auth", { replace: true });
-    }
+    if (!loading && !user) navigate("/auth", { replace: true });
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    if (user && !prefsLoading && prefs === null) {
+      navigate("/onboarding", { replace: true });
+    }
+  }, [user, prefs, prefsLoading, navigate]);
+
+  // Sync ?section= param
+  useEffect(() => {
+    const s = searchParams.get("section");
+    if (s && s !== activeSection) setActiveSection(s);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  const handleSectionChange = (id: string) => {
+    setActiveSection(id);
+    const next = new URLSearchParams(searchParams);
+    next.set("section", id);
+    setSearchParams(next, { replace: true });
+  };
 
   useEffect(() => { window.scrollTo(0, 0); }, [activeSection]);
 
-  if (loading) {
+  if (loading || prefsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-spin rounded-full h-10 w-10 border-2 border-primary border-t-transparent" />
@@ -53,6 +86,7 @@ const MainApp = () => {
   const renderSection = () => {
     switch (activeSection) {
       case "dashboard": return <IntegratedDashboard />;
+      case "recommendations": return <RecommendationsSection onNavigateSection={handleSectionChange} />;
       case "mood": return <IntegratedMoodTracker />;
       case "emotion-engine": return <EmotionEngine />;
       case "analytics": return <RealMoodAnalytics />;
@@ -92,7 +126,7 @@ const MainApp = () => {
       <div className="hidden md:block">
         <AppSidebar
           activeSection={activeSection}
-          onSectionChange={setActiveSection}
+          onSectionChange={handleSectionChange}
           collapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
@@ -101,7 +135,7 @@ const MainApp = () => {
       {/* Mobile bottom nav — hidden on desktop */}
       <MobileBottomNav
         activeSection={activeSection}
-        onSectionChange={setActiveSection}
+        onSectionChange={handleSectionChange}
       />
 
       <motion.main
