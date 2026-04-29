@@ -216,22 +216,31 @@ const RecommendationsSection = ({ onNavigateSection }: RecommendationsSectionPro
               <Sparkles className="w-5 h-5 text-primary" /> Features to try
             </h3>
             <div className="grid md:grid-cols-2 gap-4">
-              {payload.suggestedFeatures.map((s, i) => (
+              {payload.suggestedFeatures.map((s, i) => {
+                const key = `feature:${s.featureId}:${s.title}`;
+                return (
                 <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                   <Card className="glass-card h-full">
-                    <CardContent className="p-5">
+                    <CardContent className="p-5 flex flex-col h-full">
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <h4 className="font-semibold text-foreground">{s.title}</h4>
                         <Badge variant="secondary" className="shrink-0">{s.featureId}</Badge>
                       </div>
                       <p className="text-sm text-muted-foreground mb-4">{s.reason}</p>
-                      <Button size="sm" variant="outline" onClick={() => onNavigateSection(s.featureId)}>
-                        {s.actionLabel} <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                      </Button>
+                      <div className="mt-auto flex items-center justify-between gap-3">
+                        <Button size="sm" variant="outline" onClick={() => onNavigateSection(s.featureId)}>
+                          {s.actionLabel} <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                        </Button>
+                        <FeedbackButtons
+                          rating={feedbackMap[key]}
+                          onRate={(r) => submitFeedback(key, "feature", s.title, r)}
+                        />
+                      </div>
                     </CardContent>
                   </Card>
                 </motion.div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
