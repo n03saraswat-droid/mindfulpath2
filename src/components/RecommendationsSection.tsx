@@ -303,4 +303,31 @@ const DailyBlock = ({ icon: Icon, label, body, tint }: { icon: any; label: strin
   </div>
 );
 
+const FeedbackButtons = ({ rating, onRate }: { rating?: number; onRate: (r: 1 | -1) => void }) => {
+  const liked = rating === 1;
+  const disliked = rating === -1;
+  return (
+    <div className="flex items-center gap-1" aria-label="Was this recommendation helpful?">
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onRate(1); }}
+        aria-label="Helpful"
+        aria-pressed={liked}
+        className={`p-1.5 rounded-md transition-colors ${liked ? "bg-emerald-500/20 text-emerald-400" : "text-muted-foreground hover:text-foreground hover:bg-white/5"}`}
+      >
+        <ThumbsUp className={`w-3.5 h-3.5 ${liked ? "fill-current" : ""}`} />
+      </button>
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onRate(-1); }}
+        aria-label="Not helpful"
+        aria-pressed={disliked}
+        className={`p-1.5 rounded-md transition-colors ${disliked ? "bg-rose-500/20 text-rose-400" : "text-muted-foreground hover:text-foreground hover:bg-white/5"}`}
+      >
+        <ThumbsDown className={`w-3.5 h-3.5 ${disliked ? "fill-current" : ""}`} />
+      </button>
+    </div>
+  );
+};
+
 export default RecommendationsSection;
