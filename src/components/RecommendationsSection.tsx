@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, RefreshCw, Loader2, Sunrise, Sun, Moon, ArrowRight, SlidersHorizontal, BookOpen, Music, Wind, Leaf, Heart } from "lucide-react";
+import { Sparkles, RefreshCw, Loader2, Sunrise, Sun, Moon, ArrowRight, SlidersHorizontal, BookOpen, Music, Wind, Leaf, Heart, ThumbsUp, ThumbsDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import OnboardingQuestionnaire from "./OnboardingQuestionnaire";
@@ -54,6 +54,45 @@ const RecommendationsSection = ({ onNavigateSection }: RecommendationsSectionPro
     },
     enabled: !!user,
   });
+
+  const { data: feedbackRows } = useQuery({
+    queryKey: ["recommendation-feedback", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("recommendation_feedback")
+        .select("item_key, rating")
+        .eq("user_id", user!.id);
+      return data ?? [];
+    },
+    enabled: !!user,
+  });
+
+  const feedbackMap: Record<string, number> = {};
+  (feedbackRows ?? []).forEach((r: any) => { feedbackMap[r.item_key] = r.rating; });
+
+  const submitFeedback = async (itemKey: string, section: string, label: string, rating: 1 | -1) => {
+    if (!user) return;
+    const current = feedbackMap[itemKey];
+    try {
+      if (current === rating) {
+        // toggle off
+        await supabase.from("recommendation_feedback").delete().eq("user_id", user.id).eq("item_key", itemKey);
+      } else {
+        await supabase.from("recommendation_feedback").upsert(
+          { user_id: user.id, item_key: itemKey, item_section: section, item_label: label, rating },
+          { onConflict: "user_id,item_key" },
+        );
+      }
+      qc.invalidateQueries({ queryKey: ["recommendation-feedback", user.id] });
+      if (rating === -1 && current !== -1) {
+        toast({ title: "Got it — we'll suggest fewer like this", description: "Hit Refresh plan to update your recommendations." });
+      } else if (rating === 1 && current !== 1) {
+        toast({ title: "Saved — we'll suggest more like this" });
+      }
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Couldn't save feedback", description: e?.message });
+    }
+  };
 
   const generate = async () => {
     setGenerating(true);
@@ -177,22 +216,31 @@ const RecommendationsSection = ({ onNavigateSection }: RecommendationsSectionPro
               <Sparkles className="w-5 h-5 text-primary" /> Features to try
             </h3>
             <div className="grid md:grid-cols-2 gap-4">
-              {payload.suggestedFeatures.map((s, i) => (
+              {payload.suggestedFeatures.map((s, i) => {
+                const key = `feature:${s.featureId}:${s.title}`;
+                return (
                 <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                   <Card className="glass-card h-full">
-                    <CardContent className="p-5">
+                    <CardContent className="p-5 flex flex-col h-full">
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <h4 className="font-semibold text-foreground">{s.title}</h4>
                         <Badge variant="secondary" className="shrink-0">{s.featureId}</Badge>
                       </div>
                       <p className="text-sm text-muted-foreground mb-4">{s.reason}</p>
-                      <Button size="sm" variant="outline" onClick={() => onNavigateSection(s.featureId)}>
-                        {s.actionLabel} <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                      </Button>
+                      <div className="mt-auto flex items-center justify-between gap-3">
+                        <Button size="sm" variant="outline" onClick={() => onNavigateSection(s.featureId)}>
+                          {s.actionLabel} <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                        </Button>
+                        <FeedbackButtons
+                          rating={feedbackMap[key]}
+                          onRate={(r) => submitFeedback(key, "feature", s.title, r)}
+                        />
+                      </div>
                     </CardContent>
                   </Card>
                 </motion.div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -204,16 +252,34 @@ const RecommendationsSection = ({ onNavigateSection }: RecommendationsSectionPro
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {payload.contentPicks.map((c, i) => {
                 const Icon = categoryIcon[c.category] || BookOpen;
+                const key = `content:${c.category}:${c.title}`;
                 return (
                   <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                    <Card className="glass-card h-full cursor-pointer hover:border-primary/40 transition-colors" onClick={() => onNavigateSection(c.featureId)}>
-                      <CardContent className="p-5">
+                    <Card className="glass-card h-full hover:border-primary/40 transition-colors">
+                      <CardContent className="p-5 flex flex-col h-full">
                         <div className="flex items-center gap-2 mb-3">
                           <div className="p-2 rounded-lg bg-primary/10"><Icon className="w-4 h-4 text-primary" /></div>
                           <Badge variant="outline" className="text-[10px] uppercase tracking-wide">{c.category}</Badge>
                         </div>
-                        <h4 className="font-semibold text-foreground mb-1">{c.title}</h4>
-                        <p className="text-sm text-muted-foreground">{c.description}</p>
+                        <button
+                          onClick={() => onNavigateSection(c.featureId)}
+                          className="text-left flex-1"
+                        >
+                          <h4 className="font-semibold text-foreground mb-1 hover:text-primary transition-colors">{c.title}</h4>
+                          <p className="text-sm text-muted-foreground">{c.description}</p>
+                        </button>
+                        <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+                          <button
+                            onClick={() => onNavigateSection(c.featureId)}
+                            className="text-xs text-primary inline-flex items-center hover:underline"
+                          >
+                            Open <ArrowRight className="w-3 h-3 ml-1" />
+                          </button>
+                          <FeedbackButtons
+                            rating={feedbackMap[key]}
+                            onRate={(r) => submitFeedback(key, "content", c.title, r)}
+                          />
+                        </div>
                       </CardContent>
                     </Card>
                   </motion.div>
@@ -236,5 +302,32 @@ const DailyBlock = ({ icon: Icon, label, body, tint }: { icon: any; label: strin
     <p className="text-sm text-muted-foreground leading-relaxed">{body}</p>
   </div>
 );
+
+const FeedbackButtons = ({ rating, onRate }: { rating?: number; onRate: (r: 1 | -1) => void }) => {
+  const liked = rating === 1;
+  const disliked = rating === -1;
+  return (
+    <div className="flex items-center gap-1" aria-label="Was this recommendation helpful?">
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onRate(1); }}
+        aria-label="Helpful"
+        aria-pressed={liked}
+        className={`p-1.5 rounded-md transition-colors ${liked ? "bg-emerald-500/20 text-emerald-400" : "text-muted-foreground hover:text-foreground hover:bg-white/5"}`}
+      >
+        <ThumbsUp className={`w-3.5 h-3.5 ${liked ? "fill-current" : ""}`} />
+      </button>
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onRate(-1); }}
+        aria-label="Not helpful"
+        aria-pressed={disliked}
+        className={`p-1.5 rounded-md transition-colors ${disliked ? "bg-rose-500/20 text-rose-400" : "text-muted-foreground hover:text-foreground hover:bg-white/5"}`}
+      >
+        <ThumbsDown className={`w-3.5 h-3.5 ${disliked ? "fill-current" : ""}`} />
+      </button>
+    </div>
+  );
+};
 
 export default RecommendationsSection;

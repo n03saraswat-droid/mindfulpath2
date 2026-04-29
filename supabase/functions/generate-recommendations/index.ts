@@ -21,6 +21,7 @@ Available platform features you can recommend (use these exact ids):
 Rules:
 - Be warm, constructive, skill-building. NEVER mention crisis hotlines or self-harm resources.
 - Tailor to the user's goals, interests, stress level, daily time budget, preferred formats.
+- HEAVILY weight prior feedback: lean into themes/items similar to liked_recommendations; AVOID repeating items in disliked_recommendations and avoid suggesting near-duplicates of disliked items.
 - Keep copy concise and actionable. Use the user's name if provided.`;
 
 const recommendationsTool = {
@@ -115,11 +116,12 @@ serve(async (req) => {
       });
     }
 
-    // Load preferences + lightweight profile context
-    const [{ data: prefs }, { data: profile }, { data: recentMoods }] = await Promise.all([
+    // Load preferences + lightweight profile context + prior feedback
+    const [{ data: prefs }, { data: profile }, { data: recentMoods }, { data: feedback }] = await Promise.all([
       supabase.from("user_preferences").select("*").eq("user_id", user.id).maybeSingle(),
       supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),
       supabase.from("mood_entries").select("mood, logged_at").eq("user_id", user.id).order("logged_at", { ascending: false }).limit(7),
+      supabase.from("recommendation_feedback").select("item_section, item_label, rating").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(60),
     ]);
 
     if (!prefs) {
@@ -128,6 +130,9 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    const liked = (feedback || []).filter((f: any) => f.rating === 1).map((f: any) => ({ section: f.item_section, label: f.item_label }));
+    const disliked = (feedback || []).filter((f: any) => f.rating === -1).map((f: any) => ({ section: f.item_section, label: f.item_label }));
 
     const userContext = {
       name: profile?.display_name || "friend",
@@ -140,6 +145,8 @@ serve(async (req) => {
       preferred_formats: prefs.preferred_formats,
       preferred_time_of_day: prefs.preferred_time_of_day,
       recent_moods: recentMoods?.map((m: any) => m.mood) || [],
+      liked_recommendations: liked,
+      disliked_recommendations: disliked,
     };
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
