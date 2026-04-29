@@ -130,6 +130,9 @@ serve(async (req) => {
       });
     }
 
+    const liked = (feedback || []).filter((f: any) => f.rating === 1).map((f: any) => ({ section: f.item_section, label: f.item_label }));
+    const disliked = (feedback || []).filter((f: any) => f.rating === -1).map((f: any) => ({ section: f.item_section, label: f.item_label }));
+
     const userContext = {
       name: profile?.display_name || "friend",
       goals: prefs.goals,
@@ -141,6 +144,8 @@ serve(async (req) => {
       preferred_formats: prefs.preferred_formats,
       preferred_time_of_day: prefs.preferred_time_of_day,
       recent_moods: recentMoods?.map((m: any) => m.mood) || [],
+      liked_recommendations: liked,
+      disliked_recommendations: disliked,
     };
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
