@@ -115,11 +115,12 @@ serve(async (req) => {
       });
     }
 
-    // Load preferences + lightweight profile context
-    const [{ data: prefs }, { data: profile }, { data: recentMoods }] = await Promise.all([
+    // Load preferences + lightweight profile context + prior feedback
+    const [{ data: prefs }, { data: profile }, { data: recentMoods }, { data: feedback }] = await Promise.all([
       supabase.from("user_preferences").select("*").eq("user_id", user.id).maybeSingle(),
       supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),
       supabase.from("mood_entries").select("mood, logged_at").eq("user_id", user.id).order("logged_at", { ascending: false }).limit(7),
+      supabase.from("recommendation_feedback").select("item_section, item_label, rating").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(60),
     ]);
 
     if (!prefs) {
