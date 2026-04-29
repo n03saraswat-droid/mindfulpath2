@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, RefreshCw, Loader2, Sunrise, Sun, Moon, ArrowRight, SlidersHorizontal, BookOpen, Music, Wind, Leaf, Heart } from "lucide-react";
+import { Sparkles, RefreshCw, Loader2, Sunrise, Sun, Moon, ArrowRight, SlidersHorizontal, BookOpen, Music, Wind, Leaf, Heart, ThumbsUp, ThumbsDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import OnboardingQuestionnaire from "./OnboardingQuestionnaire";
