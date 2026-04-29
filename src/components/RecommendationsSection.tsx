@@ -55,6 +55,45 @@ const RecommendationsSection = ({ onNavigateSection }: RecommendationsSectionPro
     enabled: !!user,
   });
 
+  const { data: feedbackRows } = useQuery({
+    queryKey: ["recommendation-feedback", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("recommendation_feedback")
+        .select("item_key, rating")
+        .eq("user_id", user!.id);
+      return data ?? [];
+    },
+    enabled: !!user,
+  });
+
+  const feedbackMap: Record<string, number> = {};
+  (feedbackRows ?? []).forEach((r: any) => { feedbackMap[r.item_key] = r.rating; });
+
+  const submitFeedback = async (itemKey: string, section: string, label: string, rating: 1 | -1) => {
+    if (!user) return;
+    const current = feedbackMap[itemKey];
+    try {
+      if (current === rating) {
+        // toggle off
+        await supabase.from("recommendation_feedback").delete().eq("user_id", user.id).eq("item_key", itemKey);
+      } else {
+        await supabase.from("recommendation_feedback").upsert(
+          { user_id: user.id, item_key: itemKey, item_section: section, item_label: label, rating },
+          { onConflict: "user_id,item_key" },
+        );
+      }
+      qc.invalidateQueries({ queryKey: ["recommendation-feedback", user.id] });
+      if (rating === -1 && current !== -1) {
+        toast({ title: "Got it — we'll suggest fewer like this", description: "Hit Refresh plan to update your recommendations." });
+      } else if (rating === 1 && current !== 1) {
+        toast({ title: "Saved — we'll suggest more like this" });
+      }
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Couldn't save feedback", description: e?.message });
+    }
+  };
+
   const generate = async () => {
     setGenerating(true);
     try {
