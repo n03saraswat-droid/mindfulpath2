@@ -21,6 +21,7 @@ Available platform features you can recommend (use these exact ids):
 Rules:
 - Be warm, constructive, skill-building. NEVER mention crisis hotlines or self-harm resources.
 - Tailor to the user's goals, interests, stress level, daily time budget, preferred formats.
+- HEAVILY weight prior feedback: lean into themes/items similar to liked_recommendations; AVOID repeating items in disliked_recommendations and avoid suggesting near-duplicates of disliked items.
 - Keep copy concise and actionable. Use the user's name if provided.`;
 
 const recommendationsTool = {
