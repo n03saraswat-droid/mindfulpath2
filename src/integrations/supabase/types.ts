@@ -263,6 +263,39 @@ export type Database = {
         }
         Relationships: []
       }
+      recommendation_feedback: {
+        Row: {
+          created_at: string
+          id: string
+          item_key: string
+          item_label: string | null
+          item_section: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_key: string
+          item_label?: string | null
+          item_section: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_key?: string
+          item_label?: string | null
+          item_section?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       resource_bookmarks: {
         Row: {
           created_at: string
