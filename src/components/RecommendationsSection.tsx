@@ -252,16 +252,34 @@ const RecommendationsSection = ({ onNavigateSection }: RecommendationsSectionPro
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {payload.contentPicks.map((c, i) => {
                 const Icon = categoryIcon[c.category] || BookOpen;
+                const key = `content:${c.category}:${c.title}`;
                 return (
                   <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                    <Card className="glass-card h-full cursor-pointer hover:border-primary/40 transition-colors" onClick={() => onNavigateSection(c.featureId)}>
-                      <CardContent className="p-5">
+                    <Card className="glass-card h-full hover:border-primary/40 transition-colors">
+                      <CardContent className="p-5 flex flex-col h-full">
                         <div className="flex items-center gap-2 mb-3">
                           <div className="p-2 rounded-lg bg-primary/10"><Icon className="w-4 h-4 text-primary" /></div>
                           <Badge variant="outline" className="text-[10px] uppercase tracking-wide">{c.category}</Badge>
                         </div>
-                        <h4 className="font-semibold text-foreground mb-1">{c.title}</h4>
-                        <p className="text-sm text-muted-foreground">{c.description}</p>
+                        <button
+                          onClick={() => onNavigateSection(c.featureId)}
+                          className="text-left flex-1"
+                        >
+                          <h4 className="font-semibold text-foreground mb-1 hover:text-primary transition-colors">{c.title}</h4>
+                          <p className="text-sm text-muted-foreground">{c.description}</p>
+                        </button>
+                        <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+                          <button
+                            onClick={() => onNavigateSection(c.featureId)}
+                            className="text-xs text-primary inline-flex items-center hover:underline"
+                          >
+                            Open <ArrowRight className="w-3 h-3 ml-1" />
+                          </button>
+                          <FeedbackButtons
+                            rating={feedbackMap[key]}
+                            onRate={(r) => submitFeedback(key, "content", c.title, r)}
+                          />
+                        </div>
                       </CardContent>
                     </Card>
                   </motion.div>
