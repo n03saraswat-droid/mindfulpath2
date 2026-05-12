@@ -189,6 +189,14 @@ const Courses = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [videoLesson, setVideoLesson] = useState<Lesson | null>(null);
+  const [displayName, setDisplayName] = useState<string>("Learner");
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle().then(({ data }) => {
+      if (data?.display_name) setDisplayName(data.display_name);
+    });
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -337,7 +345,7 @@ const Courses = () => {
                       <CourseCertificate
                         courseName={selectedCourse.title}
                         courseIcon={selectedCourse.icon}
-                        userName={user?.email?.split("@")[0] || "Learner"}
+                        userName={displayName}
                         completionDate={new Date()}
                       />
                     </div>

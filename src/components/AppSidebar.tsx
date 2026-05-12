@@ -1,9 +1,13 @@
-import { Heart, LayoutDashboard, BarChart3, Brain, Music, Trophy, MessageCircle, Users, BookOpen, Bookmark, Sun, Moon, Sparkles, LogOut, LogIn, ChevronLeft, ChevronRight, Wind, Leaf, Medal, Wand2 } from "lucide-react";
+import { Heart, LayoutDashboard, BarChart3, Brain, Music, Trophy, MessageCircle, Users, BookOpen, Bookmark, Sun, Moon, Sparkles, LogOut, LogIn, ChevronLeft, ChevronRight, Wind, Leaf, Wand2, Settings as SettingsIcon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/initials";
 
 interface AppSidebarProps {
   activeSection: string;
@@ -27,18 +31,32 @@ const navItems = [
   { id: "self-care", label: "Self Care", icon: Leaf, group: "learn" },
   { id: "meditation", label: "Meditation", icon: Wind, group: "learn" },
   { id: "gratitude", label: "Gratitude", icon: Sun, group: "learn" },
+  { id: "settings", label: "Profile & Settings", icon: SettingsIcon, group: "account" },
 ];
 
 const groups = [
   { id: "main", label: "Core" },
   { id: "engage", label: "Engage" },
   { id: "learn", label: "Learn" },
+  { id: "account", label: "Account" },
 ];
 
 const AppSidebar = ({ activeSection, onSectionChange, collapsed, onToggleCollapse }: AppSidebarProps) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("display_name, email").eq("id", user!.id).maybeSingle();
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const displayName = profile?.display_name || (user?.email ? user.email.split("@")[0] : "Friend");
+  const initials = getInitials(profile?.display_name, profile?.email || user?.email);
 
   return (
     <motion.aside
@@ -134,6 +152,29 @@ const AppSidebar = ({ activeSection, onSectionChange, collapsed, onToggleCollaps
 
       {/* Bottom Actions */}
       <div className="p-3 border-t border-white/10 space-y-2">
+        {user && (
+          <button
+            onClick={() => onSectionChange("settings")}
+            className={cn(
+              "w-full flex items-center gap-3 px-2 py-2 rounded-xl text-sm transition-colors",
+              activeSection === "settings"
+                ? "bg-primary/15 text-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-white/5",
+            )}
+          >
+            <Avatar className="w-8 h-8 flex-shrink-0 border border-white/10">
+              <AvatarFallback className="gradient-calm text-primary-foreground text-xs font-semibold">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            {!collapsed && (
+              <div className="min-w-0 text-left">
+                <p className="text-sm font-medium text-foreground truncate">{displayName}</p>
+                <p className="text-[11px] text-muted-foreground truncate">View profile</p>
+              </div>
+            )}
+          </button>
+        )}
         <button
           onClick={toggleTheme}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"

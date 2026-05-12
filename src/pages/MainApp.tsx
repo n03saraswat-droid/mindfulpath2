@@ -17,6 +17,7 @@ import ResourcesSection from "@/components/ResourcesSection";
 import SelfCareSection from "@/components/SelfCareSection";
 import MeditationSection from "@/components/MeditationSection";
 import RecommendationsSection from "@/components/RecommendationsSection";
+import ProfileSettings from "@/components/ProfileSettings";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { lazy, Suspense } from "react";
@@ -107,6 +108,7 @@ const MainApp = () => {
           <IntegratedGratitude />
         </Suspense>
       );
+      case "settings": return <ProfileSettings />;
       default: return <IntegratedDashboard />;
     }
   };
