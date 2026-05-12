@@ -108,6 +108,7 @@ const MainApp = () => {
           <IntegratedGratitude />
         </Suspense>
       );
+      case "settings": return <ProfileSettings />;
       default: return <IntegratedDashboard />;
     }
   };
