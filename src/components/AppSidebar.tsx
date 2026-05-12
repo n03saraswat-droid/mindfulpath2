@@ -152,6 +152,29 @@ const AppSidebar = ({ activeSection, onSectionChange, collapsed, onToggleCollaps
 
       {/* Bottom Actions */}
       <div className="p-3 border-t border-white/10 space-y-2">
+        {user && (
+          <button
+            onClick={() => onSectionChange("settings")}
+            className={cn(
+              "w-full flex items-center gap-3 px-2 py-2 rounded-xl text-sm transition-colors",
+              activeSection === "settings"
+                ? "bg-primary/15 text-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-white/5",
+            )}
+          >
+            <Avatar className="w-8 h-8 flex-shrink-0 border border-white/10">
+              <AvatarFallback className="gradient-calm text-primary-foreground text-xs font-semibold">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            {!collapsed && (
+              <div className="min-w-0 text-left">
+                <p className="text-sm font-medium text-foreground truncate">{displayName}</p>
+                <p className="text-[11px] text-muted-foreground truncate">View profile</p>
+              </div>
+            )}
+          </button>
+        )}
         <button
           onClick={toggleTheme}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
