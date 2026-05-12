@@ -248,16 +248,20 @@ const OnboardingQuestionnaire = ({ initialValues, onComplete, onCancel, title, s
 
     if (!user) return;
     setSaving(true);
-    const { error } = await supabase
-      .from("user_preferences")
-      .upsert({ user_id: user.id, ...form }, { onConflict: "user_id" });
+    const { display_name, ...prefs } = form;
+    const trimmedName = display_name.trim();
+    const [{ error }, { error: profileError }] = await Promise.all([
+      supabase.from("user_preferences").upsert({ user_id: user.id, ...prefs }, { onConflict: "user_id" }),
+      supabase.from("profiles").upsert({ id: user.id, display_name: trimmedName }, { onConflict: "id" }),
+    ]);
     setSaving(false);
-    if (error) {
-      toast({ variant: "destructive", title: "Couldn't save", description: error.message });
+    if (error || profileError) {
+      toast({ variant: "destructive", title: "Couldn't save", description: (error || profileError)?.message });
       return;
     }
     qc.invalidateQueries({ queryKey: ["user-preferences", user.id] });
     qc.invalidateQueries({ queryKey: ["user-recommendations", user.id] });
+    qc.invalidateQueries({ queryKey: ["profile", user.id] });
     toast({ title: "All set!", description: "Generating your personalized plan…" });
     onComplete();
   };
