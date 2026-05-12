@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Sparkles, Loader2, Check, ArrowRight, ArrowLeft, Heart } from "lucide-react";
@@ -63,6 +64,7 @@ interface Props {
 }
 
 interface FormState {
+  display_name: string;
   goals: string[];
   interests: string[];
   stress_level: number;
@@ -83,6 +85,7 @@ const OnboardingQuestionnaire = ({ initialValues, onComplete, onCancel, title, s
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<FormState>({
+    display_name: initialValues?.display_name ?? "",
     goals: initialValues?.goals ?? [],
     interests: initialValues?.interests ?? [],
     stress_level: initialValues?.stress_level ?? 3,
@@ -93,7 +96,38 @@ const OnboardingQuestionnaire = ({ initialValues, onComplete, onCancel, title, s
     preferred_time_of_day: initialValues?.preferred_time_of_day ?? "anytime",
   });
 
+  // Pre-fill display name from existing profile if not provided
+  useEffect(() => {
+    if (!user || form.display_name) return;
+    let cancelled = false;
+    supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle().then(({ data }) => {
+      if (!cancelled && data?.display_name) {
+        setForm((f) => (f.display_name ? f : { ...f, display_name: data.display_name as string }));
+      }
+    });
+    return () => { cancelled = true; };
+  }, [user]);
+
   const steps = [
+    {
+      key: "name",
+      heading: "What should we call you?",
+      sub: "We'll use this to personalize your experience across Mindful Path.",
+      valid: () => form.display_name.trim().length >= 1,
+      content: (
+        <div className="space-y-3">
+          <Input
+            autoFocus
+            value={form.display_name}
+            onChange={(e) => setForm((f) => ({ ...f, display_name: e.target.value.slice(0, 40) }))}
+            placeholder="Your name"
+            className="text-base"
+            maxLength={40}
+          />
+          <p className="text-[11px] text-muted-foreground">{form.display_name.length}/40</p>
+        </div>
+      ),
+    },
     {
       key: "goals",
       heading: "What brings you here?",
@@ -214,16 +248,20 @@ const OnboardingQuestionnaire = ({ initialValues, onComplete, onCancel, title, s
 
     if (!user) return;
     setSaving(true);
-    const { error } = await supabase
-      .from("user_preferences")
-      .upsert({ user_id: user.id, ...form }, { onConflict: "user_id" });
+    const { display_name, ...prefs } = form;
+    const trimmedName = display_name.trim();
+    const [{ error }, { error: profileError }] = await Promise.all([
+      supabase.from("user_preferences").upsert({ user_id: user.id, ...prefs }, { onConflict: "user_id" }),
+      supabase.from("profiles").upsert({ id: user.id, display_name: trimmedName }, { onConflict: "id" }),
+    ]);
     setSaving(false);
-    if (error) {
-      toast({ variant: "destructive", title: "Couldn't save", description: error.message });
+    if (error || profileError) {
+      toast({ variant: "destructive", title: "Couldn't save", description: (error || profileError)?.message });
       return;
     }
     qc.invalidateQueries({ queryKey: ["user-preferences", user.id] });
     qc.invalidateQueries({ queryKey: ["user-recommendations", user.id] });
+    qc.invalidateQueries({ queryKey: ["profile", user.id] });
     toast({ title: "All set!", description: "Generating your personalized plan…" });
     onComplete();
   };
