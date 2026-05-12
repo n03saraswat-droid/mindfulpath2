@@ -189,6 +189,40 @@ const RecommendationsSection = ({ onNavigateSection }: RecommendationsSectionPro
         </div>
       </motion.div>
 
+      {/* Feedback summary */}
+      {(() => {
+        const liked = (feedbackRows ?? []).filter((r: any) => r.rating === 1).length;
+        const disliked = (feedbackRows ?? []).filter((r: any) => r.rating === -1).length;
+        const total = liked + disliked;
+        return (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <Card className="glass-card">
+              <CardContent className="p-4 md:p-5 flex items-center justify-between gap-4 flex-wrap">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10"><Sparkles className="w-4 h-4 text-primary" /></div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Your feedback</p>
+                    <p className="text-xs text-muted-foreground">
+                      {total === 0
+                        ? "Rate cards with 👍 / 👎 to teach the AI what you like."
+                        : `Learning from ${total} rating${total === 1 ? "" : "s"} — applied on next refresh.`}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="bg-emerald-500/15 text-emerald-400 border-emerald-500/20 gap-1">
+                    <ThumbsUp className="w-3 h-3" /> {liked} liked
+                  </Badge>
+                  <Badge variant="secondary" className="bg-rose-500/15 text-rose-400 border-rose-500/20 gap-1">
+                    <ThumbsDown className="w-3 h-3" /> {disliked} disliked
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        );
+      })()}
+
       {generating && !payload && (
         <Card className="glass-card p-8 text-center">
           <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-3" />
