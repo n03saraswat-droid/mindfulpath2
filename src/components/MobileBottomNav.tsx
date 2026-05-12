@@ -29,6 +29,7 @@ const moreItems = [
   { id: "self-care", label: "Self Care", icon: Leaf },
   { id: "meditation", label: "Meditation", icon: Wind },
   { id: "gratitude", label: "Gratitude", icon: Sun },
+  { id: "settings", label: "Profile", icon: SettingsIcon },
 ];
 
 const MobileBottomNav = ({ activeSection, onSectionChange }: MobileBottomNavProps) => {
