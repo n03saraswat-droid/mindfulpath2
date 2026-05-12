@@ -46,6 +46,18 @@ const AppSidebar = ({ activeSection, onSectionChange, collapsed, onToggleCollaps
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("display_name, email").eq("id", user!.id).maybeSingle();
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const displayName = profile?.display_name || (user?.email ? user.email.split("@")[0] : "Friend");
+  const initials = getInitials(profile?.display_name, profile?.email || user?.email);
+
   return (
     <motion.aside
       initial={false}
