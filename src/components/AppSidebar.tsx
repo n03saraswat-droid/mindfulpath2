@@ -31,6 +31,7 @@ const navItems = [
   { id: "self-care", label: "Self Care", icon: Leaf, group: "learn" },
   { id: "meditation", label: "Meditation", icon: Wind, group: "learn" },
   { id: "gratitude", label: "Gratitude", icon: Sun, group: "learn" },
+  { id: "settings", label: "Profile & Settings", icon: SettingsIcon, group: "account" },
 ];
 
 const groups = [
