@@ -345,7 +345,7 @@ const Courses = () => {
                       <CourseCertificate
                         courseName={selectedCourse.title}
                         courseIcon={selectedCourse.icon}
-                        userName={user?.email?.split("@")[0] || "Learner"}
+                        userName={displayName}
                         completionDate={new Date()}
                       />
                     </div>
