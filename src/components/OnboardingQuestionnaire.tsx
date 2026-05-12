@@ -110,6 +110,25 @@ const OnboardingQuestionnaire = ({ initialValues, onComplete, onCancel, title, s
 
   const steps = [
     {
+      key: "name",
+      heading: "What should we call you?",
+      sub: "We'll use this to personalize your experience across Mindful Path.",
+      valid: () => form.display_name.trim().length >= 1,
+      content: (
+        <div className="space-y-3">
+          <Input
+            autoFocus
+            value={form.display_name}
+            onChange={(e) => setForm((f) => ({ ...f, display_name: e.target.value.slice(0, 40) }))}
+            placeholder="Your name"
+            className="text-base"
+            maxLength={40}
+          />
+          <p className="text-[11px] text-muted-foreground">{form.display_name.length}/40</p>
+        </div>
+      ),
+    },
+    {
       key: "goals",
       heading: "What brings you here?",
       sub: "Pick the goals that matter most right now. You can choose more than one.",
