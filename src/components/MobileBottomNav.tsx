@@ -1,4 +1,4 @@
-import { LayoutDashboard, BarChart3, MessageCircle, Music, BookOpen, MoreHorizontal, X, Brain, Sparkles, Trophy, Users, Bookmark, Leaf, Wind, Sun, LogOut, Wand2 } from "lucide-react";
+import { LayoutDashboard, BarChart3, MessageCircle, Music, BookOpen, MoreHorizontal, X, Brain, Sparkles, Trophy, Users, Bookmark, Leaf, Wind, Sun, LogOut, Wand2, Settings as SettingsIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
