@@ -37,6 +37,7 @@ const groups = [
   { id: "main", label: "Core" },
   { id: "engage", label: "Engage" },
   { id: "learn", label: "Learn" },
+  { id: "account", label: "Account" },
 ];
 
 const AppSidebar = ({ activeSection, onSectionChange, collapsed, onToggleCollapse }: AppSidebarProps) => {
