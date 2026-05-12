@@ -64,6 +64,7 @@ interface Props {
 }
 
 interface FormState {
+  display_name: string;
   goals: string[];
   interests: string[];
   stress_level: number;
@@ -84,6 +85,7 @@ const OnboardingQuestionnaire = ({ initialValues, onComplete, onCancel, title, s
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<FormState>({
+    display_name: initialValues?.display_name ?? "",
     goals: initialValues?.goals ?? [],
     interests: initialValues?.interests ?? [],
     stress_level: initialValues?.stress_level ?? 3,
@@ -93,6 +95,18 @@ const OnboardingQuestionnaire = ({ initialValues, onComplete, onCancel, title, s
     preferred_formats: initialValues?.preferred_formats ?? [],
     preferred_time_of_day: initialValues?.preferred_time_of_day ?? "anytime",
   });
+
+  // Pre-fill display name from existing profile if not provided
+  useEffect(() => {
+    if (!user || form.display_name) return;
+    let cancelled = false;
+    supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle().then(({ data }) => {
+      if (!cancelled && data?.display_name) {
+        setForm((f) => (f.display_name ? f : { ...f, display_name: data.display_name as string }));
+      }
+    });
+    return () => { cancelled = true; };
+  }, [user]);
 
   const steps = [
     {
