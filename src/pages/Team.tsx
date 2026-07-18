@@ -16,14 +16,6 @@ const teamMembers = [
       "Nikunj Saraswat led the development of the Mindful Path project and played a key role in creating the core idea behind the solution. He coordinated the overall workflow of the team, helped define the problem statement, and ensured that the project effectively focuses on helping individuals recognize and manage anxiety through a structured and thoughtful approach.",
   },
   {
-    name: "Vedansh Bhardwaj",
-    role: "Research & Analysis",
-    icon: Search,
-    color: "from-blue-600 to-cyan-500",
-    description:
-      "Vedansh Bhardwaj was responsible for conducting detailed research related to anxiety, stress triggers, and mental well-being strategies. He analyzed different approaches to managing anxiety and contributed significantly to shaping the practical aspects of the solution. His work ensured that the project is supported by relevant information and real-world understanding.",
-  },
-  {
     name: "Aditya Kashyap",
     role: "Design & Presentation",
     icon: Palette,
@@ -59,7 +51,7 @@ const Team = () => {
             <div className="max-w-lg mx-auto rounded-2xl overflow-hidden shadow-xl border border-border">
               <img
                 src={teamPhoto}
-                alt="Mindful Path Team — Vedansh Bhardwaj, Aditya Kashyap, and Nikunj Saraswat"
+                alt="Mindful Path Team — Aditya Kashyap and Nikunj Saraswat"
                 className="w-full h-auto"
                 loading="lazy"
               />
@@ -69,7 +61,7 @@ const Team = () => {
 
         {/* Member Cards */}
         <section className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {teamMembers.map((member, i) => (
               <ScrollReveal key={member.name} delay={i * 100}>
                 <Card className="h-full border-border/50 bg-card/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group">
