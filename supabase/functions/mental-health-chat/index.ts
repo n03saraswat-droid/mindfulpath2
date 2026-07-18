@@ -67,7 +67,27 @@ serve(async (req) => {
       });
     }
 
-    const { messages } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const rawMessages = Array.isArray(body?.messages) ? body.messages : null;
+    if (!rawMessages) {
+      return new Response(JSON.stringify({ error: "Invalid request: messages must be an array" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const safeMessages = rawMessages
+      .filter((m: any) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+      .slice(-40)
+      .map((m: any) => ({ role: m.role, content: String(m.content).slice(0, 4000) }));
+
+    if (safeMessages.length === 0) {
+      return new Response(JSON.stringify({ error: "No valid messages provided" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -81,7 +101,7 @@ serve(async (req) => {
         model: "google/gemini-3.1-pro-preview",
         messages: [
           { role: "system", content: systemPrompt },
-          ...messages,
+          ...safeMessages,
         ],
         stream: true,
       }),
