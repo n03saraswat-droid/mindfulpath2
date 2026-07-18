@@ -51,7 +51,7 @@ const Team = () => {
             <div className="max-w-lg mx-auto rounded-2xl overflow-hidden shadow-xl border border-border">
               <img
                 src={teamPhoto}
-                alt="Mindful Path Team — Vedansh Bhardwaj, Aditya Kashyap, and Nikunj Saraswat"
+                alt="Mindful Path Team — Aditya Kashyap and Nikunj Saraswat"
                 className="w-full h-auto"
                 loading="lazy"
               />
