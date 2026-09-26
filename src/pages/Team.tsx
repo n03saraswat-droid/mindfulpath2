@@ -8,14 +8,6 @@ import teamPhoto from "@/assets/team-photo.png";
 
 const teamMembers = [
   {
-    name: "Sanskar Bharti",
-    role: "Market Research & AI Strategy",
-    icon: Search,
-    color: "from-sky-600 to-cyan-500",
-    description:
-      "Sanskar Bharti spearheaded the market analysis and research for Mindful Path, evaluating existing digital wellness solutions to identify unmet user needs. By analyzing industry trends and AI adoption in mental health support, he provided actionable insights that shaped the platform's core positioning, feature prioritization, and user-centric approach.",
-  },
-  {
     name: "Nikunj Saraswat",
     role: "Project Lead & Concept Developer",
     icon: Lightbulb,
@@ -30,6 +22,14 @@ const teamMembers = [
     color: "from-violet-600 to-purple-500",
     description:
       "Aditya Kashyap focused on the visual and communication aspects of the project. He worked on structuring the presentation, organizing the content clearly, and contributing to the design elements used to represent the project. His role helped make the Mindful Path concept more engaging and easier for others to understand.",
+  },
+  {
+    name: "Sanskar Bharti",
+    role: "Market Research & AI Strategy",
+    icon: Search,
+    color: "from-sky-600 to-cyan-500",
+    description:
+      "Sanskar Bharti spearheaded the market analysis and research for Mindful Path, evaluating existing digital wellness solutions to identify unmet user needs. By analyzing industry trends and AI adoption in mental health support, he provided actionable insights that shaped the platform's core positioning, feature prioritization, and user-centric approach.",
   },
 ];
 
@@ -69,9 +69,9 @@ const Team = () => {
 
         {/* Member Cards */}
         <section className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {teamMembers.map((member, i) => (
-              <ScrollReveal key={member.name} delay={i * 100}>
+              <ScrollReveal key={member.name} delay={i * 100} className={i === 2 ? "md:col-span-2 md:max-w-md md:mx-auto md:w-full" : ""}>
                 <Card className="h-full border-border/50 bg-card/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group">
                   <CardContent className="p-8 flex flex-col items-center text-center">
                     <div
