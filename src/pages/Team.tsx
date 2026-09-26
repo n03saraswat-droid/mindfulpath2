@@ -8,14 +8,6 @@ import teamPhoto from "@/assets/team-photo.png";
 
 const teamMembers = [
   {
-    name: "Sanskar Bharti",
-    role: "Market Research & AI Strategy",
-    icon: Search,
-    color: "from-sky-600 to-cyan-500",
-    description:
-      "Sanskar Bharti spearheaded the market analysis and research for Mindful Path, evaluating existing digital wellness solutions to identify unmet user needs. By analyzing industry trends and AI adoption in mental health support, he provided actionable insights that shaped the platform's core positioning, feature prioritization, and user-centric approach.",
-  },
-  {
     name: "Nikunj Saraswat",
     role: "Project Lead & Concept Developer",
     icon: Lightbulb,
@@ -30,6 +22,14 @@ const teamMembers = [
     color: "from-violet-600 to-purple-500",
     description:
       "Aditya Kashyap focused on the visual and communication aspects of the project. He worked on structuring the presentation, organizing the content clearly, and contributing to the design elements used to represent the project. His role helped make the Mindful Path concept more engaging and easier for others to understand.",
+  },
+  {
+    name: "Sanskar Bharti",
+    role: "Market Research & AI Strategy",
+    icon: Search,
+    color: "from-sky-600 to-cyan-500",
+    description:
+      "Sanskar Bharti spearheaded the market analysis and research for Mindful Path, evaluating existing digital wellness solutions to identify unmet user needs. By analyzing industry trends and AI adoption in mental health support, he provided actionable insights that shaped the platform's core positioning, feature prioritization, and user-centric approach.",
   },
 ];
 
