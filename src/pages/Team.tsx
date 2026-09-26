@@ -8,6 +8,14 @@ import teamPhoto from "@/assets/team-photo.png";
 
 const teamMembers = [
   {
+    name: "Sanskar Bharti",
+    role: "Market Research & AI Strategy",
+    icon: Search,
+    color: "from-sky-600 to-cyan-500",
+    description:
+      "Sanskar Bharti spearheaded the market analysis and research for Mindful Path, evaluating existing digital wellness solutions to identify unmet user needs. By analyzing industry trends and AI adoption in mental health support, he provided actionable insights that shaped the platform's core positioning, feature prioritization, and user-centric approach.",
+  },
+  {
     name: "Nikunj Saraswat",
     role: "Project Lead & Concept Developer",
     icon: Lightbulb,
